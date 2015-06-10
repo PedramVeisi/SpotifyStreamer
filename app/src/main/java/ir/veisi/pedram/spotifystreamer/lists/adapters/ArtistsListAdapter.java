@@ -19,7 +19,7 @@ import kaaes.spotify.webapi.android.models.Artist;
 public class ArtistsListAdapter extends ArrayAdapter<Artist> {
 
     private Context mContext;
-    private  List<Artist> mArtists;
+    private List<Artist> mArtists;
 
     /**
      * Constructor
@@ -38,25 +38,22 @@ public class ArtistsListAdapter extends ArrayAdapter<Artist> {
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
 
-        View rowView = convertView;
-
         // TODO Add ViewHolder
 
         if (convertView == null) {
             LayoutInflater inflater = (LayoutInflater) mContext
                     .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-            rowView = inflater.inflate(R.layout.list_item_artists, parent, false);
-        }
-        else{
-            Artist artist = mArtists.get(position);
-
-            TextView artistName = (TextView) rowView.findViewById(R.id.artist_name_textview);
-            ImageView artistImage = (ImageView) rowView.findViewById(R.id.artist_imageview);
-
-            artistName.setText(artist.name);
-            //artistImage.setImag(artist.images.get(0));
+            convertView = inflater.inflate(R.layout.list_item_artists, parent, false);
         }
 
-        return rowView;
+        Artist artist = mArtists.get(position);
+
+        TextView artistName = (TextView) convertView.findViewById(R.id.artist_name_textview);
+        ImageView artistImage = (ImageView) convertView.findViewById(R.id.artist_imageview);
+
+        artistName.setText(artist.name);
+        //artistImage.setImag(artist.images.get(0));
+
+        return convertView;
     }
 }
