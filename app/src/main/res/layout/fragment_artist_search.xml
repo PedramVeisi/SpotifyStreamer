@@ -18,4 +18,11 @@
         android:maxLines="1"
         />
 
+    <ListView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/artist_search_result_listview"
+        android:layout_below="@+id/search_artist_edit_text"
+        android:layout_centerHorizontal="true" />
+
 </RelativeLayout>
