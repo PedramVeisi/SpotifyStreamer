@@ -8,9 +8,12 @@ import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.squareup.picasso.Picasso;
+
 import java.util.List;
 
 import ir.veisi.pedram.spotifystreamer.R;
+import ir.veisi.pedram.spotifystreamer.imagetools.CircleTransform;
 import kaaes.spotify.webapi.android.models.Artist;
 
 /**
@@ -52,7 +55,10 @@ public class ArtistsListAdapter extends ArrayAdapter<Artist> {
         ImageView artistImage = (ImageView) convertView.findViewById(R.id.artist_imageview);
 
         artistName.setText(artist.name);
-        //artistImage.setImag(artist.images.get(0));
+
+        if (artist.images.size() != 0) {
+            Picasso.with(mContext).load(artist.images.get(0).url).transform(new CircleTransform()).into(artistImage);
+        }
 
         return convertView;
     }

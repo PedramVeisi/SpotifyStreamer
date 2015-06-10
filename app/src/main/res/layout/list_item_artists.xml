@@ -2,21 +2,24 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:gravity="center_vertical"
-    android:orientation="vertical"
     android:minHeight="?attr/listPreferredItemHeight"
-    >
+    android:orientation="vertical">
 
     <ImageView
         android:id="@+id/artist_imageview"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        />
+        android:layout_margin="@dimen/artists_thumbnail_margin"
+        android:maxHeight="@dimen/artists_thumbnail_max_height"
+        android:maxWidth="@dimen/artists_thumbnail_max_width"
+        android:adjustViewBounds= "true"
+        android:src="@drawable/no_image_available" />
 
     <TextView
         android:id="@+id/artist_name_textview"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_centerVertical="true"
         android:layout_toEndOf="@+id/artist_imageview"
         android:layout_toRightOf="@+id/artist_imageview"
         android:textAppearance="?android:attr/textAppearanceSmall" />
