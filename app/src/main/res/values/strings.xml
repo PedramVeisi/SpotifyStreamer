@@ -1,7 +1,17 @@
 <resources>
     <string name="app_name">Spotify Streamer</string>
-    <string name="hello_world">Hello world!</string>
+
+    <!-- Toolbar Actions -->
     <string name="action_settings">Settings</string>
+
+    <!-- Search for artist activity -->
     <string name="search_for_an_artist">Search for an artist...</string>
     <string name="no_artist_found">No Artist Found!</string>
+
+    <!-- Top tracks activity -->
+    <string name="title_activity_top_tracks">Top 10 Tracks</string>
+    <string name="no_track_found">No track found!</string>
+
+    <!-- Intent names -->
+    <string name="intent_artist_id_name" translatable="false">intent.ARTIST_ID</string>
 </resources>

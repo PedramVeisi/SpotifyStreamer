@@ -1,5 +1,6 @@
 package ir.veisi.pedram.spotifystreamer.fragments;
 
+import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -8,6 +9,7 @@ import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.TextView;
@@ -19,6 +21,7 @@ import java.util.Locale;
 import java.util.Map;
 
 import ir.veisi.pedram.spotifystreamer.R;
+import ir.veisi.pedram.spotifystreamer.activities.TopTracksActivity;
 import ir.veisi.pedram.spotifystreamer.lists.adapters.ArtistsListAdapter;
 import kaaes.spotify.webapi.android.SpotifyApi;
 import kaaes.spotify.webapi.android.SpotifyService;
@@ -83,6 +86,17 @@ public class ArtistSearchFragment extends Fragment {
 
             @Override
             public void afterTextChanged(Editable s) {
+            }
+        });
+
+
+        artistsListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                String artistId = mArtistsAdapter.getItem(position).id;
+                Intent intent = new Intent(getActivity(), TopTracksActivity.class);
+                intent.putExtra(getString(R.string.intent_artist_id_name), artistId);
+                startActivity(intent);
             }
         });
 
