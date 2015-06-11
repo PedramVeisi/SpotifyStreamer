@@ -23,7 +23,6 @@
         android:layout_height="wrap_content"
         android:layout_centerInParent="true"
         android:text="@string/no_track_found"
-        android:visibility="gone"
-        />
+        android:visibility="gone" />
 
 </RelativeLayout>
