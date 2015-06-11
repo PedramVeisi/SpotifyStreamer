@@ -10,6 +10,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
 import android.widget.ListView;
+import android.widget.TextView;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -49,6 +50,11 @@ public class ArtistSearchFragment extends Fragment {
         ListView artistsListView = (ListView) rootView.findViewById(R.id.artist_search_result_listview);
         artistsListView.setAdapter(mArtistsAdapter);
 
+        final TextView emptyTextView = (TextView) rootView.findViewById(R.id.empty_list_message_textview);
+        artistsListView.setEmptyView(emptyTextView);
+
+        // To make sure user won't see "No artist found" message before searching anything!
+        emptyTextView.setVisibility(View.GONE);
 
         // Find reference to search EditText
         final EditText searchEditText = (EditText) rootView.findViewById(R.id.search_artist_edit_text);
@@ -70,6 +76,8 @@ public class ArtistSearchFragment extends Fragment {
                 }
                 else{
                     mArtistsAdapter.clear();
+                    // If the search box is empty, don't show "No Artist Found" message.
+                    emptyTextView.setVisibility(View.GONE);
                 }
             }
 
@@ -128,11 +136,9 @@ public class ArtistSearchFragment extends Fragment {
 
         @Override
         protected void onPostExecute(List<Artist> artists) {
-            if (artists != null) {
-                mArtistsAdapter.clear();
+            mArtistsAdapter.clear();
+            if (artists.size() != 0) {
                 mArtistsAdapter.addAll(artists);
-            } else{
-                // TODO Show something. Nothing found.
             }
         }
     }

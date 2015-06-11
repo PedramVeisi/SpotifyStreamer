@@ -60,11 +60,12 @@ public class ArtistsListAdapter extends ArrayAdapter<Artist> {
         viewHolder.artistName.setText(artist.name);
 
         // Set genre(s)
-
         if(artist.genres.size() != 0){
             String delim = "";
             StringBuilder sb = new StringBuilder();
             for (String genre : artist.genres){
+                // Make the first letter upper case.
+                genre = genre.substring(0, 1).toUpperCase() + genre.substring(1);
                 sb.append(delim).append(genre);
                 delim = ", ";
             }
@@ -73,6 +74,7 @@ public class ArtistsListAdapter extends ArrayAdapter<Artist> {
             viewHolder.genres.setText(allGenres);
         }
 
+        // Set artist image
         if (artist.images.size() != 0) {
             // Set the artist image
             Picasso.with(mContext).load(artist.images.get(0).url).transform(new PicassoRoundTransform()).into(viewHolder.artistImage);
