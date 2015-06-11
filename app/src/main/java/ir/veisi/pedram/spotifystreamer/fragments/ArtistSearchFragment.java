@@ -130,18 +130,13 @@ public class ArtistSearchFragment extends Fragment {
             }
 
             String artistName = params[0];
-
             SpotifyApi api = new SpotifyApi();
-
             SpotifyService spotify = api.getService();
 
             Map<String, Object> options = new HashMap<>();
 
             // TODO Add country selection to settings
-
             options.put(SpotifyService.COUNTRY, Locale.getDefault().getCountry());
-
-            // TODO Recover in case of error! e.g. Bad request.
 
             List<Artist> artists = spotify.searchArtists(artistName, options).artists.items;
 
