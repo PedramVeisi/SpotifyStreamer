@@ -41,27 +41,49 @@ public class ArtistsListAdapter extends ArrayAdapter<Artist> {
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
 
-        // TODO Add ViewHolder
-
         if (convertView == null) {
             LayoutInflater inflater = (LayoutInflater) mContext
                     .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
             convertView = inflater.inflate(R.layout.list_item_artists, parent, false);
+
+            // configure view holder
+            ViewHolder viewHolder = new ViewHolder();
+            viewHolder.artistName = (TextView) convertView.findViewById(R.id.artist_name_textview);
+            viewHolder.genres = (TextView) convertView.findViewById(R.id.artist_genre_textview);
+            viewHolder.artistImage = (ImageView) convertView.findViewById(R.id.artist_imageview);
+            convertView.setTag(viewHolder);
         }
 
         Artist artist = mArtists.get(position);
 
-        TextView artistName = (TextView) convertView.findViewById(R.id.artist_name_textview);
-        artistName.setText(artist.name);
+        ViewHolder viewHolder = (ViewHolder) convertView.getTag();
+        viewHolder.artistName.setText(artist.name);
+
+        // Set genre(s)
+
+        if(artist.genres.size() != 0){
+            String delim = "";
+            StringBuilder sb = new StringBuilder();
+            for (String genre : artist.genres){
+                sb.append(delim).append(genre);
+                delim = ", ";
+            }
+
+            String allGenres = sb.toString();
+            viewHolder.genres.setText(allGenres);
+        }
 
         if (artist.images.size() != 0) {
-            ImageView artistImage = (ImageView) convertView.findViewById(R.id.artist_imageview);
-
-            //TODO Move to AsyncTask
-            Picasso.with(mContext).load(artist.images.get(0).url).transform(new PicassoRoundTransform()).into(artistImage);
-
+            // Set the artist image
+            Picasso.with(mContext).load(artist.images.get(0).url).transform(new PicassoRoundTransform()).into(viewHolder.artistImage);
         }
 
         return convertView;
+    }
+
+    static class ViewHolder {
+        TextView artistName;
+        TextView genres;
+        ImageView artistImage;
     }
 }

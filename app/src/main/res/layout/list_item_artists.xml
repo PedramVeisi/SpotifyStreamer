@@ -11,19 +11,38 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_margin="@dimen/artists_thumbnail_margin"
+        android:adjustViewBounds="true"
         android:maxHeight="@dimen/artists_thumbnail_max_height"
         android:maxWidth="@dimen/artists_thumbnail_max_width"
-        android:adjustViewBounds="true"
         android:src="@drawable/no_image_available" />
 
-    <TextView
-        android:id="@+id/artist_name_textview"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+    <LinearLayout
+        android:orientation="vertical"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
         android:layout_centerVertical="true"
-        android:layout_toEndOf="@id/artist_imageview"
-        android:layout_toRightOf="@id/artist_imageview"
-        android:textAppearance="?android:attr/textAppearanceSmall" />
+        android:layout_toRightOf="@+id/artist_imageview"
+        android:layout_toEndOf="@+id/artist_imageview"
+        android:gravity="center_vertical"
+        >
+
+
+        <TextView
+            android:id="@+id/artist_name_textview"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceMedium"
+            android:textColor="@android:color/black"
+            />
+
+        <TextView
+            android:id="@+id/artist_genre_textview"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceSmall"
+            />
+
+    </LinearLayout>
 
 
 </RelativeLayout>
