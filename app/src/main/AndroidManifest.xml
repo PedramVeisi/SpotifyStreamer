@@ -20,7 +20,9 @@
         </activity>
         <activity
             android:name=".activities.TopTracksActivity"
-            android:label="@string/title_activity_top_tracks" >
+            android:label="@string/title_activity_top_tracks"
+            android:parentActivityName=".activities.MainActivity"
+            >
         </activity>
     </application>
 
