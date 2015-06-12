@@ -22,6 +22,7 @@ import java.util.Map;
 
 import ir.veisi.pedram.spotifystreamer.R;
 import ir.veisi.pedram.spotifystreamer.activities.TopTracksActivity;
+import ir.veisi.pedram.spotifystreamer.datamodels.ArtistModel;
 import ir.veisi.pedram.spotifystreamer.lists.adapters.ArtistsListAdapter;
 import kaaes.spotify.webapi.android.SpotifyApi;
 import kaaes.spotify.webapi.android.SpotifyService;
@@ -47,7 +48,7 @@ public class ArtistSearchFragment extends Fragment {
 
 
         // Instantiate the adapter
-        mArtistsAdapter = new ArtistsListAdapter(getActivity(), R.layout.list_item_artists, new ArrayList<Artist>());
+        mArtistsAdapter = new ArtistsListAdapter(getActivity(), R.layout.list_item_artists, new ArrayList<ArtistModel>());
 
         // Reference to the listview
         ListView artistsListView = (ListView) rootView.findViewById(R.id.artist_search_result_listview);
@@ -89,11 +90,10 @@ public class ArtistSearchFragment extends Fragment {
             }
         });
 
-
         artistsListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                String artistId = mArtistsAdapter.getItem(position).id;
+                String artistId = mArtistsAdapter.getItem(position).getId();
                 Intent intent = new Intent(getActivity(), TopTracksActivity.class);
                 intent.putExtra(getString(R.string.intent_artist_id_name), artistId);
                 startActivity(intent);
@@ -105,7 +105,7 @@ public class ArtistSearchFragment extends Fragment {
     }
 
 
-    public class SearchForArtist extends AsyncTask<String, Void, List<Artist>> {
+    public class SearchForArtist extends AsyncTask<String, Void, List<ArtistModel>> {
 
         /**
          * Override this method to perform a computation on a background thread. The
@@ -122,7 +122,7 @@ public class ArtistSearchFragment extends Fragment {
          * @see #publishProgress
          */
         @Override
-        protected List<Artist> doInBackground(String... params) {
+        protected List<ArtistModel> doInBackground(String... params) {
 
             // Nothing to do
             if (params.length == 0) {
@@ -138,13 +138,24 @@ public class ArtistSearchFragment extends Fragment {
             // TODO Add country selection to settings
             options.put(SpotifyService.COUNTRY, Locale.getDefault().getCountry());
 
-            List<Artist> artists = spotify.searchArtists(artistName, options).artists.items;
+            List<Artist> resultArtists = spotify.searchArtists(artistName, options).artists.items;
+
+            List<ArtistModel> artists = new ArrayList<ArtistModel>();
+
+            for (Artist resultArtist : resultArtists){
+                ArtistModel artist = new ArtistModel();
+                artist.setId(resultArtist.id);
+                artist.setName(resultArtist.name);
+                artist.setImages(resultArtist.images);
+                artist.setGenres(resultArtist.genres);
+                artists.add(artist);
+            }
 
             return artists;
         }
 
         @Override
-        protected void onPostExecute(List<Artist> artists) {
+        protected void onPostExecute(List<ArtistModel> artists) {
             mArtistsAdapter.clear();
             if (artists.size() != 0) {
                 mArtistsAdapter.addAll(artists);

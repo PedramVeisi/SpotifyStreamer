@@ -10,29 +10,29 @@ import android.widget.TextView;
 
 import com.squareup.picasso.Picasso;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import ir.veisi.pedram.spotifystreamer.R;
+import ir.veisi.pedram.spotifystreamer.datamodels.ArtistModel;
 import ir.veisi.pedram.spotifystreamer.imagetools.PicassoRoundTransform;
-import kaaes.spotify.webapi.android.models.Artist;
 
 /**
  * Created by pedram on 10/06/15.
  */
-public class ArtistsListAdapter extends ArrayAdapter<Artist> {
+public class ArtistsListAdapter extends ArrayAdapter<ArtistModel> {
 
     private Context mContext;
-    private List<Artist> mArtists;
+    private List<ArtistModel> mArtists;
 
     /**
      * Constructor
-     *
-     * @param context  The current context.
+     *  @param context  The current context.
      * @param resource The resource ID for a layout file containing a TextView to use when
      *                 instantiating views.
      * @param artists  The artists to represent in the ListView.
      */
-    public ArtistsListAdapter(Context context, int resource, List<Artist> artists) {
+    public ArtistsListAdapter(Context context, int resource, ArrayList<ArtistModel> artists) {
         super(context, resource, artists);
         this.mContext = context;
         this.mArtists = artists;
@@ -54,16 +54,16 @@ public class ArtistsListAdapter extends ArrayAdapter<Artist> {
             convertView.setTag(viewHolder);
         }
 
-        Artist artist = mArtists.get(position);
+        ArtistModel artist = mArtists.get(position);
 
         ViewHolder viewHolder = (ViewHolder) convertView.getTag();
-        viewHolder.artistName.setText(artist.name);
+        viewHolder.artistName.setText(artist.getName());
 
         // Set genre(s)
-        if(artist.genres.size() != 0){
+        if(artist.getGenres().size() != 0){
             String delim = "";
             StringBuilder sb = new StringBuilder();
-            for (String genre : artist.genres){
+            for (String genre : artist.getGenres()){
                 // Make the first letter upper case.
                 genre = genre.substring(0, 1).toUpperCase() + genre.substring(1);
                 sb.append(delim).append(genre);
@@ -75,9 +75,9 @@ public class ArtistsListAdapter extends ArrayAdapter<Artist> {
         }
 
         // Set artist image
-        if (artist.images.size() != 0) {
+        if (artist.getImages().size() != 0) {
             // Set the artist image
-            Picasso.with(mContext).load(artist.images.get(0).url).transform(new PicassoRoundTransform()).into(viewHolder.artistImage);
+            Picasso.with(mContext).load(artist.getImages().get(0).url).transform(new PicassoRoundTransform()).into(viewHolder.artistImage);
         }
 
         return convertView;
