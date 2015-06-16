@@ -17,12 +17,32 @@
         android:divider="@android:color/transparent"
         android:dividerHeight="@dimen/artist_list_divider_height" />
 
-    <TextView
-        android:id="@+id/no_tracks_message_textview"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_centerInParent="true"
-        android:text="@string/no_track_found"
-        android:visibility="gone" />
+    <!-- Is it good practice to put this here or should it go to a seprate file? -->
+    <LinearLayout
+        android:id="@+id/empty_list_message_view"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:gravity="center"
+        android:orientation="vertical"
+        android:visibility="gone">
+
+        <ImageView
+            android:id="@+id/imageView"
+            android:layout_width="@dimen/list_view_empty_view_image_width"
+            android:layout_height="@dimen/list_view_empty_view_image_height"
+            android:layout_gravity="center_horizontal"
+            android:alpha="0.2"
+            android:src="@drawable/nothing_found_sad_face" />
+
+        <TextView
+            android:id="@+id/empty_list_message_textview"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:text="@string/no_track_found"
+            android:textAppearance="?android:attr/textAppearanceMedium"
+            android:textColor="@android:color/darker_gray" />
+
+    </LinearLayout>
 
 </RelativeLayout>

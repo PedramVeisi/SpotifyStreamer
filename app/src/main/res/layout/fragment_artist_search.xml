@@ -37,11 +37,11 @@
 
         <ImageView
             android:id="@+id/imageView"
-            android:layout_width="@dimen/artist_empty_view_image_width"
-            android:layout_height="@dimen/artist_empty_view_image_height"
+            android:layout_width="@dimen/list_view_empty_view_image_width"
+            android:layout_height="@dimen/list_view_empty_view_image_height"
             android:layout_gravity="center_horizontal"
             android:alpha="0.2"
-            android:src="@drawable/no_artist_found" />
+            android:src="@drawable/nothing_found_sad_face" />
 
         <TextView
             android:id="@+id/empty_list_message_textview"

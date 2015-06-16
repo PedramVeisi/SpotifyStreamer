@@ -44,6 +44,9 @@ public class TopTracksActivityFragment extends Fragment {
         ListView topTracksListView = (ListView) rootView.findViewById(R.id.artist_top_tracks_listview);
         topTracksListView.setAdapter(mTracksAdapter);
 
+        final View emptyView = (View) rootView.findViewById(R.id.empty_list_message_view);
+        topTracksListView.setEmptyView(emptyView);
+
         GetTopTracks getTopTracks = new GetTopTracks();
         getTopTracks.execute(artistId);
 
