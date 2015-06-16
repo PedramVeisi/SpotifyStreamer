@@ -88,11 +88,13 @@
     <string name="country_andorra_code">"ad"</string>
     <string name="country_argentina_code">"ar"</string>
     <string name="country_australia_code">"au"</string>
+    <string name="country_belgium_code">"be"</string>
     <string name="country_belgium_french_code">"be-fr"</string>
     <string name="country_belgium_dutch_code">"be-nl"</string>
     <string name="country_bolivia_code">"bo"</string>
     <string name="country_brazil_code">"br"</string>
     <string name="country_bulgaria_code">"bg"</string>
+    <string name="country_canada_code">"ca-en"</string>
     <string name="country_canada_english_code">"ca-en"</string>
     <string name="country_canada_french_code">"ca-fr"</string>
     <string name="country_chile_code">"cl"</string>
@@ -110,6 +112,7 @@
     <string name="country_france_code">"fr"</string>
     <string name="country_guatemala_code">"gt"</string>
     <string name="country_honduras_code">"hn"</string>
+    <string name="country_hong_kong_code">"hk"</string>
     <string name="country_hong_kong_english_code">"hk-en"</string>
     <string name="country_iceland_code">"is"</string>
     <string name="country_ireland_code">"ie"</string>
@@ -117,9 +120,11 @@
     <string name="country_latvia_code">"lv"</string>
     <string name="country_liechtenstein_code">"li"</string>
     <string name="country_lithuania_code">"lt"</string>
+    <string name="country_luxembourg_code">"lu"</string>
     <string name="country_luxembourg_french_code">"lu-fr"</string>
     <string name="country_luxembourg_greman_code">"lu-de"</string>
     <string name="country_hungary_code">"hu"</string>
+    <string name="country_malaysia_code">"my"</string>
     <string name="country_malaysia_english_code">"my-en"</string>
     <string name="country_malaysia_melayu_code">"my-ms"</string>
     <string name="country_malta_code">"mt"</string>
@@ -136,7 +141,9 @@
     <string name="country_poland_code">"pl"</string>
     <string name="country_portugal_code">"pt"</string>
     <string name="country_dominican_republic_code">"do"</string>
+    <string name="country_switzerland_code">"ch"</string>
     <string name="country_switzerland_german_code">"ch-de"</string>
+    <string name="country_singapore_code">"sg"</string>
     <string name="country_singapore_english_code">"sg-en"</string>
     <string name="country_slovakia_code">"sk"</string>
     <string name="country_switzerland_french_code">"ch-fr"</string>
