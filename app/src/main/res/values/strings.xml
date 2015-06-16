@@ -18,6 +18,9 @@
     <!-- Intent names -->
     <string name="intent_artist_id_name" translatable="false">intent.ARTIST_ID</string>
 
+    <!-- Preferences -->
+    <string name="pref_country_key" translatable="false">country</string>
+
     <!-- Country Names -->
     <string name="country_andorra">Andorra</string>
     <string name="country_argentina">Argentina</string>
@@ -85,76 +88,76 @@
     <string name="country_hong_kong_chinese">香港（中文）</string>
 
     <!-- Country Codes -->
-    <string name="country_andorra_code">"ad"</string>
-    <string name="country_argentina_code">"ar"</string>
-    <string name="country_australia_code">"au"</string>
-    <string name="country_belgium_code">"be"</string>
-    <string name="country_belgium_french_code">"be-fr"</string>
-    <string name="country_belgium_dutch_code">"be-nl"</string>
-    <string name="country_bolivia_code">"bo"</string>
-    <string name="country_brazil_code">"br"</string>
-    <string name="country_bulgaria_code">"bg"</string>
-    <string name="country_canada_code">"ca-en"</string>
-    <string name="country_canada_english_code">"ca-en"</string>
-    <string name="country_canada_french_code">"ca-fr"</string>
-    <string name="country_chile_code">"cl"</string>
-    <string name="country_colombia_code">"co"</string>
-    <string name="country_costa_rica_code">"cr"</string>
-    <string name="country_cyprus_code">"cy"</string>
-    <string name="country_czech_republic_code">"cz"</string>
-    <string name="country_denmark_code">"dk"</string>
-    <string name="country_germany_code">"de"</string>
-    <string name="country_ecuador_code">"ec"</string>
-    <string name="country_el_salvador_code">"sv"</string>
-    <string name="country_spain_code">"es"</string>
-    <string name="country_estonia_code">"ee"</string>
-    <string name="country_finland_code">"fi"</string>
-    <string name="country_france_code">"fr"</string>
-    <string name="country_guatemala_code">"gt"</string>
-    <string name="country_honduras_code">"hn"</string>
-    <string name="country_hong_kong_code">"hk"</string>
-    <string name="country_hong_kong_english_code">"hk-en"</string>
-    <string name="country_iceland_code">"is"</string>
-    <string name="country_ireland_code">"ie"</string>
-    <string name="country_italy_code">"it"</string>
-    <string name="country_latvia_code">"lv"</string>
-    <string name="country_liechtenstein_code">"li"</string>
-    <string name="country_lithuania_code">"lt"</string>
-    <string name="country_luxembourg_code">"lu"</string>
-    <string name="country_luxembourg_french_code">"lu-fr"</string>
-    <string name="country_luxembourg_greman_code">"lu-de"</string>
-    <string name="country_hungary_code">"hu"</string>
-    <string name="country_malaysia_code">"my"</string>
-    <string name="country_malaysia_english_code">"my-en"</string>
-    <string name="country_malaysia_melayu_code">"my-ms"</string>
-    <string name="country_malta_code">"mt"</string>
-    <string name="country_monoco_code">"mc"</string>
-    <string name="country_mexico_code">"mx"</string>
-    <string name="country_netherlands_code">"nl"</string>
-    <string name="country_new_zeland_code">"nz"</string>
-    <string name="country_nicaragua_code">"ni"</string>
-    <string name="country_norway_code">"no"</string>
-    <string name="country_panama_code">"pa"</string>
-    <string name="country_paraguay_code">"py"</string>
-    <string name="country_peru_code">"pe"</string>
-    <string name="country_philippines_code">"ph"</string>
-    <string name="country_poland_code">"pl"</string>
-    <string name="country_portugal_code">"pt"</string>
-    <string name="country_dominican_republic_code">"do"</string>
-    <string name="country_switzerland_code">"ch"</string>
-    <string name="country_switzerland_german_code">"ch-de"</string>
-    <string name="country_singapore_code">"sg"</string>
-    <string name="country_singapore_english_code">"sg-en"</string>
-    <string name="country_slovakia_code">"sk"</string>
-    <string name="country_switzerland_french_code">"ch-fr"</string>
-    <string name="country_sweden_code">"se"</string>
-    <string name="country_turkey_code">"tr"</string>
-    <string name="country_usa_code">"us"</string>
-    <string name="country_uk_code">"uk"</string>
-    <string name="country_uruguay_code">"uy"</string>
-    <string name="country_austria_code">"at"</string>
-    <string name="country_greece_code">"gr"</string>
-    <string name="country_taiwan_code">"tw"</string>
-    <string name="country_hong_kong_chinese_code">"hk-zh"</string>
+    <string name="country_andorra_code" translatable="false">"ad"</string>
+    <string name="country_argentina_code" translatable="false">"ar"</string>
+    <string name="country_australia_code" translatable="false">"au"</string>
+    <string name="country_belgium_code" translatable="false">"be"</string>
+    <string name="country_belgium_french_code" translatable="false">"be-fr"</string>
+    <string name="country_belgium_dutch_code" translatable="false">"be-nl"</string>
+    <string name="country_bolivia_code" translatable="false">"bo"</string>
+    <string name="country_brazil_code" translatable="false">"br"</string>
+    <string name="country_bulgaria_code" translatable="false">"bg"</string>
+    <string name="country_canada_code" translatable="false">"ca-en"</string>
+    <string name="country_canada_english_code" translatable="false">"ca-en"</string>
+    <string name="country_canada_french_code" translatable="false">"ca-fr"</string>
+    <string name="country_chile_code" translatable="false">"cl"</string>
+    <string name="country_colombia_code" translatable="false">"co"</string>
+    <string name="country_costa_rica_code" translatable="false">"cr"</string>
+    <string name="country_cyprus_code" translatable="false">"cy"</string>
+    <string name="country_czech_republic_code" translatable="false">"cz"</string>
+    <string name="country_denmark_code" translatable="false">"dk"</string>
+    <string name="country_germany_code" translatable="false">"de"</string>
+    <string name="country_ecuador_code" translatable="false">"ec"</string>
+    <string name="country_el_salvador_code" translatable="false">"sv"</string>
+    <string name="country_spain_code" translatable="false">"es"</string>
+    <string name="country_estonia_code" translatable="false">"ee"</string>
+    <string name="country_finland_code" translatable="false">"fi"</string>
+    <string name="country_france_code" translatable="false">"fr"</string>
+    <string name="country_guatemala_code" translatable="false">"gt"</string>
+    <string name="country_honduras_code" translatable="false">"hn"</string>
+    <string name="country_hong_kong_code" translatable="false">"hk"</string>
+    <string name="country_hong_kong_english_code" translatable="false">"hk-en"</string>
+    <string name="country_iceland_code" translatable="false">"is"</string>
+    <string name="country_ireland_code" translatable="false">"ie"</string>
+    <string name="country_italy_code" translatable="false">"it"</string>
+    <string name="country_latvia_code" translatable="false">"lv"</string>
+    <string name="country_liechtenstein_code" translatable="false">"li"</string>
+    <string name="country_lithuania_code" translatable="false">"lt"</string>
+    <string name="country_luxembourg_code" translatable="false">"lu"</string>
+    <string name="country_luxembourg_french_code" translatable="false">"lu-fr"</string>
+    <string name="country_luxembourg_greman_code" translatable="false">"lu-de"</string>
+    <string name="country_hungary_code" translatable="false">"hu"</string>
+    <string name="country_malaysia_code" translatable="false">"my"</string>
+    <string name="country_malaysia_english_code" translatable="false">"my-en"</string>
+    <string name="country_malaysia_melayu_code" translatable="false">"my-ms"</string>
+    <string name="country_malta_code" translatable="false">"mt"</string>
+    <string name="country_monoco_code" translatable="false">"mc"</string>
+    <string name="country_mexico_code" translatable="false">"mx"</string>
+    <string name="country_netherlands_code" translatable="false">"nl"</string>
+    <string name="country_new_zeland_code" translatable="false">"nz"</string>
+    <string name="country_nicaragua_code" translatable="false">"ni"</string>
+    <string name="country_norway_code" translatable="false">"no"</string>
+    <string name="country_panama_code" translatable="false">"pa"</string>
+    <string name="country_paraguay_code" translatable="false">"py"</string>
+    <string name="country_peru_code" translatable="false">"pe"</string>
+    <string name="country_philippines_code" translatable="false">"ph"</string>
+    <string name="country_poland_code" translatable="false">"pl"</string>
+    <string name="country_portugal_code" translatable="false">"pt"</string>
+    <string name="country_dominican_republic_code" translatable="false">"do"</string>
+    <string name="country_switzerland_code" translatable="false">"ch"</string>
+    <string name="country_switzerland_german_code" translatable="false">"ch-de"</string>
+    <string name="country_singapore_code" translatable="false">"sg"</string>
+    <string name="country_singapore_english_code" translatable="false">"sg-en"</string>
+    <string name="country_slovakia_code" translatable="false">"sk"</string>
+    <string name="country_switzerland_french_code" translatable="false">"ch-fr"</string>
+    <string name="country_sweden_code" translatable="false">"se"</string>
+    <string name="country_turkey_code" translatable="false">"tr"</string>
+    <string name="country_usa_code" translatable="false">"us"</string>
+    <string name="country_uk_code" translatable="false">"uk"</string>
+    <string name="country_uruguay_code" translatable="false">"uy"</string>
+    <string name="country_austria_code" translatable="false">"at"</string>
+    <string name="country_greece_code" translatable="false">"gr"</string>
+    <string name="country_taiwan_code" translatable="false">"tw"</string>
+    <string name="country_hong_kong_chinese_code" translatable="false">"hk-zh"</string>
 
 </resources>
