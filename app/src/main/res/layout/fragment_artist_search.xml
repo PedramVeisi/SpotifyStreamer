@@ -40,9 +40,8 @@
             android:layout_width="@dimen/artist_empty_view_image_width"
             android:layout_height="@dimen/artist_empty_view_image_height"
             android:layout_gravity="center_horizontal"
-            android:src="@drawable/no_artist_found"
             android:alpha="0.2"
-            />
+            android:src="@drawable/no_artist_found" />
 
         <TextView
             android:id="@+id/empty_list_message_textview"
