@@ -17,4 +17,71 @@
 
     <!-- Intent names -->
     <string name="intent_artist_id_name" translatable="false">intent.ARTIST_ID</string>
+
+    <!-- Country Names -->
+    <string name="country_andorra">Andorra</string>
+    <string name="country_argentina">Argentina</string>
+    <string name="country_australia">Australia</string>
+    <string name="country_belgium_french">Belgique (français)</string>
+    <string name="country_belgium_dutch">België (Nederlands)</string>
+    <string name="country_bolivia">Bolivia</string>
+    <string name="country_brazil">Brasil</string>
+    <string name="country_bulgaria">Bulgaria</string>
+    <string name="country_canada_english">Canada (English)</string>
+    <string name="country_canada_french">Canada (français)</string>
+    <string name="country_chile">Chile</string>
+    <string name="country_colombia">Colombia</string>
+    <string name="country_costa_rica">Costa Rica</string>
+    <string name="country_cyprus">Cyprus</string>
+    <string name="country_czech_republic">Czech Republic</string>
+    <string name="country_denmark">Denmark</string>
+    <string name="country_germany">Deutschland</string>
+    <string name="country_ecuador">Ecuador</string>
+    <string name="country_el_salvador">El Salvador</string>
+    <string name="country_spain">España</string>
+    <string name="country_estonia">Estonia</string>
+    <string name="country_finland">Finland</string>
+    <string name="country_france">France</string>
+    <string name="country_guatemala">Guatemala</string>
+    <string name="country_honduras">Honduras</string>
+    <string name="country_hong_kong_english">Hong Kong (English)</string>
+    <string name="country_iceland">Iceland</string>
+    <string name="country_ireland">Ireland</string>
+    <string name="country_italy">Italia</string>
+    <string name="country_latvia">Latvia</string>
+    <string name="country_liechtenstein">Liechtenstein</string>
+    <string name="country_lithuania">Lithuania</string>
+    <string name="country_luxembourg_french">Luxembourg (français)</string>
+    <string name="country_luxembourg_greman">Luxemburg (Deutsch)</string>
+    <string name="country_hungary">Magyarország</string>
+    <string name="country_malaysia_english">Malaysia (English)</string>
+    <string name="country_malaysia_melayu">Malaysia (Melayu)</string>
+    <string name="country_malta">Malta</string>
+    <string name="country_monoco">Monaco</string>
+    <string name="country_mexico">México</string>
+    <string name="country_netherlands">Nederland</string>
+    <string name="country_new_zeland">New Zealand</string>
+    <string name="country_nicaragua">Nicaragua</string>
+    <string name="country_norway">Norway</string>
+    <string name="country_panama">Panamá</string>
+    <string name="country_paraguay">Paraguay</string>
+    <string name="country_peru">Perú</string>
+    <string name="country_philippines">Philippines</string>
+    <string name="country_poland">Polska</string>
+    <string name="country_portugal">Portugal</string>
+    <string name="country_dominican_republic">República Dominicana</string>
+    <string name="country_switzerland_german">Schweiz (Deutsch)</string>
+    <string name="country_singapore_english">Singapore (English)</string>
+    <string name="country_slovakia">Slovakia</string>
+    <string name="country_switzerland_french">Suisse (français)</string>
+    <string name="country_sweden">Sverige</string>
+    <string name="country_turkey">Türkiye</string>
+    <string name="country_usa">USA</string>
+    <string name="country_uk">United Kingdom</string>
+    <string name="country_uruguay">Uruguay</string>
+    <string name="country_austria">Österreich</string>
+    <string name="country_greece">Ελλάδα</string>
+    <string name="country_taiwan">台灣</string>
+    <string name="country_hong_kong_chinese">香港（中文）</string>
+
 </resources>
