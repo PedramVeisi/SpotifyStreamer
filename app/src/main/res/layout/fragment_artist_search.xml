@@ -41,6 +41,7 @@
             android:layout_height="@dimen/artist_empty_view_image_height"
             android:layout_gravity="center_horizontal"
             android:src="@drawable/no_artist_found"
+            android:alpha="0.2"
             />
 
         <TextView
