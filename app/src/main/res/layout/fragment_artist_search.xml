@@ -24,26 +24,23 @@
         android:layout_below="@+id/search_artist_edit_text"
         android:layout_centerHorizontal="true"
         android:divider="@android:color/transparent"
-        android:dividerHeight="@dimen/artist_list_divider_height"
-        />
+        android:dividerHeight="@dimen/artist_list_divider_height" />
 
     <!-- Is it good practice to put this here or should it go to a seprate file? -->
     <LinearLayout
+        android:id="@+id/empty_list_message_view"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:orientation="vertical"
-        android:id="@+id/empty_list_message_view"
-        android:visibility="gone"
         android:gravity="center"
-        >
+        android:orientation="vertical"
+        android:visibility="gone">
 
         <ImageView
             android:id="@+id/imageView"
             android:layout_width="200dp"
             android:layout_height="200dp"
             android:layout_gravity="center_horizontal"
-            android:src="@drawable/no_artist_found"
-            />
+            android:src="@drawable/no_artist_found" />
 
         <TextView
             android:id="@+id/empty_list_message_textview"
@@ -51,8 +48,7 @@
             android:layout_height="wrap_content"
             android:layout_centerInParent="true"
             android:text="@string/no_artist_found"
-            android:textColor="@android:color/darker_gray"
-            />
+            android:textColor="@android:color/darker_gray" />
 
     </LinearLayout>
 
