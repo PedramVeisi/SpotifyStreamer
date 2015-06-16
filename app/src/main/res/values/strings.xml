@@ -1,6 +1,9 @@
 <resources>
     <string name="app_name">Spotify Streamer</string>
 
+    <!-- General -->
+    <string name="refine_search">Please refine your search.</string>
+
     <!-- Toolbar Actions -->
     <string name="action_settings">Settings</string>
 

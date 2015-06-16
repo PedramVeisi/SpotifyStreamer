@@ -118,7 +118,6 @@ public class TopTracksActivityFragment extends Fragment {
 
                 // Now we have everything. Creating our summarized track
                 tracks.add(new TrackGist(track.name, track.album.name, largeAlbumThumbnailUrl, smallAlbumThumbnailUrl, track.preview_url));
-
             }
 
             return tracks;

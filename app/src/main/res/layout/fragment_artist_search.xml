@@ -47,12 +47,21 @@
             android:src="@drawable/nothing_found_sad_face" />
 
         <TextView
-            android:id="@+id/empty_list_message_textview"
+            android:id="@+id/empty_list_not_found_message_textview"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_centerInParent="true"
             android:text="@string/no_artist_found"
             android:textAppearance="?android:attr/textAppearanceMedium"
+            android:textColor="@android:color/darker_gray" />
+
+        <TextView
+            android:id="@+id/empty_list_refine_search_message_textview"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:text="@string/refine_search"
+            android:textAppearance="?android:attr/textAppearanceSmall"
             android:textColor="@android:color/darker_gray" />
 
     </LinearLayout>
