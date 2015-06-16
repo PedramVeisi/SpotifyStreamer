@@ -15,8 +15,8 @@ import java.util.Locale;
 import java.util.Map;
 
 import ir.veisi.pedram.spotifystreamer.R;
-import ir.veisi.pedram.spotifystreamer.models.TrackGist;
 import ir.veisi.pedram.spotifystreamer.lists.adapters.TopTracksListAdapter;
+import ir.veisi.pedram.spotifystreamer.models.TrackGist;
 import kaaes.spotify.webapi.android.SpotifyApi;
 import kaaes.spotify.webapi.android.SpotifyService;
 import kaaes.spotify.webapi.android.models.Image;
@@ -46,12 +46,14 @@ public class TopTracksActivityFragment extends Fragment {
         ListView topTracksListView = (ListView) rootView.findViewById(R.id.artist_top_tracks_listview);
         topTracksListView.setAdapter(mTracksAdapter);
 
+        // To show the empty view when there is no top track
         final View emptyView = (View) rootView.findViewById(R.id.empty_list_message_view);
         topTracksListView.setEmptyView(emptyView);
 
         // To make sure user won't see "No track found" message before tracks are loaded!
         emptyView.setVisibility(View.GONE);
 
+        // Getting the top tracks off the UI thread.
         GetTopTracks getTopTracks = new GetTopTracks();
         getTopTracks.execute(artistId);
 
@@ -103,11 +105,13 @@ public class TopTracksActivityFragment extends Fragment {
                 // Fill the thumbnail variables with the first image and change them later if wanted sizes exist.
                 largeAlbumThumbnailUrl = track.album.images.get(0).url;
                 smallAlbumThumbnailUrl =  track.album.images.get(0).url;
+
+                // Get desired thumbnail sizes in case they exist
                 for (Image image : track.album.images){
-                    if (image.width == 640){
+                    if (image.width == getResources().getInteger(R.integer.album_art_large_thumbnail_width)){
                         largeAlbumThumbnailUrl = image.url;
                     }
-                    else if(image.width == 200){
+                    else if(image.width == getResources().getInteger(R.integer.album_art_small_thumbnail_width)){
                         smallAlbumThumbnailUrl = image.url;
                     }
                 }

@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <!-- Top Tracks Activity -->
+    <integer name="album_art_small_thumbnail_width" format="float">200</integer>
+    <integer name="album_art_large_thumbnail_width">640</integer>
+
+</resources>
