@@ -8,5 +8,7 @@
     <dimen name="artists_thumbnail_max_width">64dp</dimen>
     <dimen name="artists_thumbnail_margin">16dp</dimen>
     <dimen name="artist_list_divider_height">4dp</dimen>
+    <dimen name="artist_empty_view_image_width">200dp</dimen>
+    <dimen name="artist_empty_view_image_height">200dp</dimen>
 
 </resources>
