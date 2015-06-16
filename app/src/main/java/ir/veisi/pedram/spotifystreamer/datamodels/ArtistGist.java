@@ -7,41 +7,33 @@ import kaaes.spotify.webapi.android.models.Image;
 /**
  * Created by pedram on 12/06/15.
  */
-public class ArtistModel {
+public class ArtistGist {
     private String mArtistId;
     private String mArtistName;
     private List<Image> mArtistImages;
     private List<String> mArtistGenres;
 
-    public String getId() {
-        return mArtistId;
+    public ArtistGist(String artistId, String artistName, List<Image> artistImages, List<String> artistGenres){
+        this.mArtistId = artistId;
+        this.mArtistName = artistName;
+        this.mArtistImages = artistImages;
+        this.mArtistGenres = artistGenres;
     }
 
-    public void setId(String artistId) {
-        this.mArtistId = artistId;
+    public String getId() {
+        return mArtistId;
     }
 
     public String getName() {
         return mArtistName;
     }
 
-    public void setName(String artistName) {
-        this.mArtistName = artistName;
-    }
-
     public List<Image> getImages() {
         return mArtistImages;
-    }
-
-    public void setImages(List<Image> artistImages) {
-        this.mArtistImages = artistImages;
     }
 
     public List<String> getGenres() {
         return mArtistGenres;
     }
 
-    public void setGenres(List<String> artistGenres) {
-        this.mArtistGenres = artistGenres;
-    }
 }

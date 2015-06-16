@@ -14,16 +14,16 @@ import java.util.ArrayList;
 import java.util.List;
 
 import ir.veisi.pedram.spotifystreamer.R;
-import ir.veisi.pedram.spotifystreamer.datamodels.ArtistModel;
+import ir.veisi.pedram.spotifystreamer.datamodels.ArtistGist;
 import ir.veisi.pedram.spotifystreamer.imagetools.PicassoRoundTransform;
 
 /**
  * Created by pedram on 10/06/15.
  */
-public class ArtistsListAdapter extends ArrayAdapter<ArtistModel> {
+public class ArtistsListAdapter extends ArrayAdapter<ArtistGist> {
 
     private Context mContext;
-    private List<ArtistModel> mArtists;
+    private List<ArtistGist> mArtists;
 
     /**
      * Constructor
@@ -32,7 +32,7 @@ public class ArtistsListAdapter extends ArrayAdapter<ArtistModel> {
      *                 instantiating views.
      * @param artists  The artists to represent in the ListView.
      */
-    public ArtistsListAdapter(Context context, int resource, ArrayList<ArtistModel> artists) {
+    public ArtistsListAdapter(Context context, int resource, ArrayList<ArtistGist> artists) {
         super(context, resource, artists);
         this.mContext = context;
         this.mArtists = artists;
@@ -54,7 +54,7 @@ public class ArtistsListAdapter extends ArrayAdapter<ArtistModel> {
             convertView.setTag(viewHolder);
         }
 
-        ArtistModel artist = mArtists.get(position);
+        ArtistGist artist = mArtists.get(position);
 
         ViewHolder viewHolder = (ViewHolder) convertView.getTag();
         viewHolder.artistName.setText(artist.getName());

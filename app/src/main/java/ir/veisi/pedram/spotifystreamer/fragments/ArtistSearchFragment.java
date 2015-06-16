@@ -22,7 +22,7 @@ import java.util.Map;
 
 import ir.veisi.pedram.spotifystreamer.R;
 import ir.veisi.pedram.spotifystreamer.activities.TopTracksActivity;
-import ir.veisi.pedram.spotifystreamer.datamodels.ArtistModel;
+import ir.veisi.pedram.spotifystreamer.datamodels.ArtistGist;
 import ir.veisi.pedram.spotifystreamer.lists.adapters.ArtistsListAdapter;
 import kaaes.spotify.webapi.android.SpotifyApi;
 import kaaes.spotify.webapi.android.SpotifyService;
@@ -48,7 +48,7 @@ public class ArtistSearchFragment extends Fragment {
 
 
         // Instantiate the adapter
-        mArtistsAdapter = new ArtistsListAdapter(getActivity(), R.layout.list_item_artists, new ArrayList<ArtistModel>());
+        mArtistsAdapter = new ArtistsListAdapter(getActivity(), R.layout.list_item_artists, new ArrayList<ArtistGist>());
 
         // Reference to the listview
         ListView artistsListView = (ListView) rootView.findViewById(R.id.artist_search_result_listview);
@@ -105,7 +105,7 @@ public class ArtistSearchFragment extends Fragment {
     }
 
 
-    public class SearchForArtist extends AsyncTask<String, Void, List<ArtistModel>> {
+    public class SearchForArtist extends AsyncTask<String, Void, List<ArtistGist>> {
 
         /**
          * Override this method to perform a computation on a background thread. The
@@ -122,7 +122,7 @@ public class ArtistSearchFragment extends Fragment {
          * @see #publishProgress
          */
         @Override
-        protected List<ArtistModel> doInBackground(String... params) {
+        protected List<ArtistGist> doInBackground(String... params) {
 
             // Nothing to do
             if (params.length == 0) {
@@ -140,14 +140,11 @@ public class ArtistSearchFragment extends Fragment {
 
             List<Artist> resultArtists = spotify.searchArtists(artistName, options).artists.items;
 
-            List<ArtistModel> artists = new ArrayList<ArtistModel>();
+            List<ArtistGist> artists = new ArrayList<ArtistGist>();
 
+            // Extracting required information. Using ArtistModel class, we don't need to pass all the artist data around.
             for (Artist resultArtist : resultArtists){
-                ArtistModel artist = new ArtistModel();
-                artist.setId(resultArtist.id);
-                artist.setName(resultArtist.name);
-                artist.setImages(resultArtist.images);
-                artist.setGenres(resultArtist.genres);
+                ArtistGist artist = new ArtistGist(resultArtist.id, resultArtist.name, resultArtist.images, resultArtist.genres);
                 artists.add(artist);
             }
 
@@ -155,7 +152,7 @@ public class ArtistSearchFragment extends Fragment {
         }
 
         @Override
-        protected void onPostExecute(List<ArtistModel> artists) {
+        protected void onPostExecute(List<ArtistGist> artists) {
             mArtistsAdapter.clear();
             if (artists.size() != 0) {
                 mArtistsAdapter.addAll(artists);
