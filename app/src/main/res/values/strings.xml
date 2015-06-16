@@ -21,6 +21,7 @@
     <!-- Preferences -->
     <string name="title_settings">Settings</string>
     <string name="pref_country_key" translatable="false">country</string>
+    <string name="prefs_country_settings">Country Settings</string>
 
     <!-- Country Names -->
     <string name="country_andorra">Andorra</string>
@@ -160,5 +161,7 @@
     <string name="country_greece_code" translatable="false">"gr"</string>
     <string name="country_taiwan_code" translatable="false">"tw"</string>
     <string name="country_hong_kong_chinese_code" translatable="false">"hk-zh"</string>
+
+
 
 </resources>
