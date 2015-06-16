@@ -4,7 +4,7 @@
     <PreferenceCategory android:title="@string/prefs_country_settings">
 
         <ListPreference
-            android:defaultValue="@string/country_canada_code"
+            android:defaultValue="@string/country_canada_english_code"
             android:entries="@array/pref_countries_entries"
             android:entryValues="@array/pref_countries_values"
             android:key="@string/pref_country_key"

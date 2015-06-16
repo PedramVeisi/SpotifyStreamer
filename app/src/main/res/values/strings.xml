@@ -93,13 +93,11 @@
     <string name="country_andorra_code" translatable="false">"ad"</string>
     <string name="country_argentina_code" translatable="false">"ar"</string>
     <string name="country_australia_code" translatable="false">"au"</string>
-    <string name="country_belgium_code" translatable="false">"be"</string>
     <string name="country_belgium_french_code" translatable="false">"be-fr"</string>
     <string name="country_belgium_dutch_code" translatable="false">"be-nl"</string>
     <string name="country_bolivia_code" translatable="false">"bo"</string>
     <string name="country_brazil_code" translatable="false">"br"</string>
     <string name="country_bulgaria_code" translatable="false">"bg"</string>
-    <string name="country_canada_code" translatable="false">"ca-en"</string>
     <string name="country_canada_english_code" translatable="false">"ca-en"</string>
     <string name="country_canada_french_code" translatable="false">"ca-fr"</string>
     <string name="country_chile_code" translatable="false">"cl"</string>
@@ -117,7 +115,6 @@
     <string name="country_france_code" translatable="false">"fr"</string>
     <string name="country_guatemala_code" translatable="false">"gt"</string>
     <string name="country_honduras_code" translatable="false">"hn"</string>
-    <string name="country_hong_kong_code" translatable="false">"hk"</string>
     <string name="country_hong_kong_english_code" translatable="false">"hk-en"</string>
     <string name="country_iceland_code" translatable="false">"is"</string>
     <string name="country_ireland_code" translatable="false">"ie"</string>
@@ -125,11 +122,9 @@
     <string name="country_latvia_code" translatable="false">"lv"</string>
     <string name="country_liechtenstein_code" translatable="false">"li"</string>
     <string name="country_lithuania_code" translatable="false">"lt"</string>
-    <string name="country_luxembourg_code" translatable="false">"lu"</string>
     <string name="country_luxembourg_french_code" translatable="false">"lu-fr"</string>
-    <string name="country_luxembourg_greman_code" translatable="false">"lu-de"</string>
+    <string name="country_luxembourg_german_code" translatable="false">"lu-de"</string>
     <string name="country_hungary_code" translatable="false">"hu"</string>
-    <string name="country_malaysia_code" translatable="false">"my"</string>
     <string name="country_malaysia_english_code" translatable="false">"my-en"</string>
     <string name="country_malaysia_melayu_code" translatable="false">"my-ms"</string>
     <string name="country_malta_code" translatable="false">"mt"</string>
@@ -146,9 +141,7 @@
     <string name="country_poland_code" translatable="false">"pl"</string>
     <string name="country_portugal_code" translatable="false">"pt"</string>
     <string name="country_dominican_republic_code" translatable="false">"do"</string>
-    <string name="country_switzerland_code" translatable="false">"ch"</string>
     <string name="country_switzerland_german_code" translatable="false">"ch-de"</string>
-    <string name="country_singapore_code" translatable="false">"sg"</string>
     <string name="country_singapore_english_code" translatable="false">"sg-en"</string>
     <string name="country_slovakia_code" translatable="false">"sk"</string>
     <string name="country_switzerland_french_code" translatable="false">"ch-fr"</string>
@@ -161,7 +154,5 @@
     <string name="country_greece_code" translatable="false">"gr"</string>
     <string name="country_taiwan_code" translatable="false">"tw"</string>
     <string name="country_hong_kong_chinese_code" translatable="false">"hk-zh"</string>
-
-
 
 </resources>

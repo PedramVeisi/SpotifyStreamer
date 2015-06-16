@@ -4,13 +4,13 @@
         <item>@string/country_andorra_code</item>
         <item>@string/country_argentina_code</item>
         <item>@string/country_australia_code</item>
-        <item>@string/country_belgium_code</item>
-        <item>@string/country_belgium_code</item>
+        <item>@string/country_belgium_french_code</item>
+        <item>@string/country_belgium_dutch_code</item>
         <item>@string/country_bolivia_code</item>
         <item>@string/country_brazil_code</item>
         <item>@string/country_bulgaria_code</item>
-        <item>@string/country_canada_code</item>
-        <item>@string/country_canada_code</item>
+        <item>@string/country_canada_english_code</item>
+        <item>@string/country_canada_french_code</item>
         <item>@string/country_chile_code</item>
         <item>@string/country_colombia_code</item>
         <item>@string/country_costa_rica_code</item>
@@ -26,18 +26,18 @@
         <item>@string/country_france_code</item>
         <item>@string/country_guatemala_code</item>
         <item>@string/country_honduras_code</item>
-        <item>@string/country_hong_kong_code</item>
+        <item>@string/country_hong_kong_english_code</item>
         <item>@string/country_iceland_code</item>
         <item>@string/country_ireland_code</item>
         <item>@string/country_italy_code</item>
         <item>@string/country_latvia_code</item>
         <item>@string/country_liechtenstein_code</item>
         <item>@string/country_lithuania_code</item>
-        <item>@string/country_luxembourg_code</item>
-        <item>@string/country_luxembourg_code</item>
+        <item>@string/country_luxembourg_french_code</item>
+        <item>@string/country_luxembourg_german_code</item>
         <item>@string/country_hungary_code</item>
-        <item>@string/country_malaysia_code</item>
-        <item>@string/country_malaysia_code</item>
+        <item>@string/country_malaysia_english_code</item>
+        <item>@string/country_malaysia_melayu_code</item>
         <item>@string/country_malta_code</item>
         <item>@string/country_monoco_code</item>
         <item>@string/country_mexico_code</item>
@@ -52,10 +52,10 @@
         <item>@string/country_poland_code</item>
         <item>@string/country_portugal_code</item>
         <item>@string/country_dominican_republic_code</item>
-        <item>@string/country_switzerland_code</item>
-        <item>@string/country_singapore_code</item>
+        <item>@string/country_switzerland_german_code</item>
+        <item>@string/country_singapore_english_code</item>
         <item>@string/country_slovakia_code</item>
-        <item>@string/country_switzerland_code</item>
+        <item>@string/country_switzerland_french_code</item>
         <item>@string/country_sweden_code</item>
         <item>@string/country_turkey_code</item>
         <item>@string/country_usa_code</item>
@@ -64,7 +64,7 @@
         <item>@string/country_austria_code</item>
         <item>@string/country_greece_code</item>
         <item>@string/country_taiwan_code</item>
-        <item>@string/country_hong_kong_code</item>
+        <item>@string/country_hong_kong_chinese_code</item>
     </string-array>
     <string-array name="pref_countries_entries">
         <item>@string/country_andorra</item>
