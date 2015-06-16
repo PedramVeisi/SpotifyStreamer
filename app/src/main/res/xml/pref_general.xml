@@ -2,10 +2,11 @@
 <PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
 
     <ListPreference
-        android:defaultValue="Ca"
+        android:defaultValue="@string/country_canada_code"
         android:entries="@array/pref_countries_entries"
         android:entryValues="@array/pref_countries_values"
         android:key="@string/pref_country_key"
-        android:title="Country" />
+        android:title="Country"
+        />
 
 </PreferenceScreen>
