@@ -47,6 +47,9 @@ public class TopTracksActivityFragment extends Fragment {
         final View emptyView = (View) rootView.findViewById(R.id.empty_list_message_view);
         topTracksListView.setEmptyView(emptyView);
 
+        // To make sure user won't see "No track found" message before tracks are loaded!
+        emptyView.setVisibility(View.GONE);
+
         GetTopTracks getTopTracks = new GetTopTracks();
         getTopTracks.execute(artistId);
 
