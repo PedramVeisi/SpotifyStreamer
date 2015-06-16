@@ -1,4 +1,4 @@
-package ir.veisi.pedram.spotifystreamer.datamodels;
+package ir.veisi.pedram.spotifystreamer.models;
 
 import java.util.List;
 

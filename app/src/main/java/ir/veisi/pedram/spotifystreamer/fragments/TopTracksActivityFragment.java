@@ -15,9 +15,11 @@ import java.util.Locale;
 import java.util.Map;
 
 import ir.veisi.pedram.spotifystreamer.R;
+import ir.veisi.pedram.spotifystreamer.models.TrackGist;
 import ir.veisi.pedram.spotifystreamer.lists.adapters.TopTracksListAdapter;
 import kaaes.spotify.webapi.android.SpotifyApi;
 import kaaes.spotify.webapi.android.SpotifyService;
+import kaaes.spotify.webapi.android.models.Image;
 import kaaes.spotify.webapi.android.models.Track;
 
 /**
@@ -39,7 +41,7 @@ public class TopTracksActivityFragment extends Fragment {
         String artistId = getActivity().getIntent().getStringExtra(getResources().getString(R.string.intent_artist_id_name));
 
         // Instantiate the adapter
-        mTracksAdapter = new TopTracksListAdapter(getActivity(), R.layout.list_item_top_tracks, new ArrayList<Track>());
+        mTracksAdapter = new TopTracksListAdapter(getActivity(), R.layout.list_item_top_tracks, new ArrayList<TrackGist>());
 
         ListView topTracksListView = (ListView) rootView.findViewById(R.id.artist_top_tracks_listview);
         topTracksListView.setAdapter(mTracksAdapter);
@@ -56,7 +58,7 @@ public class TopTracksActivityFragment extends Fragment {
         return rootView;
     }
 
-    public class GetTopTracks extends AsyncTask<String, Void, List<Track>> {
+    public class GetTopTracks extends AsyncTask<String, Void, List<TrackGist>> {
 
         /**
          * Override this method to perform a computation on a background thread. The
@@ -73,7 +75,7 @@ public class TopTracksActivityFragment extends Fragment {
          * @see #publishProgress
          */
         @Override
-        protected List<Track> doInBackground(String... params) {
+        protected List<TrackGist> doInBackground(String... params) {
 
             // Nothing to do
             if (params.length == 0) {
@@ -89,12 +91,37 @@ public class TopTracksActivityFragment extends Fragment {
             // TODO Add country selection to settings
             options.put(SpotifyService.COUNTRY, Locale.getDefault().getCountry());
 
-            List<Track> tracks = spotify.getArtistTopTrack(artistId, options).tracks;
+            List<Track> resultTracks = spotify.getArtistTopTrack(artistId, options).tracks;
+
+            // Shrinking data size by extracting what we want
+            List<TrackGist> tracks = new ArrayList<TrackGist>();
+
+            String largeAlbumThumbnailUrl;
+            String smallAlbumThumbnailUrl;
+
+            for (Track track : resultTracks){
+                // Fill the thumbnail variables with the first image and change them later if wanted sizes exist.
+                largeAlbumThumbnailUrl = track.album.images.get(0).url;
+                smallAlbumThumbnailUrl =  track.album.images.get(0).url;
+                for (Image image : track.album.images){
+                    if (image.width == 640){
+                        largeAlbumThumbnailUrl = image.url;
+                    }
+                    else if(image.width == 200){
+                        smallAlbumThumbnailUrl = image.url;
+                    }
+                }
+
+                // Now we have everything. Creating our summarized track
+                tracks.add(new TrackGist(track.name, track.album.name, largeAlbumThumbnailUrl, smallAlbumThumbnailUrl, track.preview_url));
+
+            }
+
             return tracks;
         }
 
         @Override
-        protected void onPostExecute(List<Track> tracks) {
+        protected void onPostExecute(List<TrackGist> tracks) {
             mTracksAdapter.clear();
             if (tracks.size() != 0) {
                 mTracksAdapter.addAll(tracks);

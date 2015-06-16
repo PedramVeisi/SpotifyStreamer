@@ -14,7 +14,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import ir.veisi.pedram.spotifystreamer.R;
-import ir.veisi.pedram.spotifystreamer.datamodels.ArtistGist;
+import ir.veisi.pedram.spotifystreamer.models.ArtistGist;
 import ir.veisi.pedram.spotifystreamer.imagetools.PicassoRoundTransform;
 
 /**

@@ -21,7 +21,7 @@ import java.util.Map;
 
 import ir.veisi.pedram.spotifystreamer.R;
 import ir.veisi.pedram.spotifystreamer.activities.TopTracksActivity;
-import ir.veisi.pedram.spotifystreamer.datamodels.ArtistGist;
+import ir.veisi.pedram.spotifystreamer.models.ArtistGist;
 import ir.veisi.pedram.spotifystreamer.lists.adapters.ArtistsListAdapter;
 import kaaes.spotify.webapi.android.SpotifyApi;
 import kaaes.spotify.webapi.android.SpotifyService;
@@ -138,7 +138,6 @@ public class ArtistSearchFragment extends Fragment {
             options.put(SpotifyService.COUNTRY, Locale.getDefault().getCountry());
 
             List<Artist> resultArtists = spotify.searchArtists(artistName, options).artists.items;
-
             List<ArtistGist> artists = new ArrayList<ArtistGist>();
 
             // Extracting required information. Using ArtistModel class, we don't need to pass all the artist data around.

@@ -14,15 +14,15 @@ import java.util.List;
 
 import ir.veisi.pedram.spotifystreamer.R;
 import ir.veisi.pedram.spotifystreamer.imagetools.PicassoRoundTransform;
-import kaaes.spotify.webapi.android.models.Track;
+import ir.veisi.pedram.spotifystreamer.models.TrackGist;
 
 /**
  * Created by pedram on 10/06/15.
  */
-public class TopTracksListAdapter extends ArrayAdapter<Track> {
+public class TopTracksListAdapter extends ArrayAdapter<TrackGist> {
 
     private Context mContext;
-    private List<Track> mTracks;
+    private List<TrackGist> mTracks;
 
     /**
      * Constructor
@@ -30,9 +30,9 @@ public class TopTracksListAdapter extends ArrayAdapter<Track> {
      * @param context  The current context.
      * @param resource The resource ID for a layout file containing a TextView to use when
      *                 instantiating views.
-     * @param tracks  The tracks to represent in the ListView.
+     * @param tracks   The tracks to represent in the ListView.
      */
-    public TopTracksListAdapter(Context context, int resource, List<Track> tracks) {
+    public TopTracksListAdapter(Context context, int resource, List<TrackGist> tracks) {
         super(context, resource, tracks);
         this.mContext = context;
         this.mTracks = tracks;
@@ -54,20 +54,21 @@ public class TopTracksListAdapter extends ArrayAdapter<Track> {
             convertView.setTag(viewHolder);
         }
 
-        Track track = mTracks.get(position);
+        TrackGist track = mTracks.get(position);
 
         ViewHolder viewHolder = (ViewHolder) convertView.getTag();
-        viewHolder.trackName.setText(track.name);
+        viewHolder.trackName.setText(track.getTrackName());
 
         // Set genre(s)
-        viewHolder.trackAlbum.setText(track.album.name);
-
+        viewHolder.trackAlbum.setText(track.getAlbumName());
 
 
         // Set track image
-        if (track.album.images.size() != 0) {
-            // Set the track image
-            Picasso.with(mContext).load(track.album.images.get(0).url).transform(new PicassoRoundTransform()).into(viewHolder.trackAlbumImage);
+        if (track.getSmallAlbumThumbnail() != null) {
+            // Set the track image (small thumbnail)
+            Picasso.with(mContext).load(track.getSmallAlbumThumbnail()).transform(new PicassoRoundTransform()).into(viewHolder.trackAlbumImage);
+        } else {
+            viewHolder.trackAlbumImage.setImageResource(R.drawable.no_image_available);
         }
 
         return convertView;
