@@ -1,7 +1,9 @@
 package ir.veisi.pedram.spotifystreamer.fragments;
 
+import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -11,7 +13,6 @@ import android.widget.ListView;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Locale;
 import java.util.Map;
 
 import ir.veisi.pedram.spotifystreamer.R;
@@ -88,10 +89,18 @@ public class TopTracksActivityFragment extends Fragment {
             SpotifyApi api = new SpotifyApi();
             SpotifyService spotify = api.getService();
 
-            Map<String, Object> options = new HashMap<>();
+            // Reading Country code from settings
+            SharedPreferences sharedPrefs = PreferenceManager.getDefaultSharedPreferences(getActivity());
+            String countryCode = sharedPrefs.getString(getString(R.string.pref_country_key), getString(R.string.pref_country_default_value));
 
-            // TODO Add country selection to settings
-            options.put(SpotifyService.COUNTRY, Locale.getDefault().getCountry());
+            // Some countries such as Canada have two codes indicating language (ca-en, ca-fr).
+            // To requests artists or tracks language doesn't matter. This line will extract the country
+            // code and removes the language part (for Canada result is ca)
+            String country = countryCode.split("-")[0];
+
+            // Adding country to search parameters
+            Map<String, Object> options = new HashMap<>();
+            options.put(SpotifyService.COUNTRY, country);
 
             List<Track> resultTracks = spotify.getArtistTopTrack(artistId, options).tracks;
 
