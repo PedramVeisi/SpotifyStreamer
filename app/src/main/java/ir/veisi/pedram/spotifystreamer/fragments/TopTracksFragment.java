@@ -29,6 +29,7 @@ import kaaes.spotify.webapi.android.models.Track;
 public class TopTracksFragment extends Fragment {
 
     private TopTracksListAdapter mTracksAdapter;
+    private ArrayList<TrackGist> tracks = new ArrayList<TrackGist>();
 
     public TopTracksFragment() {
     }
@@ -55,14 +56,28 @@ public class TopTracksFragment extends Fragment {
         // To make sure user won't see "No track found" message before tracks are loaded!
         emptyView.setVisibility(View.GONE);
 
-        // Getting the top tracks off the UI thread.
-        GetTopTracks getTopTracks = new GetTopTracks();
-        getTopTracks.execute(artistId);
+        // If user is rotating the screen, get the track data from savedInstanceState
+        if (savedInstanceState != null) {
+            tracks = savedInstanceState.getParcelableArrayList(getString(R.string.state_tracks));
+            mTracksAdapter.clear();
+            mTracksAdapter.addAll(tracks);
+        } else {
+            // Getting the top tracks off the UI thread.
+            GetTopTracks getTopTracks = new GetTopTracks();
+            getTopTracks.execute(artistId);
+        }
 
         return rootView;
     }
 
-    public class GetTopTracks extends AsyncTask<String, Void, List<TrackGist>> {
+    @Override
+    public void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        // Saving state in case user is rotating the device
+        outState.putParcelableArrayList(getString(R.string.state_tracks), tracks);
+    }
+
+    public class GetTopTracks extends AsyncTask<String, Void, ArrayList<TrackGist>> {
         /**
          * Override this method to perform a computation on a background thread. The
          * specified parameters are the parameters passed to {@link #execute}
@@ -78,7 +93,7 @@ public class TopTracksFragment extends Fragment {
          * @see #publishProgress
          */
         @Override
-        protected List<TrackGist> doInBackground(String... params) {
+        protected ArrayList<TrackGist> doInBackground(String... params) {
 
             // Nothing to do
             if (params.length == 0) {
@@ -104,41 +119,39 @@ public class TopTracksFragment extends Fragment {
 
             List<Track> resultTracks = spotify.getArtistTopTrack(artistId, options).tracks;
 
-            // Shrinking data size by extracting what we want
-            List<TrackGist> tracks = new ArrayList<TrackGist>();
-
             String largeAlbumThumbnailUrl;
             String smallAlbumThumbnailUrl;
 
-            for (Track track : resultTracks){
+            ArrayList<TrackGist> trackGists = new ArrayList<TrackGist>();
+
+            for (Track track : resultTracks) {
                 // Fill the thumbnail variables with the first image and change them later if wanted sizes exist.
                 largeAlbumThumbnailUrl = track.album.images.get(0).url;
-                smallAlbumThumbnailUrl =  track.album.images.get(0).url;
+                smallAlbumThumbnailUrl = track.album.images.get(0).url;
 
                 // Get desired thumbnail sizes in case they exist
-                for (Image image : track.album.images){
-                    if (image.width == getResources().getInteger(R.integer.album_art_large_thumbnail_width)){
+                for (Image image : track.album.images) {
+                    if (image.width == getResources().getInteger(R.integer.album_art_large_thumbnail_width)) {
                         largeAlbumThumbnailUrl = image.url;
-                    }
-                    else if(image.width == getResources().getInteger(R.integer.album_art_small_thumbnail_width)){
+                    } else if (image.width == getResources().getInteger(R.integer.album_art_small_thumbnail_width)) {
                         smallAlbumThumbnailUrl = image.url;
                     }
                 }
 
                 // Now we have everything. Creating our summarized track
-                tracks.add(new TrackGist(track.name, track.album.name, largeAlbumThumbnailUrl, smallAlbumThumbnailUrl, track.preview_url));
+                trackGists.add(new TrackGist(track.name, track.album.name, largeAlbumThumbnailUrl, smallAlbumThumbnailUrl, track.preview_url));
             }
 
-            return tracks;
+            return trackGists;
         }
 
         @Override
-        protected void onPostExecute(List<TrackGist> tracks) {
+        protected void onPostExecute(ArrayList<TrackGist> trackGists) {
+            tracks = trackGists;
             mTracksAdapter.clear();
-            if (tracks.size() != 0) {
-                mTracksAdapter.addAll(tracks);
+            if (trackGists.size() != 0) {
+                mTracksAdapter.addAll(trackGists);
             }
         }
     }
-
 }

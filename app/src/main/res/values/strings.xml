@@ -14,6 +14,7 @@
     <!-- Top tracks activity -->
     <string name="title_activity_top_tracks">Top 10 Tracks</string>
     <string name="no_track_found">No tracks found!</string>
+    <string name="state_tracks" translatable="false">state_tracks</string>
 
     <!-- Intent names -->
     <string name="intent_artist_id" translatable="false">intent.ARTIST_ID</string>
