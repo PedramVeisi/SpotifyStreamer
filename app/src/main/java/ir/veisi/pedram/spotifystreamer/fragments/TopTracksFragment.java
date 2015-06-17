@@ -63,7 +63,6 @@ public class TopTracksFragment extends Fragment {
     }
 
     public class GetTopTracks extends AsyncTask<String, Void, List<TrackGist>> {
-
         /**
          * Override this method to perform a computation on a background thread. The
          * specified parameters are the parameters passed to {@link #execute}
