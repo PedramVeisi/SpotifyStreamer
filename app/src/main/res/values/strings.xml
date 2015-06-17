@@ -16,7 +16,7 @@
     <string name="no_track_found">No tracks found!</string>
 
     <!-- Intent names -->
-    <string name="intent_artist_id_name" translatable="false">intent.ARTIST_ID</string>
+    <string name="intent_artist_id" translatable="false">intent.ARTIST_ID</string>
 
     <!-- Preferences -->
     <string name="title_settings">Settings</string>

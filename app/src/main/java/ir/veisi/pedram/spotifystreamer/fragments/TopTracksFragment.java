@@ -40,7 +40,7 @@ public class TopTracksFragment extends Fragment {
         View rootView = inflater.inflate(R.layout.fragment_top_tracks, container, false);
 
         // Get artistId from calling activity
-        String artistId = getActivity().getIntent().getStringExtra(getResources().getString(R.string.intent_artist_id_name));
+        String artistId = getActivity().getIntent().getStringExtra(getResources().getString(R.string.intent_artist_id));
 
         // Instantiate the adapter
         mTracksAdapter = new TopTracksListAdapter(getActivity(), R.layout.list_item_top_tracks, new ArrayList<TrackGist>());
