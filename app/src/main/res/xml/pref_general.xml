@@ -8,7 +8,7 @@
             android:entries="@array/pref_countries_entries"
             android:entryValues="@array/pref_countries_values"
             android:key="@string/pref_country_key"
-            android:title="Country" />
+            android:title="@string/country" />
 
     </PreferenceCategory>
 

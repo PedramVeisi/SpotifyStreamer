@@ -66,6 +66,7 @@
         <item>@string/country_taiwan_code</item>
         <item>@string/country_hong_kong_chinese_code</item>
     </string-array>
+
     <string-array name="pref_countries_entries">
         <item>@string/country_andorra</item>
         <item>@string/country_argentina</item>

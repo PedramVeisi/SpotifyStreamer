@@ -9,11 +9,11 @@
 
     <!-- Search for artist activity -->
     <string name="search_for_an_artist">Search for an artist...</string>
-    <string name="no_artist_found">No Artist Found!</string>
+    <string name="no_artist_found">No Artists Found!</string>
 
     <!-- Top tracks activity -->
     <string name="title_activity_top_tracks">Top 10 Tracks</string>
-    <string name="no_track_found">No track found!</string>
+    <string name="no_track_found">No tracks found!</string>
 
     <!-- Intent names -->
     <string name="intent_artist_id_name" translatable="false">intent.ARTIST_ID</string>
@@ -21,6 +21,7 @@
     <!-- Preferences -->
     <string name="title_settings">Settings</string>
     <string name="prefs_country_and_languages_settings">Country and Languages Settings</string>
+    <string name="country">Country</string>
     <string name="pref_country_key" translatable="false">country</string>
     <string name="pref_country_default_value" translatable="false">ca</string>
 
