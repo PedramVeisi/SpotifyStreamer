@@ -6,6 +6,7 @@ import kaaes.spotify.webapi.android.models.Image;
 
 /**
  * Created by pedram on 12/06/15.
+ * This class is used to summarize the returned artist from Spotify and store the data we need.
  */
 public class ArtistGist {
     private String mArtistId;
@@ -20,18 +21,22 @@ public class ArtistGist {
         this.mArtistGenres = artistGenres;
     }
 
+    // Returns artist's ID
     public String getId() {
         return mArtistId;
     }
 
+    // Returns artist's name
     public String getName() {
         return mArtistName;
     }
 
+    // Returns list of artist's images
     public List<Image> getImages() {
         return mArtistImages;
     }
 
+    // Returns list of genres
     public List<String> getGenres() {
         return mArtistGenres;
     }

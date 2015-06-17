@@ -62,8 +62,6 @@ public class TopTracksListAdapter extends ArrayAdapter<TrackGist> {
         // Set genre(s)
         viewHolder.trackAlbum.setText(track.getAlbumName());
 
-
-        // Set track image
         if (track.getSmallAlbumThumbnail() != null) {
             // Set the track image (small thumbnail)
             Picasso.with(mContext).load(track.getSmallAlbumThumbnail()).transform(new PicassoRoundTransform()).into(viewHolder.trackAlbumImage);
@@ -74,6 +72,9 @@ public class TopTracksListAdapter extends ArrayAdapter<TrackGist> {
         return convertView;
     }
 
+    /*
+    * ViewHolder class in order to make the listview scrolling smooth
+    */
     static class ViewHolder {
         TextView trackName;
         TextView trackAlbum;

@@ -76,7 +76,8 @@ public class ArtistSearchFragment extends Fragment {
 
             // Using a timer to delay search. It will help preventing multiple API calls while user is still typing
             Timer timer = new Timer();
-            private final long delay = getResources().getInteger(R.integer.artist_search_delay); // in ms
+            // Search delay time in ms
+            private final long delay = getResources().getInteger(R.integer.artist_search_delay);
 
             @Override
             public void afterTextChanged(Editable s) {
@@ -99,7 +100,7 @@ public class ArtistSearchFragment extends Fragment {
                 else{
                     // If the search box is empty cancel the timer to prevent delayed listview population,
                     // clear the adapter to empty the list (if not already)
-                    //  and don't show the "No Artist Found" message.
+                    // and don't show the "No Artist Found" message.
                     timer.cancel();
                     mArtistsAdapter.clear();
                     emptyView.setVisibility(View.GONE);

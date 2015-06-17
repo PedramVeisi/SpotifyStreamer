@@ -27,7 +27,7 @@ public class ArtistsListAdapter extends ArrayAdapter<ArtistGist> {
 
     /**
      * Constructor
-     *  @param context  The current context.
+     * @param context  The current context.
      * @param resource The resource ID for a layout file containing a TextView to use when
      *                 instantiating views.
      * @param artists  The artists to represent in the ListView.
@@ -54,6 +54,7 @@ public class ArtistsListAdapter extends ArrayAdapter<ArtistGist> {
             convertView.setTag(viewHolder);
         }
 
+        // Get the current artist
         ArtistGist artist = mArtists.get(position);
 
         ViewHolder viewHolder = (ViewHolder) convertView.getTag();
@@ -74,7 +75,6 @@ public class ArtistsListAdapter extends ArrayAdapter<ArtistGist> {
             viewHolder.genres.setText(allGenres);
         }
 
-        // Set artist image
         if (artist.getImages().size() != 0) {
             // Set the artist image
             Picasso.with(mContext).load(artist.getImages().get(0).url).transform(new PicassoRoundTransform()).into(viewHolder.artistImage);
@@ -83,6 +83,9 @@ public class ArtistsListAdapter extends ArrayAdapter<ArtistGist> {
         return convertView;
     }
 
+    /*
+    * ViewHolder class in order to make the listview scrolling smooth
+    */
     static class ViewHolder {
         TextView artistName;
         TextView genres;
