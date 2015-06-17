@@ -14,9 +14,7 @@ public class TopTracksActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_top_tracks);
-
     }
-
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -34,7 +32,7 @@ public class TopTracksActivity extends AppCompatActivity {
 
         //noinspection SimplifiableIfStatement
         if (id == R.id.action_settings) {
-
+            // Start SettingsActivity from menu
             Intent intent = new Intent(this, SettingsActivity.class);
             startActivity(intent);
 
