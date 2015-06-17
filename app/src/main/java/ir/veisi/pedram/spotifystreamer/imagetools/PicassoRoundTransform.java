@@ -10,22 +10,7 @@ import com.squareup.picasso.Transformation;
 /**
  * Created by pedram on 10/06/15.
  */
-public class PicassoRoundTransform implements Transformation
-{
-    private final int radius;
-    private final int margin;  // dp
-
-    public PicassoRoundTransform()
-    {
-        this.radius = 0;
-        this.margin = 0;
-    }
-
-    public PicassoRoundTransform(final int radius, final int margin)
-    {
-        this.radius = radius;
-        this.margin = margin;
-    }
+public class PicassoRoundTransform implements Transformation {
 
     @Override
     public Bitmap transform(Bitmap source) {
