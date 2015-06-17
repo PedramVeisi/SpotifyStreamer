@@ -99,7 +99,7 @@ public class ArtistSearchFragment extends Fragment {
                 else{
                     // If the search box is empty cancel the timer to prevent delayed listview population,
                     // clear the adapter to empty the list (if not already)
-                    // and don't show the "No Artist Found" message.
+                    //  and don't show the "No Artist Found" message.
                     timer.cancel();
                     mArtistsAdapter.clear();
                     emptyView.setVisibility(View.GONE);
