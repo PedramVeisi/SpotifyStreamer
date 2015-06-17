@@ -134,10 +134,7 @@ public class ArtistSearchFragment extends Fragment {
             SpotifyApi api = new SpotifyApi();
             SpotifyService spotify = api.getService();
 
-            Map<String, Object> options = new HashMap<>();
-
             // Reading Country code from settings
-
             SharedPreferences sharedPrefs = PreferenceManager.getDefaultSharedPreferences(getActivity());
             String countryCode = sharedPrefs.getString(getString(R.string.pref_country_key), getString(R.string.pref_country_default_value));
 
@@ -146,6 +143,8 @@ public class ArtistSearchFragment extends Fragment {
             // code and removes the language part (for Canada result is ca)
             String country = countryCode.split("-")[0];
 
+            // Adding country to search parameters
+            Map<String, Object> options = new HashMap<>();
             options.put(SpotifyService.COUNTRY, country);
 
             List<Artist> resultArtists = spotify.searchArtists(artistName, options).artists.items;
