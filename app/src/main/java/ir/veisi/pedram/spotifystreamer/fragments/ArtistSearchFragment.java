@@ -1,8 +1,10 @@
 package ir.veisi.pedram.spotifystreamer.fragments;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.support.v4.app.Fragment;
 import android.text.Editable;
 import android.text.TextWatcher;
@@ -16,13 +18,12 @@ import android.widget.ListView;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Locale;
 import java.util.Map;
 
 import ir.veisi.pedram.spotifystreamer.R;
 import ir.veisi.pedram.spotifystreamer.activities.TopTracksActivity;
-import ir.veisi.pedram.spotifystreamer.models.ArtistGist;
 import ir.veisi.pedram.spotifystreamer.lists.adapters.ArtistsListAdapter;
+import ir.veisi.pedram.spotifystreamer.models.ArtistGist;
 import kaaes.spotify.webapi.android.SpotifyApi;
 import kaaes.spotify.webapi.android.SpotifyService;
 import kaaes.spotify.webapi.android.models.Artist;
@@ -135,8 +136,17 @@ public class ArtistSearchFragment extends Fragment {
 
             Map<String, Object> options = new HashMap<>();
 
-            // TODO Add country selection to settings
-            options.put(SpotifyService.COUNTRY, Locale.getDefault().getCountry());
+            // Reading Country code from settings
+
+            SharedPreferences sharedPrefs = PreferenceManager.getDefaultSharedPreferences(getActivity());
+            String countryCode = sharedPrefs.getString(getString(R.string.pref_country_key), getString(R.string.pref_country_default_value));
+
+            // Some countries such as Canada have two codes indicating language (ca-en, ca-fr).
+            // To requests artists or tracks language doesn't matter. This line will extract the country
+            // code and removes the language part (for Canada result is ca)
+            String country = countryCode.split("-")[0];
+
+            options.put(SpotifyService.COUNTRY, country);
 
             List<Artist> resultArtists = spotify.searchArtists(artistName, options).artists.items;
             List<ArtistGist> artists = new ArrayList<ArtistGist>();

@@ -20,8 +20,9 @@
 
     <!-- Preferences -->
     <string name="title_settings">Settings</string>
-    <string name="pref_country_key" translatable="false">country</string>
     <string name="prefs_country_and_languages_settings">Country and Languages Settings</string>
+    <string name="pref_country_key" translatable="false">country</string>
+    <string name="pref_country_default_value" translatable="false">ca</string>
 
     <!-- Country Names -->
     <string name="country_andorra">Andorra</string>
