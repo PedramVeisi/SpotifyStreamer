@@ -26,11 +26,11 @@ import kaaes.spotify.webapi.android.models.Track;
 /**
  * A placeholder fragment containing a simple view.
  */
-public class TopTracksActivityFragment extends Fragment {
+public class TopTracksFragment extends Fragment {
 
     private TopTracksListAdapter mTracksAdapter;
 
-    public TopTracksActivityFragment() {
+    public TopTracksFragment() {
     }
 
     @Override
