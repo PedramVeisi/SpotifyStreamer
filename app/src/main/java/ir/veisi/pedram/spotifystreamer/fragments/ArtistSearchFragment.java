@@ -19,6 +19,8 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Timer;
+import java.util.TimerTask;
 
 import ir.veisi.pedram.spotifystreamer.R;
 import ir.veisi.pedram.spotifystreamer.activities.TopTracksActivity;
@@ -70,23 +72,38 @@ public class ArtistSearchFragment extends Fragment {
 
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
-                String query = searchEditText.getText().toString();
+            }
+
+            // Using a timer to delay search. It will help preventing multiple API calls while user is still typing
+            Timer timer = new Timer();
+            private final long delay = getResources().getInteger(R.integer.artist_search_delay); // in ms
+
+            @Override
+            public void afterTextChanged(Editable s) {
+                final String query = searchEditText.getText().toString();
 
                 // Check for null or empty string to avoid exception thrown because of bad request.
                 // With empty string the listview will be cleared.
                 if (!"".equals(query)) {
-                    SearchForArtist searchTask = new SearchForArtist();
-                    searchTask.execute(query);
+                    // Create a time and wait for the specified delay time then perform the search
+                    timer.cancel();
+                    timer = new Timer();
+                    timer.schedule(new TimerTask() {
+                        @Override
+                        public void run() {
+                            SearchForArtist searchTask = new SearchForArtist();
+                            searchTask.execute(query);
+                        }
+                    }, delay);
                 }
                 else{
+                    // If the search box is empty cancel the timer to prevent delayed listview population,
+                    // clear the adapter to empty the list (if not already)
+                    //  and don't show the "No Artist Found" message.
+                    timer.cancel();
                     mArtistsAdapter.clear();
-                    // If the search box is empty, don't show "No Artist Found" message.
                     emptyView.setVisibility(View.GONE);
                 }
-            }
-
-            @Override
-            public void afterTextChanged(Editable s) {
             }
         });
 
@@ -134,17 +151,16 @@ public class ArtistSearchFragment extends Fragment {
             SpotifyApi api = new SpotifyApi();
             SpotifyService spotify = api.getService();
 
+            Map<String, Object> options = new HashMap<>();
+
             // Reading Country code from settings
+
             SharedPreferences sharedPrefs = PreferenceManager.getDefaultSharedPreferences(getActivity());
             String countryCode = sharedPrefs.getString(getString(R.string.pref_country_key), getString(R.string.pref_country_default_value));
 
-            // Some countries such as Canada have two codes indicating language (ca-en, ca-fr).
-            // To requests artists or tracks language doesn't matter. This line will extract the country
-            // code and removes the language part (for Canada result is ca)
+            // Some countries such as Canada have two codes indicating language (ca-en, ca-fr)
             String country = countryCode.split("-")[0];
 
-            // Adding country to search parameters
-            Map<String, Object> options = new HashMap<>();
             options.put(SpotifyService.COUNTRY, country);
 
             List<Artist> resultArtists = spotify.searchArtists(artistName, options).artists.items;
