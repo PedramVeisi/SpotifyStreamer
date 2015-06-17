@@ -45,7 +45,6 @@ public class ArtistSearchFragment extends Fragment {
         // Inflating fragment's view to customize it
         View rootView = inflater.inflate(R.layout.fragment_artist_search, container, false);
 
-
         // Instantiate the adapter
         mArtistsAdapter = new ArtistsListAdapter(getActivity(), R.layout.list_item_artists, new ArrayList<ArtistGist>());
 
@@ -62,6 +61,7 @@ public class ArtistSearchFragment extends Fragment {
         // Find reference to search EditText
         final EditText searchEditText = (EditText) rootView.findViewById(R.id.search_artist_edit_text);
 
+        // Implementing live search
         searchEditText.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
@@ -89,6 +89,7 @@ public class ArtistSearchFragment extends Fragment {
             }
         });
 
+        // Start TopTracksActivity for each artist
         artistsListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
@@ -100,12 +101,12 @@ public class ArtistSearchFragment extends Fragment {
         });
 
         return rootView;
-
     }
 
-
+    /*
+     *  AsyncTask to search for artists off the UI thread
+     */
     public class SearchForArtist extends AsyncTask<String, Void, List<ArtistGist>> {
-
         /**
          * Override this method to perform a computation on a background thread. The
          * specified parameters are the parameters passed to {@link #execute}
@@ -157,5 +158,4 @@ public class ArtistSearchFragment extends Fragment {
             }
         }
     }
-
 }
