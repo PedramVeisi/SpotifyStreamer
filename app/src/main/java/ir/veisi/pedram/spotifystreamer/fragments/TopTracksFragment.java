@@ -9,6 +9,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ListView;
+import android.widget.Toast;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -22,6 +23,7 @@ import kaaes.spotify.webapi.android.SpotifyApi;
 import kaaes.spotify.webapi.android.SpotifyService;
 import kaaes.spotify.webapi.android.models.Image;
 import kaaes.spotify.webapi.android.models.Track;
+import retrofit.RetrofitError;
 
 /**
  * A placeholder fragment containing a simple view.
@@ -117,29 +119,46 @@ public class TopTracksFragment extends Fragment {
             Map<String, Object> options = new HashMap<>();
             options.put(SpotifyService.COUNTRY, country);
 
-            List<Track> resultTracks = spotify.getArtistTopTrack(artistId, options).tracks;
+            List<Track> resultTracks;
+
+            try {
+                resultTracks = spotify.getArtistTopTrack(artistId, options).tracks;
+            } catch (RetrofitError e) {
+                e.printStackTrace();
+                // If there is any error, show a toast and return an empty list.
+                getActivity().runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        Toast.makeText(getActivity(), getString(R.string.error_loading_results), Toast.LENGTH_LONG).show();
+                    }
+                });
+                // Return an empty list
+                return new ArrayList<TrackGist>();
+            }
 
             String largeAlbumThumbnailUrl;
             String smallAlbumThumbnailUrl;
 
             ArrayList<TrackGist> trackGists = new ArrayList<TrackGist>();
 
-            for (Track track : resultTracks) {
-                // Fill the thumbnail variables with the first image and change them later if wanted sizes exist.
-                largeAlbumThumbnailUrl = track.album.images.get(0).url;
-                smallAlbumThumbnailUrl = track.album.images.get(0).url;
+            if (resultTracks != null){
+                for (Track track : resultTracks) {
+                    // Fill the thumbnail variables with the first image and change them later if wanted sizes exist.
+                    largeAlbumThumbnailUrl = track.album.images.get(0).url;
+                    smallAlbumThumbnailUrl = track.album.images.get(0).url;
 
-                // Get desired thumbnail sizes in case they exist
-                for (Image image : track.album.images) {
-                    if (image.width == getResources().getInteger(R.integer.album_art_large_thumbnail_width)) {
-                        largeAlbumThumbnailUrl = image.url;
-                    } else if (image.width == getResources().getInteger(R.integer.album_art_small_thumbnail_width)) {
-                        smallAlbumThumbnailUrl = image.url;
+                    // Get desired thumbnail sizes in case they exist
+                    for (Image image : track.album.images) {
+                        if (image.width == getResources().getInteger(R.integer.album_art_large_thumbnail_width)) {
+                            largeAlbumThumbnailUrl = image.url;
+                        } else if (image.width == getResources().getInteger(R.integer.album_art_small_thumbnail_width)) {
+                            smallAlbumThumbnailUrl = image.url;
+                        }
                     }
-                }
 
-                // Now we have everything. Creating our summarized track
-                trackGists.add(new TrackGist(track.name, track.album.name, largeAlbumThumbnailUrl, smallAlbumThumbnailUrl, track.preview_url));
+                    // Now we have everything. Creating our summarized track
+                    trackGists.add(new TrackGist(track.name, track.album.name, largeAlbumThumbnailUrl, smallAlbumThumbnailUrl, track.preview_url));
+                }
             }
 
             return trackGists;
