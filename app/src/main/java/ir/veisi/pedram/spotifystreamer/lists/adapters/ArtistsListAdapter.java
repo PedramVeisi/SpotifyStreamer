@@ -78,9 +78,9 @@ public class ArtistsListAdapter extends ArrayAdapter<ArtistGist> {
             viewHolder.genres.setText("");
         }
 
-        if (artist.getImages().size() != 0) {
+        if (artist.getImageUrl() != null) {
             // Set the artist image
-            Picasso.with(mContext).load(artist.getImages().get(0).url).transform(new PicassoRoundTransform()).into(viewHolder.artistImage);
+            Picasso.with(mContext).load(artist.getImageUrl()).transform(new PicassoRoundTransform()).into(viewHolder.artistImage);
         }
         else{ // Since view is recycled, in case of no images, ImageView should be updated.
             viewHolder.artistImage.setImageResource(R.drawable.no_image_available);

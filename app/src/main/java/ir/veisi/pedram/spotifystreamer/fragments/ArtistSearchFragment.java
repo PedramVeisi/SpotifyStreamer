@@ -40,13 +40,14 @@ public class ArtistSearchFragment extends Fragment {
 
     // Artist search result adapter
     private ArtistsListAdapter mArtistsAdapter;
+    private ArrayList<ArtistGist> artists;
 
     public ArtistSearchFragment() {
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
+                             final Bundle savedInstanceState) {
         // Inflating fragment's view to customize it
         View rootView = inflater.inflate(R.layout.fragment_artist_search, container, false);
 
@@ -88,7 +89,8 @@ public class ArtistSearchFragment extends Fragment {
                 // Check for null or empty string to avoid exception thrown because of bad request.
                 // With empty string the listview will be cleared.
                 if (!"".equals(query)) {
-                    // Create a time and wait for the specified delay time then perform the search
+
+                    // Create a timer and wait for the specified delay time then perform the search
                     timer.cancel();
                     timer = new Timer();
                     timer.schedule(new TimerTask() {
@@ -98,6 +100,7 @@ public class ArtistSearchFragment extends Fragment {
                             searchTask.execute(query);
                         }
                     }, delay);
+
                 } else {
                     // If the search box is empty cancel the timer to prevent delayed listview population,
                     // clear the adapter to empty the list (if not already)
@@ -121,6 +124,13 @@ public class ArtistSearchFragment extends Fragment {
         });
 
         return rootView;
+    }
+
+    @Override
+    public void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        // Saving state in case user is rotating the device
+        outState.putParcelableArrayList(getString(R.string.state_artists), artists);
     }
 
     /*
@@ -166,7 +176,7 @@ public class ArtistSearchFragment extends Fragment {
             options.put(SpotifyService.COUNTRY, country);
 
             List<Artist> resultArtists = null;
-            List<ArtistGist> artists = new ArrayList<ArtistGist>();
+            artists = new ArrayList<ArtistGist>();
 
             try {
                 resultArtists = spotify.searchArtists(artistName, options).artists.items;
@@ -185,7 +195,11 @@ public class ArtistSearchFragment extends Fragment {
             if (resultArtists != null) {
                 // Extracting required information. Using ArtistModel class, we don't need to pass all the artist data around.
                 for (Artist resultArtist : resultArtists) {
-                    ArtistGist artist = new ArtistGist(resultArtist.id, resultArtist.name, resultArtist.images, resultArtist.genres);
+                    String artistImage = null;
+                    if (resultArtist.images.size() != 0) {
+                        artistImage = resultArtist.images.get(0).url;
+                    }
+                    ArtistGist artist = new ArtistGist(resultArtist.id, resultArtist.name, artistImage, resultArtist.genres);
                     artists.add(artist);
                 }
 

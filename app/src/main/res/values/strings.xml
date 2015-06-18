@@ -158,5 +158,6 @@
     <string name="country_greece_code" translatable="false">"gr"</string>
     <string name="country_taiwan_code" translatable="false">"tw"</string>
     <string name="country_hong_kong_chinese_code" translatable="false">"hk-zh"</string>
+    <string name="state_artists">state_artists</string>
 
 </resources>

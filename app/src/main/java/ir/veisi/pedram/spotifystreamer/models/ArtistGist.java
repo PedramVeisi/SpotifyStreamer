@@ -3,10 +3,7 @@ package ir.veisi.pedram.spotifystreamer.models;
 import android.os.Parcel;
 import android.os.Parcelable;
 
-import java.util.ArrayList;
 import java.util.List;
-
-import kaaes.spotify.webapi.android.models.Image;
 
 /**
  * Created by pedram on 12/06/15.
@@ -16,7 +13,7 @@ public class ArtistGist implements Parcelable {
 
     private String mArtistId;
     private String mArtistName;
-    private List<Image> mArtistImages;
+    private String mArtistImageUrl;
     private List<String> mArtistGenres;
 
     // Read data from Parcel. Constructor auto-generated using Parcelable Generator Plugin
@@ -24,15 +21,14 @@ public class ArtistGist implements Parcelable {
     private ArtistGist(Parcel in) {
         this.mArtistId = in.readString();
         this.mArtistName = in.readString();
-        this.mArtistImages = new ArrayList<Image>();
-        in.readList(this.mArtistImages, List.class.getClassLoader());
+        this.mArtistImageUrl = in.readString();
         this.mArtistGenres = in.createStringArrayList();
     }
 
-    public ArtistGist(String artistId, String artistName, List<Image> artistImages, List<String> artistGenres){
+    public ArtistGist(String artistId, String artistName, String artistImageUrl, List<String> artistGenres){
         this.mArtistId = artistId;
         this.mArtistName = artistName;
-        this.mArtistImages = artistImages;
+        this.mArtistImageUrl = artistImageUrl;
         this.mArtistGenres = artistGenres;
     }
 
@@ -47,8 +43,8 @@ public class ArtistGist implements Parcelable {
     }
 
     // Returns list of artist's images
-    public List<Image> getImages() {
-        return mArtistImages;
+    public String getImageUrl() {
+        return mArtistImageUrl;
     }
 
     // Returns list of genres
@@ -68,7 +64,7 @@ public class ArtistGist implements Parcelable {
     public void writeToParcel(Parcel dest, int flags) {
         dest.writeString(this.mArtistId);
         dest.writeString(this.mArtistName);
-        dest.writeList(this.mArtistImages);
+        dest.writeString(this.mArtistImageUrl);
         dest.writeStringList(this.mArtistGenres);
     }
 
