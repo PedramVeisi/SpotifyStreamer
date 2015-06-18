@@ -14,6 +14,7 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.EditText;
 import android.widget.ListView;
+import android.widget.Toast;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -29,6 +30,7 @@ import ir.veisi.pedram.spotifystreamer.models.ArtistGist;
 import kaaes.spotify.webapi.android.SpotifyApi;
 import kaaes.spotify.webapi.android.SpotifyService;
 import kaaes.spotify.webapi.android.models.Artist;
+import retrofit.RetrofitError;
 
 
 /**
@@ -96,8 +98,7 @@ public class ArtistSearchFragment extends Fragment {
                             searchTask.execute(query);
                         }
                     }, delay);
-                }
-                else{
+                } else {
                     // If the search box is empty cancel the timer to prevent delayed listview population,
                     // clear the adapter to empty the list (if not already)
                     // and don't show the "No Artist Found" message.
@@ -164,13 +165,30 @@ public class ArtistSearchFragment extends Fragment {
 
             options.put(SpotifyService.COUNTRY, country);
 
-            List<Artist> resultArtists = spotify.searchArtists(artistName, options).artists.items;
+            List<Artist> resultArtists = null;
             List<ArtistGist> artists = new ArrayList<ArtistGist>();
 
-            // Extracting required information. Using ArtistModel class, we don't need to pass all the artist data around.
-            for (Artist resultArtist : resultArtists){
-                ArtistGist artist = new ArtistGist(resultArtist.id, resultArtist.name, resultArtist.images, resultArtist.genres);
-                artists.add(artist);
+            try {
+                resultArtists = spotify.searchArtists(artistName, options).artists.items;
+            } catch (RetrofitError e) {
+                e.printStackTrace();
+                // If there is any error, show a toast and return the artists which is an empty list.
+                getActivity().runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        Toast.makeText(getActivity(), getString(R.string.error_loading_results), Toast.LENGTH_LONG).show();
+                    }
+                });
+                return artists;
+            }
+
+            if (resultArtists != null) {
+                // Extracting required information. Using ArtistModel class, we don't need to pass all the artist data around.
+                for (Artist resultArtist : resultArtists) {
+                    ArtistGist artist = new ArtistGist(resultArtist.id, resultArtist.name, resultArtist.images, resultArtist.genres);
+                    artists.add(artist);
+                }
+
             }
 
             return artists;
