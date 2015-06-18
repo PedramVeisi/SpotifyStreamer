@@ -3,6 +3,7 @@
 
     <!-- General -->
     <string name="refine_search">Please refine your search.</string>
+    <string name="error_loading_results">Error in loading results. Please check you internet connection.</string>
 
     <!-- Toolbar Actions -->
     <string name="action_settings">Settings</string>
@@ -157,6 +158,5 @@
     <string name="country_greece_code" translatable="false">"gr"</string>
     <string name="country_taiwan_code" translatable="false">"tw"</string>
     <string name="country_hong_kong_chinese_code" translatable="false">"hk-zh"</string>
-    <string name="error_loading_results">Error in loading results. Please check you internet connection.</string>
 
 </resources>
