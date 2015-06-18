@@ -9,11 +9,11 @@ import android.os.Parcelable;
  */
 public class TrackGist implements Parcelable {
 
-    String mTrackName;
-    String mAlbumName;
-    String mLargeAlbumThumbnail;
-    String mSmallAlbumThumbnail;
-    String mPreviewUrl;
+    private String mTrackName;
+    private String mAlbumName;
+    private String mLargeAlbumThumbnail;
+    private String mSmallAlbumThumbnail;
+    private String mPreviewUrl;
 
     // Read data from Parcel. Constructor auto-generated using Parcelable Generator Plugin
     // https://github.com/mcharmas/android-parcelable-intellij-plugin
