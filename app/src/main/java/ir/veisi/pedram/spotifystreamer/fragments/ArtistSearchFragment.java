@@ -179,7 +179,7 @@ public class ArtistSearchFragment extends Fragment {
                         Toast.makeText(getActivity(), getString(R.string.error_loading_results), Toast.LENGTH_LONG).show();
                     }
                 });
-                return artists;
+                return new ArrayList<ArtistGist>();
             }
 
             if (resultArtists != null) {
