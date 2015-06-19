@@ -11,6 +11,7 @@
     <!-- Search for artist activity -->
     <string name="search_for_an_artist">Search for an artist...</string>
     <string name="no_artist_found">No Artists Found!</string>
+    <string name="state_artists" translatable="false">state_artists</string>
 
     <!-- Top tracks activity -->
     <string name="title_activity_top_tracks">Top 10 Tracks</string>
@@ -158,6 +159,5 @@
     <string name="country_greece_code" translatable="false">"gr"</string>
     <string name="country_taiwan_code" translatable="false">"tw"</string>
     <string name="country_hong_kong_chinese_code" translatable="false">"hk-zh"</string>
-    <string name="state_artists">state_artists</string>
 
 </resources>
