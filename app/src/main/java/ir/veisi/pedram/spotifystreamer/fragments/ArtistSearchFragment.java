@@ -202,15 +202,17 @@ public class ArtistSearchFragment extends Fragment {
             // Reading Country code from settings
 
             SharedPreferences sharedPrefs = PreferenceManager.getDefaultSharedPreferences(getActivity());
-            String countryCode = sharedPrefs.getString(getString(R.string.pref_country_key), getString(R.string.pref_country_default_value));
+            String country = sharedPrefs.getString(getString(R.string.pref_country_key), getString(R.string.pref_country_default_value));
 
             // Some countries such as Canada have two codes indicating language (ca-en, ca-fr)
-            String country = countryCode.split("-")[0];
+            if (country != null) {
+                country = country.split("-")[0];
+            }
 
             options.put(SpotifyService.COUNTRY, country);
 
-            List<Artist> resultArtists = null;
-            artists = new ArrayList<ArtistGist>();
+            List<Artist> resultArtists;
+            artists = new ArrayList<>();
 
             try {
                 resultArtists = spotify.searchArtists(artistName, options).artists.items;
@@ -223,7 +225,7 @@ public class ArtistSearchFragment extends Fragment {
                         Toast.makeText(getActivity(), getString(R.string.error_loading_results), Toast.LENGTH_LONG).show();
                     }
                 });
-                return new ArrayList<ArtistGist>();
+                return new ArrayList<>();
             }
 
             if (resultArtists != null) {
