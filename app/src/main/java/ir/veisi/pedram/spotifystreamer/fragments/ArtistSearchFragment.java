@@ -42,12 +42,16 @@ public class ArtistSearchFragment extends Fragment {
     private ArtistsListAdapter mArtistsAdapter;
     private ArrayList<ArtistGist> artists;
 
+    // Used to check if device is rotated. Checking for savedInstanceState is not enough
+    // since we have a live search and it can't be checked in afterTextChanged() method
+    private boolean rotationFlag = false;
+
     public ArtistSearchFragment() {
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             final Bundle savedInstanceState) {
+                             Bundle savedInstanceState) {
         // Inflating fragment's view to customize it
         View rootView = inflater.inflate(R.layout.fragment_artist_search, container, false);
 
@@ -63,6 +67,14 @@ public class ArtistSearchFragment extends Fragment {
 
         // To make sure user won't see "No artist found" message before searching anything!
         emptyView.setVisibility(View.GONE);
+
+        // If user is rotating the screen, get the track data from savedInstanceState
+        if (savedInstanceState != null) {
+            artists = savedInstanceState.getParcelableArrayList(getString(R.string.state_artists));
+            mArtistsAdapter.clear();
+            mArtistsAdapter.addAll(artists);
+            rotationFlag = true;
+        }
 
         // Find reference to search EditText
         final EditText searchEditText = (EditText) rootView.findViewById(R.id.search_artist_edit_text);
@@ -89,18 +101,20 @@ public class ArtistSearchFragment extends Fragment {
                 // Check for null or empty string to avoid exception thrown because of bad request.
                 // With empty string the listview will be cleared.
                 if (!"".equals(query)) {
-
-                    // Create a timer and wait for the specified delay time then perform the search
-                    timer.cancel();
-                    timer = new Timer();
-                    timer.schedule(new TimerTask() {
-                        @Override
-                        public void run() {
-                            SearchForArtist searchTask = new SearchForArtist();
-                            searchTask.execute(query);
-                        }
-                    }, delay);
-
+                    if (rotationFlag) {
+                        rotationFlag = false;
+                    } else {
+                        // Create a timer and wait for the specified delay time then perform the search
+                        timer.cancel();
+                        timer = new Timer();
+                        timer.schedule(new TimerTask() {
+                            @Override
+                            public void run() {
+                                SearchForArtist searchTask = new SearchForArtist();
+                                searchTask.execute(query);
+                            }
+                        }, delay);
+                    }
                 } else {
                     // If the search box is empty cancel the timer to prevent delayed listview population,
                     // clear the adapter to empty the list (if not already)
