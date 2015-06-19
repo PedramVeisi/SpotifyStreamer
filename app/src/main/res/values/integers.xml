@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <integer name="artist_search_delay">300</integer>
+    <integer name="artist_search_delay">400</integer>
 
     <!-- Top Tracks Activity -->
     <integer name="album_art_small_thumbnail_width" format="float">200</integer>

@@ -28,9 +28,9 @@
 
         <ProgressBar
             android:id="@+id/artist_search_progress_spinner_progress_bar"
+            style="?android:attr/progressBarStyle"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            style="?android:attr/progressBarStyle"></ProgressBar>
+            android:layout_height="wrap_content"></ProgressBar>
     </LinearLayout>
 
     <ListView
