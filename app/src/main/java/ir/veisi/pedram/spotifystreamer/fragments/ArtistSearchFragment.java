@@ -13,6 +13,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.EditText;
+import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.Toast;
 
@@ -62,7 +63,7 @@ public class ArtistSearchFragment extends Fragment {
         ListView artistsListView = (ListView) rootView.findViewById(R.id.artist_search_result_listview);
         artistsListView.setAdapter(mArtistsAdapter);
 
-        final View emptyView = (View) rootView.findViewById(R.id.empty_list_message_view);
+        final View emptyView = rootView.findViewById(R.id.empty_list_message_view);
         artistsListView.setEmptyView(emptyView);
 
         // To make sure user won't see "No artist found" message before searching anything!
@@ -102,6 +103,7 @@ public class ArtistSearchFragment extends Fragment {
                 // With empty string the listview will be cleared.
                 if (!"".equals(query)) {
                     if (rotationFlag) {
+                        // This will prevent disabling the live search.
                         rotationFlag = false;
                     } else {
                         // Create a timer and wait for the specified delay time then perform the search
@@ -151,6 +153,24 @@ public class ArtistSearchFragment extends Fragment {
      *  AsyncTask to search for artists off the UI thread
      */
     public class SearchForArtist extends AsyncTask<String, Void, List<ArtistGist>> {
+        // CAST THE LINEARLAYOUT HOLDING THE MAIN PROGRESS (SPINNER)
+        LinearLayout searchProgressBarLinearLeayout = (LinearLayout) getActivity().findViewById(R.id.artist_search_progress_spinner_wrapper);
+
+        @Override
+        protected void onPreExecute() {
+            // Check if listview is empty. IF it's not, don't show the loading spinner.
+            if(mArtistsAdapter.isEmpty()){
+                // Since search is delayed and run from a thread other than the main one, this must be run on UI Thread.
+                getActivity().runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        // Show the spinner while loading result
+                        searchProgressBarLinearLeayout.setVisibility(View.VISIBLE);
+                    }
+                });
+            }
+        }
+
         /**
          * Override this method to perform a computation on a background thread. The
          * specified parameters are the parameters passed to {@link #execute}
@@ -228,6 +248,9 @@ public class ArtistSearchFragment extends Fragment {
             if (artists.size() != 0) {
                 mArtistsAdapter.addAll(artists);
             }
+
+            // Hide the spinner after loading is done.
+            searchProgressBarLinearLeayout.setVisibility(View.GONE);
         }
     }
 }
