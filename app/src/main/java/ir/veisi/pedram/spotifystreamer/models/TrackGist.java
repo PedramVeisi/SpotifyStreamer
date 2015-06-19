@@ -4,9 +4,12 @@ import android.os.Parcel;
 import android.os.Parcelable;
 
 /**
- * Created by pedram on 16/06/15.
  * This class is used to summarize the returned track from Spotify and store the data we need.
+ * Created by Pedram Veisi on 16/06/15.
+ * @author Pedram Veisi
+ *
  */
+
 public class TrackGist implements Parcelable {
 
     private String mTrackName;
@@ -15,8 +18,13 @@ public class TrackGist implements Parcelable {
     private String mSmallAlbumThumbnail;
     private String mPreviewUrl;
 
-    // Read data from Parcel. Constructor auto-generated using Parcelable Generator Plugin
-    // https://github.com/mcharmas/android-parcelable-intellij-plugin
+    /**
+     * Constructor
+     *
+     * Auto-generated using Parcelable Generator Plugin to read data from Parcel.
+     * https://github.com/mcharmas/android-parcelable-intellij-plugin
+     * @param in
+     */
     private TrackGist(Parcel in) {
         this.mTrackName = in.readString();
         this.mAlbumName = in.readString();
@@ -25,6 +33,15 @@ public class TrackGist implements Parcelable {
         this.mPreviewUrl = in.readString();
     }
 
+    /**
+     * Constructor
+     *
+     * @param trackName Name of Track
+     * @param albumName Album of Track
+     * @param largeAlbumThumbnail Large album thumbnail for the track
+     * @param smallAlbumThumbnail Small album thumbnail for the track
+     * @param previewUrl Preview URL of the track
+     */
     public TrackGist(String trackName, String albumName, String largeAlbumThumbnail, String smallAlbumThumbnail, String previewUrl) {
         this.mTrackName = trackName;
         this.mAlbumName = albumName;
@@ -33,27 +50,38 @@ public class TrackGist implements Parcelable {
         this.mPreviewUrl = previewUrl;
     }
 
-    // Returns track's name
+
+    /**
+     * @return Track's name
+     */
     public String getTrackName() {
         return mTrackName;
     }
 
-    // Returns track's album
+    /**
+     * @return Track's album
+     */
     public String getAlbumName() {
         return mAlbumName;
     }
 
-    // Returns large album thumbnail
+    /**
+     * @return Large album thumbnail
+     */
     public String getLargeAlbumThumbnail() {
         return mLargeAlbumThumbnail;
     }
 
-    // Returns small album thumbnail
+    /**
+     * @return Small album thumbnail
+     */
     public String getSmallAlbumThumbnail() {
         return mSmallAlbumThumbnail;
     }
 
-    // Returns preview url for the track
+    /**
+     * @return Preview url for the track
+     */
     public String getPreviewUrl() {
         return mPreviewUrl;
     }
@@ -61,11 +89,18 @@ public class TrackGist implements Parcelable {
     // Create a Parcel and save data in it.
     // Following code auto-generated using Parcelable Generator Plugin
     // https://github.com/mcharmas/android-parcelable-intellij-plugin
+
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public int describeContents() {
         return 0;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public void writeToParcel(Parcel dest, int flags) {
         dest.writeString(this.mTrackName);
