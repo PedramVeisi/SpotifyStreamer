@@ -35,6 +35,7 @@ import retrofit.RetrofitError;
 
 
 /**
+ * @author Pedram Veisi
  * A placeholder fragment containing a simple view.
  */
 public class ArtistSearchFragment extends Fragment {
@@ -47,6 +48,9 @@ public class ArtistSearchFragment extends Fragment {
     // since we have a live search and it can't be checked in afterTextChanged() method
     private boolean rotationFlag = false;
 
+    /**
+     * Constructor
+     */
     public ArtistSearchFragment() {
     }
 
@@ -150,7 +154,7 @@ public class ArtistSearchFragment extends Fragment {
     }
 
     /*
-     *  AsyncTask to search for artists off the UI thread
+     * AsyncTask to search for artists off the UI thread
      */
     public class SearchForArtist extends AsyncTask<String, Void, List<ArtistGist>> {
         // CAST THE LINEARLAYOUT HOLDING THE MAIN PROGRESS (SPINNER)
