@@ -18,6 +18,7 @@ import ir.veisi.pedram.spotifystreamer.models.ArtistGist;
 import ir.veisi.pedram.spotifystreamer.imagetools.PicassoRoundTransform;
 
 /**
+ * Custom adapter to populate the Top Tracks List
  * Created by Pedram Veisi on 10/06/15.
  *
  * @author Pedram Veisi
