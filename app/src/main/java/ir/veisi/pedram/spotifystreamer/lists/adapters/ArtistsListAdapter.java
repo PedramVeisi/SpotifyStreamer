@@ -18,7 +18,9 @@ import ir.veisi.pedram.spotifystreamer.models.ArtistGist;
 import ir.veisi.pedram.spotifystreamer.imagetools.PicassoRoundTransform;
 
 /**
- * Created by pedram on 10/06/15.
+ * Created by Pedram Veisi on 10/06/15.
+ *
+ * @author Pedram Veisi
  */
 public class ArtistsListAdapter extends ArrayAdapter<ArtistGist> {
 
@@ -27,6 +29,7 @@ public class ArtistsListAdapter extends ArrayAdapter<ArtistGist> {
 
     /**
      * Constructor
+     *
      * @param context  The current context.
      * @param resource The resource ID for a layout file containing a TextView to use when
      *                 instantiating views.
@@ -61,10 +64,10 @@ public class ArtistsListAdapter extends ArrayAdapter<ArtistGist> {
         viewHolder.artistName.setText(artist.getName());
 
         // Set genre(s)
-        if(artist.getGenres().size() != 0){
+        if (artist.getGenres().size() != 0) {
             String delim = "";
             StringBuilder sb = new StringBuilder();
-            for (String genre : artist.getGenres()){
+            for (String genre : artist.getGenres()) {
                 // Make the first letter upper case.
                 genre = genre.substring(0, 1).toUpperCase() + genre.substring(1);
                 sb.append(delim).append(genre);
@@ -73,25 +76,23 @@ public class ArtistsListAdapter extends ArrayAdapter<ArtistGist> {
 
             String allGenres = sb.toString();
             viewHolder.genres.setText(allGenres);
-        }
-        else{   // Since view is recycled, TextView should be null if there is no genre
+        } else {   // Since view is recycled, TextView should be null if there is no genre
             viewHolder.genres.setText("");
         }
 
         if (artist.getImageUrl() != null) {
             // Set the artist image
             Picasso.with(mContext).load(artist.getImageUrl()).transform(new PicassoRoundTransform()).into(viewHolder.artistImage);
-        }
-        else{ // Since view is recycled, in case of no images, ImageView should be updated.
+        } else { // Since view is recycled, in case of no images, ImageView should be updated.
             viewHolder.artistImage.setImageResource(R.drawable.no_image_available);
         }
 
         return convertView;
     }
 
-    /*
-    * ViewHolder class in order to make the listview scrolling smooth
-    */
+    /**
+     * ViewHolder class in order to make the listview scrolling smooth
+     */
     static class ViewHolder {
         TextView artistName;
         TextView genres;
