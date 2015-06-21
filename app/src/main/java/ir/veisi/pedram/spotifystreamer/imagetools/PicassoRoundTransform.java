@@ -8,7 +8,10 @@ import android.graphics.Paint;
 import com.squareup.picasso.Transformation;
 
 /**
- * Created by pedram on 10/06/15.
+ * Transforms an image to a circle image
+ * Created by Pedram Veisi on 10/06/15.
+ *
+ * @author PedramVeisi
  */
 public class PicassoRoundTransform implements Transformation {
 
