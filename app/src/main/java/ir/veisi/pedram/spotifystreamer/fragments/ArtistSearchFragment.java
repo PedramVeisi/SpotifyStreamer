@@ -36,7 +36,7 @@ import retrofit.RetrofitError;
 
 /**
  * @author Pedram Veisi
- * A placeholder fragment containing a simple view.
+ *         A placeholder fragment containing a simple view.
  */
 public class ArtistSearchFragment extends Fragment {
 
@@ -163,7 +163,7 @@ public class ArtistSearchFragment extends Fragment {
         @Override
         protected void onPreExecute() {
             // Check if listview is empty. IF it's not, don't show the loading spinner.
-            if(mArtistsAdapter.isEmpty()){
+            if (mArtistsAdapter.isEmpty()) {
                 // Since search is delayed and run from a thread other than the main one, this must be run on UI Thread.
                 getActivity().runOnUiThread(new Runnable() {
                     @Override
