@@ -17,7 +17,10 @@ import ir.veisi.pedram.spotifystreamer.imagetools.PicassoRoundTransform;
 import ir.veisi.pedram.spotifystreamer.models.TrackGist;
 
 /**
- * Created by pedram on 10/06/15.
+ * Adapter to populate the Top Tracks List
+ *
+ * Created by Pedram Veisi on 10/06/15.
+ * @author Pedram Veisi
  */
 public class TopTracksListAdapter extends ArrayAdapter<TrackGist> {
 
