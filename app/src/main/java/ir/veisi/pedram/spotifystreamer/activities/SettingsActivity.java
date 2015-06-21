@@ -6,7 +6,9 @@ import android.support.v7.app.AppCompatActivity;
 import ir.veisi.pedram.spotifystreamer.fragments.SettingsFragment;
 
 /**
- * Created by pedram on 16/06/15.
+ * Created by Pedram Veisi on 16/06/15.
+ *
+ *  @author Pedram Veisi
  */
 public class SettingsActivity extends AppCompatActivity {
     @Override

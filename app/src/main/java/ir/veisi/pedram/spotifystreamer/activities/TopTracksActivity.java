@@ -8,6 +8,9 @@ import android.view.MenuItem;
 
 import ir.veisi.pedram.spotifystreamer.R;
 
+/**
+ * @author Pedram Veisi
+ */
 public class TopTracksActivity extends AppCompatActivity {
 
     @Override
