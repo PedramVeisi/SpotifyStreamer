@@ -27,12 +27,17 @@ import retrofit.RetrofitError;
 
 /**
  * A placeholder fragment containing a simple view.
+ *
+ * @author Pedram Veisi
  */
 public class TopTracksFragment extends Fragment {
 
     private TopTracksListAdapter mTracksAdapter;
     private ArrayList<TrackGist> tracks = new ArrayList<TrackGist>();
 
+    /**
+     * Constructor
+     */
     public TopTracksFragment() {
     }
 
@@ -80,20 +85,6 @@ public class TopTracksFragment extends Fragment {
     }
 
     public class GetTopTracks extends AsyncTask<String, Void, ArrayList<TrackGist>> {
-        /**
-         * Override this method to perform a computation on a background thread. The
-         * specified parameters are the parameters passed to {@link #execute}
-         * by the caller of this task.
-         * <p/>
-         * This method can call {@link #publishProgress} to publish updates
-         * on the UI thread.
-         *
-         * @param params The parameters of the task.
-         * @return A result, defined by the subclass of this task.
-         * @see #onPreExecute()
-         * @see #onPostExecute
-         * @see #publishProgress
-         */
         @Override
         protected ArrayList<TrackGist> doInBackground(String... params) {
 
@@ -141,7 +132,7 @@ public class TopTracksFragment extends Fragment {
 
             ArrayList<TrackGist> trackGists = new ArrayList<TrackGist>();
 
-            if (resultTracks != null){
+            if (resultTracks != null) {
                 for (Track track : resultTracks) {
                     // Fill the thumbnail variables with the first image and change them later if wanted sizes exist.
                     largeAlbumThumbnailUrl = track.album.images.get(0).url;
