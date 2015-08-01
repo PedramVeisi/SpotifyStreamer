@@ -1,4 +1,4 @@
-package ir.veisi.pedram.spotifystreamer;
+package si.vei.pedram.spotifystreamer;
 
 import android.app.Application;
 import android.test.ApplicationTestCase;

@@ -5,7 +5,7 @@ android {
     buildToolsVersion "22.0.0"
 
     defaultConfig {
-        applicationId "ir.veisi.pedram.spotifystreamer"
+        applicationId "si.vei.pedram.spotifystreamer"
         minSdkVersion 14
         targetSdkVersion 22
         versionCode 1

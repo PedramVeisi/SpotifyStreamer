@@ -1,4 +1,4 @@
-package ir.veisi.pedram.spotifystreamer.imagetools;
+package si.vei.pedram.spotifystreamer.imagetools;
 
 import android.graphics.Bitmap;
 import android.graphics.BitmapShader;

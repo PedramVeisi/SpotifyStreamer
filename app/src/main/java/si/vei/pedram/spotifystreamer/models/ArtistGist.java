@@ -1,4 +1,4 @@
-package ir.veisi.pedram.spotifystreamer.models;
+package si.vei.pedram.spotifystreamer.models;
 
 import android.os.Parcel;
 import android.os.Parcelable;

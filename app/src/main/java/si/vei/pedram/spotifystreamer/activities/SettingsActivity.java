@@ -1,9 +1,9 @@
-package ir.veisi.pedram.spotifystreamer.activities;
+package si.vei.pedram.spotifystreamer.activities;
 
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 
-import ir.veisi.pedram.spotifystreamer.fragments.SettingsFragment;
+import si.vei.pedram.spotifystreamer.fragments.SettingsFragment;
 
 /**
  * Created by Pedram Veisi on 16/06/15.

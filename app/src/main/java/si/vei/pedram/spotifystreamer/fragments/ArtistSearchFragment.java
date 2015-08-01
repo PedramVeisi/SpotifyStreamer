@@ -1,4 +1,4 @@
-package ir.veisi.pedram.spotifystreamer.fragments;
+package si.vei.pedram.spotifystreamer.fragments;
 
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -24,10 +24,10 @@ import java.util.Map;
 import java.util.Timer;
 import java.util.TimerTask;
 
-import ir.veisi.pedram.spotifystreamer.R;
-import ir.veisi.pedram.spotifystreamer.activities.TopTracksActivity;
-import ir.veisi.pedram.spotifystreamer.lists.adapters.ArtistsListAdapter;
-import ir.veisi.pedram.spotifystreamer.models.ArtistGist;
+import si.vei.pedram.spotifystreamer.R;
+import si.vei.pedram.spotifystreamer.activities.TopTracksActivity;
+import si.vei.pedram.spotifystreamer.lists.adapters.ArtistsListAdapter;
+import si.vei.pedram.spotifystreamer.models.ArtistGist;
 import kaaes.spotify.webapi.android.SpotifyApi;
 import kaaes.spotify.webapi.android.SpotifyService;
 import kaaes.spotify.webapi.android.models.Artist;

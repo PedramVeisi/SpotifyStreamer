@@ -1,4 +1,4 @@
-package ir.veisi.pedram.spotifystreamer.fragments;
+package si.vei.pedram.spotifystreamer.fragments;
 
 import android.os.Bundle;
 import android.preference.ListPreference;
@@ -6,7 +6,7 @@ import android.preference.Preference;
 import android.preference.PreferenceFragment;
 import android.preference.PreferenceManager;
 
-import ir.veisi.pedram.spotifystreamer.R;
+import si.vei.pedram.spotifystreamer.R;
 
 /**
  * @author Pedram Veisi

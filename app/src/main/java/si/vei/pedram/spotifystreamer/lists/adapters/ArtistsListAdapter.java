@@ -1,4 +1,4 @@
-package ir.veisi.pedram.spotifystreamer.lists.adapters;
+package si.vei.pedram.spotifystreamer.lists.adapters;
 
 import android.content.Context;
 import android.view.LayoutInflater;
@@ -13,9 +13,9 @@ import com.squareup.picasso.Picasso;
 import java.util.ArrayList;
 import java.util.List;
 
-import ir.veisi.pedram.spotifystreamer.R;
-import ir.veisi.pedram.spotifystreamer.models.ArtistGist;
-import ir.veisi.pedram.spotifystreamer.imagetools.PicassoRoundTransform;
+import si.vei.pedram.spotifystreamer.R;
+import si.vei.pedram.spotifystreamer.models.ArtistGist;
+import si.vei.pedram.spotifystreamer.imagetools.PicassoRoundTransform;
 
 /**
  * Custom adapter to populate the Top Tracks List
