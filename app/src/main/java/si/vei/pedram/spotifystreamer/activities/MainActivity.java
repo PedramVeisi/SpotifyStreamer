@@ -8,16 +8,38 @@ import android.view.MenuItem;
 
 import si.vei.pedram.spotifystreamer.R;
 import si.vei.pedram.spotifystreamer.fragments.ArtistSearchFragment;
+import si.vei.pedram.spotifystreamer.fragments.TopTracksFragment;
 
 /**
  * @author Pedram Veisi
  */
 public class MainActivity extends AppCompatActivity implements ArtistSearchFragment.Callback {
 
+    private static final String TOPTRACKSFRAGMENT_TAG = "TTFTAG";
+    private boolean mTwoPane;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
         setContentView(R.layout.activity_main);
+        if (findViewById(R.id.top_tracks_container) != null) {
+            // The detail container view will be present only in the large-screen layouts
+            // (res/layout-sw600dp). If this view is present, then the activity should be
+            // in two-pane mode.
+            mTwoPane = true;
+            // In two-pane mode, show the detail view in this activity by
+            // adding or replacing the detail fragment using a
+            // fragment transaction.
+            if (savedInstanceState == null) {
+                getSupportFragmentManager().beginTransaction()
+                        .replace(R.id.top_tracks_container, new TopTracksFragment(), TOPTRACKSFRAGMENT_TAG)
+                        .commit();
+            } else {
+                mTwoPane = false;
+            }
+
+        }
     }
 
     @Override
