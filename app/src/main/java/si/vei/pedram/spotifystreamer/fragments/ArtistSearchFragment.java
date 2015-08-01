@@ -1,6 +1,5 @@
 package si.vei.pedram.spotifystreamer.fragments;
 
-import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -24,14 +23,13 @@ import java.util.Map;
 import java.util.Timer;
 import java.util.TimerTask;
 
-import si.vei.pedram.spotifystreamer.R;
-import si.vei.pedram.spotifystreamer.activities.TopTracksActivity;
-import si.vei.pedram.spotifystreamer.lists.adapters.ArtistsListAdapter;
-import si.vei.pedram.spotifystreamer.models.ArtistGist;
 import kaaes.spotify.webapi.android.SpotifyApi;
 import kaaes.spotify.webapi.android.SpotifyService;
 import kaaes.spotify.webapi.android.models.Artist;
 import retrofit.RetrofitError;
+import si.vei.pedram.spotifystreamer.R;
+import si.vei.pedram.spotifystreamer.lists.adapters.ArtistsListAdapter;
+import si.vei.pedram.spotifystreamer.models.ArtistGist;
 
 
 /**
@@ -137,9 +135,11 @@ public class ArtistSearchFragment extends Fragment {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 String artistId = mArtistsAdapter.getItem(position).getId();
-                Intent intent = new Intent(getActivity(), TopTracksActivity.class);
-                intent.putExtra(getString(R.string.intent_artist_id), artistId);
-                startActivity(intent);
+
+                // Notify the CallBack
+                if(artistId != null){
+                    ((Callback)getActivity()).onItemSelected(artistId);
+                }
             }
         });
 
@@ -245,4 +245,12 @@ public class ArtistSearchFragment extends Fragment {
             searchProgressBarLinearLeayout.setVisibility(View.GONE);
         }
     }
+
+    public interface Callback {
+        /**
+         * TopTracksFragmentCallback for when an item has been selected.
+         */
+        public void onItemSelected(String artistId);
+    }
+
 }

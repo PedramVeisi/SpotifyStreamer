@@ -7,11 +7,12 @@ import android.view.Menu;
 import android.view.MenuItem;
 
 import si.vei.pedram.spotifystreamer.R;
+import si.vei.pedram.spotifystreamer.fragments.ArtistSearchFragment;
 
 /**
  * @author Pedram Veisi
  */
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity implements ArtistSearchFragment.Callback {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -43,5 +44,12 @@ public class MainActivity extends AppCompatActivity {
         }
 
         return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    public void onItemSelected(String artistId) {
+        Intent intent = new Intent(this, TopTracksActivity.class);
+        intent.putExtra(getString(R.string.intent_artist_id), artistId);
+        startActivity(intent);
     }
 }
