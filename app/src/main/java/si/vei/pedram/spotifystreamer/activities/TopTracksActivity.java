@@ -25,6 +25,9 @@ public class TopTracksActivity extends AppCompatActivity {
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        getSupportActionBar().setDisplayShowHomeEnabled(true);
+
         if (savedInstanceState == null) {
             // Create the top tracks fragment and add it to the activity
             // using a fragment transaction.
