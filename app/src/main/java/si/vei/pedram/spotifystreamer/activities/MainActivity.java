@@ -3,6 +3,7 @@ package si.vei.pedram.spotifystreamer.activities;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 
@@ -23,6 +24,11 @@ public class MainActivity extends AppCompatActivity implements ArtistSearchFragm
         super.onCreate(savedInstanceState);
 
         setContentView(R.layout.activity_main);
+
+        // Set a toolbar to replace the action bar.
+        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
+
         if (findViewById(R.id.top_tracks_container) != null) {
             // The detail container view will be present only in the large-screen layouts
             // (res/layout-sw600dp). If this view is present, then the activity should be

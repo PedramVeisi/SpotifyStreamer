@@ -13,4 +13,6 @@
     <dimen name="top_tracks_header_height">200dp</dimen>
     <dimen name="top_tracks_header_list_margin">10dp</dimen>
 
+    <dimen name="toolbar_elevation">7dp</dimen>
+
 </resources>

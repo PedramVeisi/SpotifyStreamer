@@ -69,7 +69,7 @@ public class ArtistSearchFragment extends Fragment {
         artistsListView.setEmptyView(emptyView);
 
         // To make sure user won't see "No artist found" message before searching anything!
-        emptyView.setVisibility(View.GONE);
+        //emptyView.setVisibility(View.GONE);
 
         // If user is rotating the screen, get the track data from savedInstanceState
         if (savedInstanceState != null) {
