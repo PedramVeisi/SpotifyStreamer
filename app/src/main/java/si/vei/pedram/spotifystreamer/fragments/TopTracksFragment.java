@@ -5,6 +5,7 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -37,7 +38,7 @@ public class TopTracksFragment extends Fragment {
 
     private TopTracksListAdapter mTracksAdapter;
     private ArrayList<TrackGist> tracks = new ArrayList<TrackGist>();
-    private String artistId;
+    private String artistId = "test";
     private String artistImageUrl;
 
     /**
@@ -84,6 +85,7 @@ public class TopTracksFragment extends Fragment {
             mTracksAdapter.clear();
             mTracksAdapter.addAll(tracks);
         } else {
+            Log.e("artist", artistId);
             // Getting the top tracks off the UI thread.
             GetTopTracks getTopTracks = new GetTopTracks();
             getTopTracks.execute(artistId);
