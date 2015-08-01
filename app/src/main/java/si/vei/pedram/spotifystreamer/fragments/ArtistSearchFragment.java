@@ -80,7 +80,7 @@ public class ArtistSearchFragment extends Fragment {
         }
 
         // Find reference to search EditText
-        final EditText searchEditText = (EditText) rootView.findViewById(R.id.search_artist_edit_text);
+        final EditText searchEditText = (EditText) rootView.findViewById(R.id.artist_search_edit_text);
 
         // Implementing live search
         searchEditText.addTextChangedListener(new TextWatcher() {

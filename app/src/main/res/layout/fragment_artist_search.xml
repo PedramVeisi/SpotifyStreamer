@@ -7,7 +7,7 @@
     tools:context=".MainActivityFragment">
 
     <EditText
-        android:id="@+id/search_artist_edit_text"
+        android:id="@+id/artist_search_edit_text"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentRight="true"
@@ -37,7 +37,7 @@
         android:id="@+id/artist_search_result_listview"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/search_artist_edit_text"
+        android:layout_below="@+id/artist_search_edit_text"
         android:layout_centerHorizontal="true"
         android:divider="@android:color/transparent"
         android:dividerHeight="@dimen/artist_list_divider_height"
