@@ -65,7 +65,7 @@ public class ArtistSearchFragment extends Fragment {
         ListView artistsListView = (ListView) rootView.findViewById(R.id.artist_search_result_listview);
         artistsListView.setAdapter(mArtistsAdapter);
 
-        final View emptyView = rootView.findViewById(R.id.empty_list_message_view);
+        final View emptyView = rootView.findViewById(R.id.no_artist_empty_list_mesage_view);
         artistsListView.setEmptyView(emptyView);
 
         // To make sure user won't see "No artist found" message before searching anything!

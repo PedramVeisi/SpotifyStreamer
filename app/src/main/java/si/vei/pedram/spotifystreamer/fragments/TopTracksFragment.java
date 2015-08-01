@@ -72,7 +72,7 @@ public class TopTracksFragment extends Fragment {
         topTracksListView.setAdapter(mTracksAdapter);
 
         // To show the empty view when there is no top track
-        final View emptyView = (View) rootView.findViewById(R.id.empty_list_message_view);
+        View emptyView = (View) rootView.findViewById(R.id.empty_top_tracks_list_message_view);
         topTracksListView.setEmptyView(emptyView);
 
         // To make sure user won't see "No track found" message before tracks are loaded!
