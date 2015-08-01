@@ -38,7 +38,7 @@ import retrofit.RetrofitError;
  * @author Pedram Veisi
  *         A placeholder fragment containing a simple view.
  */
-public class SearchArtistFragment extends Fragment {
+public class ArtistSearchFragment extends Fragment {
 
     // Artist search result adapter
     private ArtistsListAdapter mArtistsAdapter;
@@ -51,7 +51,7 @@ public class SearchArtistFragment extends Fragment {
     /**
      * Constructor
      */
-    public SearchArtistFragment() {
+    public ArtistSearchFragment() {
     }
 
     @Override
