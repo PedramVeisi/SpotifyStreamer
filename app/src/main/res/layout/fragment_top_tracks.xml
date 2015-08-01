@@ -7,10 +7,16 @@
     tools:context="si.vei.pedram.spotifystreamer.fragments.TopTracksFragment">
 
 
+    <ImageView
+        android:id="@+id/top_tracks_header_imageview"
+        android:layout_width="match_parent"
+        android:layout_height="200dp" />
+
     <ListView
         android:id="@+id/artist_top_tracks_listview"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_below="@id/top_tracks_header_imageview"
         android:layout_centerHorizontal="true"
         android:divider="@android:color/transparent"
         android:dividerHeight="@dimen/artist_list_divider_height"

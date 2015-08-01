@@ -211,8 +211,9 @@
     <string name="no_track_found">No tracks found!</string>
     <string name="state_tracks" translatable="false">state_tracks</string>
 
-    <!-- Intent names -->
-    <string name="intent_artist_id" translatable="false">intent.ARTIST_ID</string>
+    <!-- Fragments data keys -->
+    <string name="artist_id_key" translatable="false">KEY_ARTIST_ID</string>
+    <string name="artist_image_url_key" translatable="false">KEY_ARTIST_IMAGE_URL</string>
 
     <!-- Preferences -->
     <string name="title_settings">Settings</string>

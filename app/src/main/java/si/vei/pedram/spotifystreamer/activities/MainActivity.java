@@ -69,13 +69,14 @@ public class MainActivity extends AppCompatActivity implements ArtistSearchFragm
     }
 
     @Override
-    public void onItemSelected(String artistId) {
+    public void onItemSelected(String artistId, String artistImageUrl) {
         if (mTwoPane) {
             // In two-pane mode, show the top tracks view in this activity by
             // adding or replacing the top tracks fragment using a
             // fragment transaction.
             Bundle args = new Bundle();
-            args.putString(getString(R.string.intent_artist_id), artistId);
+            args.putString(getString(R.string.artist_id_key), artistId);
+            args.putString(getString(R.string.artist_image_url_key), artistImageUrl);
 
             TopTracksFragment fragment = new TopTracksFragment();
             fragment.setArguments(args);
@@ -86,7 +87,8 @@ public class MainActivity extends AppCompatActivity implements ArtistSearchFragm
 
         } else {
             Intent intent = new Intent(this, TopTracksActivity.class);
-            intent.putExtra(getString(R.string.intent_artist_id), artistId);
+            intent.putExtra(getString(R.string.artist_id_key), artistId);
+            intent.putExtra(getString(R.string.artist_image_url_key), artistImageUrl);
             startActivity(intent);
         }
     }

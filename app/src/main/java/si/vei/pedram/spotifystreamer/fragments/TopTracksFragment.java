@@ -8,22 +8,25 @@ import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.Toast;
+
+import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import si.vei.pedram.spotifystreamer.R;
-import si.vei.pedram.spotifystreamer.lists.adapters.TopTracksListAdapter;
-import si.vei.pedram.spotifystreamer.models.TrackGist;
 import kaaes.spotify.webapi.android.SpotifyApi;
 import kaaes.spotify.webapi.android.SpotifyService;
 import kaaes.spotify.webapi.android.models.Image;
 import kaaes.spotify.webapi.android.models.Track;
 import retrofit.RetrofitError;
+import si.vei.pedram.spotifystreamer.R;
+import si.vei.pedram.spotifystreamer.lists.adapters.TopTracksListAdapter;
+import si.vei.pedram.spotifystreamer.models.TrackGist;
 
 /**
  * A placeholder fragment containing a simple view.
@@ -35,6 +38,7 @@ public class TopTracksFragment extends Fragment {
     private TopTracksListAdapter mTracksAdapter;
     private ArrayList<TrackGist> tracks = new ArrayList<TrackGist>();
     private String artistId;
+    private String artistImageUrl;
 
     /**
      * Constructor
@@ -51,7 +55,14 @@ public class TopTracksFragment extends Fragment {
         // Get artistId
         Bundle arguments = getArguments();
         if (arguments != null) {
-            artistId = arguments.getString(getString(R.string.intent_artist_id));
+            artistId = arguments.getString(getString(R.string.artist_id_key));
+            artistImageUrl = arguments.getString(getString(R.string.artist_image_url_key));
+        }
+
+        if (artistImageUrl != null) {
+            // Set header image view
+            ImageView headerImageView = (ImageView) rootView.findViewById(R.id.top_tracks_header_imageview);
+            Picasso.with(getActivity()).load(artistImageUrl).into(headerImageView);
         }
 
         // Instantiate the adapter
