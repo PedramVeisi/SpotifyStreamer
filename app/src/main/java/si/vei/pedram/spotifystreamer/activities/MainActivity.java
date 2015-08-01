@@ -70,8 +70,24 @@ public class MainActivity extends AppCompatActivity implements ArtistSearchFragm
 
     @Override
     public void onItemSelected(String artistId) {
-        Intent intent = new Intent(this, TopTracksActivity.class);
-        intent.putExtra(getString(R.string.intent_artist_id), artistId);
-        startActivity(intent);
+        if (mTwoPane) {
+            // In two-pane mode, show the top tracks view in this activity by
+            // adding or replacing the top tracks fragment using a
+            // fragment transaction.
+            Bundle args = new Bundle();
+            args.putString(getString(R.string.intent_artist_id), artistId);
+
+            TopTracksFragment fragment = new TopTracksFragment();
+            fragment.setArguments(args);
+
+            getSupportFragmentManager().beginTransaction()
+                    .replace(R.id.top_tracks_container, fragment, TOPTRACKSFRAGMENT_TAG)
+                    .commit();
+
+        } else {
+            Intent intent = new Intent(this, TopTracksActivity.class);
+            intent.putExtra(getString(R.string.intent_artist_id), artistId);
+            startActivity(intent);
+        }
     }
 }

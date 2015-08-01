@@ -7,6 +7,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 
 import si.vei.pedram.spotifystreamer.R;
+import si.vei.pedram.spotifystreamer.fragments.TopTracksFragment;
 
 /**
  * @author Pedram Veisi
@@ -17,6 +18,21 @@ public class TopTracksActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_top_tracks);
+
+        if(savedInstanceState == null){
+            // Create the top tracks fragment and add it to the activity
+            // using a fragment transaction.
+            Bundle arguments = new Bundle();
+            arguments.putParcelable(getString(R.string.intent_artist_id), getIntent().getData());
+
+            TopTracksFragment fragment = new TopTracksFragment();
+            fragment.setArguments(arguments);
+
+            getSupportFragmentManager().beginTransaction()
+                    .add(R.id.top_tracks_container, fragment)
+                    .commit();
+        }
+
     }
 
     @Override

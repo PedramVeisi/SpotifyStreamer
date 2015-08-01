@@ -34,6 +34,7 @@ public class TopTracksFragment extends Fragment {
 
     private TopTracksListAdapter mTracksAdapter;
     private ArrayList<TrackGist> tracks = new ArrayList<TrackGist>();
+    private String artistId;
 
     /**
      * Constructor
@@ -47,8 +48,11 @@ public class TopTracksFragment extends Fragment {
         // Inflating fragment's view to customize it
         View rootView = inflater.inflate(R.layout.fragment_top_tracks, container, false);
 
-        // Get artistId from calling activity
-        String artistId = getActivity().getIntent().getStringExtra(getResources().getString(R.string.intent_artist_id));
+        // Get artistId
+        Bundle arguments = getArguments();
+        if (arguments != null) {
+            artistId = arguments.getString(getString(R.string.intent_artist_id));
+        }
 
         // Instantiate the adapter
         mTracksAdapter = new TopTracksListAdapter(getActivity(), R.layout.list_item_top_tracks, new ArrayList<TrackGist>());
