@@ -5,7 +5,6 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.v4.app.Fragment;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -40,6 +39,7 @@ public class TopTracksFragment extends Fragment {
     private ArrayList<TrackGist> tracks = new ArrayList<TrackGist>();
     private String artistId;
     private String artistImageUrl;
+    private GetTopTracks getTopTracks;
 
     /**
      * Constructor
@@ -85,9 +85,8 @@ public class TopTracksFragment extends Fragment {
             mTracksAdapter.clear();
             mTracksAdapter.addAll(tracks);
         } else {
-            Log.e("artist", artistId);
             // Getting the top tracks off the UI thread.
-            GetTopTracks getTopTracks = new GetTopTracks();
+            getTopTracks = new GetTopTracks();
             getTopTracks.execute(artistId);
         }
 
@@ -99,6 +98,12 @@ public class TopTracksFragment extends Fragment {
         super.onSaveInstanceState(outState);
         // Saving state in case user is rotating the device
         outState.putParcelableArrayList(getString(R.string.state_tracks), tracks);
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        getTopTracks.cancel(true);
     }
 
     public class GetTopTracks extends AsyncTask<String, Void, ArrayList<TrackGist>> {
@@ -174,7 +179,9 @@ public class TopTracksFragment extends Fragment {
 
         @Override
         protected void onPostExecute(ArrayList<TrackGist> trackGists) {
-            if(isAdded()) {
+            if (isCancelled())
+                return;
+            else {
                 tracks = trackGists;
                 mTracksAdapter.clear();
                 if (trackGists.size() != 0) {
