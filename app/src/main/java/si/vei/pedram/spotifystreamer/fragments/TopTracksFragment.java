@@ -103,6 +103,7 @@ public class TopTracksFragment extends Fragment {
     @Override
     public void onPause() {
         super.onPause();
+        // Cancel AsyncTask if fragment is changed
         getTopTracks.cancel(true);
     }
 
