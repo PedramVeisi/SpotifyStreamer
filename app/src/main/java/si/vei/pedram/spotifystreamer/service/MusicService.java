@@ -58,7 +58,7 @@ public class MusicService extends Service  implements
         mPlayer.setOnErrorListener(this);
     }
 
-    public void setSongsList(ArrayList<TrackGist> tracks){
+    public void setTrackList(ArrayList<TrackGist> tracks){
         mTrackList = tracks;
     }
 
@@ -84,7 +84,7 @@ public class MusicService extends Service  implements
     }
 
     public class MusicBinder extends Binder {
-        MusicService getService() {
+        public MusicService getService() {
             return MusicService.this;
         }
     }
