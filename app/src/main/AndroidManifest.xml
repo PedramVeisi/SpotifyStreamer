@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="si.vei.pedram.spotifystreamer" >
+    package="si.vei.pedram.spotifystreamer">
 
     <uses-permission android:name="android.permission.INTERNET" />
 
@@ -11,11 +11,11 @@
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
-        android:theme="@style/AppTheme" >
+        android:theme="@style/AppTheme">
         <activity
             android:name=".activities.MainActivity"
             android:label="@string/app_name"
-            android:launchMode="singleTop" >
+            android:launchMode="singleTop">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -25,6 +25,7 @@
         <activity
             android:name=".activities.TopTracksActivity"
             android:label="@string/title_activity_top_tracks"
+            android:launchMode="singleTop"
             android:parentActivityName=".activities.MainActivity" />
         <activity
             android:name=".activities.SettingsActivity"
@@ -33,14 +34,13 @@
         <activity
             android:name=".activities.MusicPlayerActivity"
             android:label="@string/title_activity_song_player"
-            android:launchMode="singleTop" >
-        </activity>
+            android:launchMode="singleTop"
+            android:parentActivityName=".activities.TopTracksActivity"></activity>
 
         <service
             android:name=".service.MusicService"
             android:enabled="false"
-            android:exported="false" >
-        </service>
+            android:exported="false"></service>
     </application>
 
 </manifest>

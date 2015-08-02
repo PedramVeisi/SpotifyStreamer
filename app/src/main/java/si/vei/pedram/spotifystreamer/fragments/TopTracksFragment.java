@@ -1,5 +1,6 @@
 package si.vei.pedram.spotifystreamer.fragments;
 
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -8,6 +9,7 @@ import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.Toast;
@@ -25,6 +27,7 @@ import kaaes.spotify.webapi.android.models.Image;
 import kaaes.spotify.webapi.android.models.Track;
 import retrofit.RetrofitError;
 import si.vei.pedram.spotifystreamer.R;
+import si.vei.pedram.spotifystreamer.activities.MusicPlayerActivity;
 import si.vei.pedram.spotifystreamer.lists.adapters.TopTracksListAdapter;
 import si.vei.pedram.spotifystreamer.models.TrackGist;
 
@@ -75,6 +78,14 @@ public class TopTracksFragment extends Fragment {
 
         ListView topTracksListView = (ListView) rootView.findViewById(R.id.artist_top_tracks_listview);
         topTracksListView.setAdapter(mTracksAdapter);
+
+        topTracksListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                Intent intent = new Intent(getActivity(), MusicPlayerActivity.class);
+                startActivity(intent);
+            }
+        });
 
         // To show the empty view when there is no top track
         View emptyView = (View) rootView.findViewById(R.id.empty_top_tracks_list_message_view);
