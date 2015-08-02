@@ -16,5 +16,4 @@
         tools:context="si.vei.pedram.spotifystreamer.fragments.ArtistSearchFragment"
         tools:layout="@layout/fragment_artist_search" />
 
-
 </RelativeLayout>

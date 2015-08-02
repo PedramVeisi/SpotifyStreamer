@@ -47,7 +47,7 @@
 
     <!-- Is it good practice to put this here or should it go to a seprate file? -->
     <LinearLayout
-        android:id="@android:id/empty"
+        android:id="@+id/no_artist_empty_list_mesage_view"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:gravity="center"

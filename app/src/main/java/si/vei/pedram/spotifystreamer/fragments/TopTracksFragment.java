@@ -174,10 +174,12 @@ public class TopTracksFragment extends Fragment {
 
         @Override
         protected void onPostExecute(ArrayList<TrackGist> trackGists) {
-            tracks = trackGists;
-            mTracksAdapter.clear();
-            if (trackGists.size() != 0) {
-                mTracksAdapter.addAll(trackGists);
+            if(isAdded()) {
+                tracks = trackGists;
+                mTracksAdapter.clear();
+                if (trackGists.size() != 0) {
+                    mTracksAdapter.addAll(trackGists);
+                }
             }
         }
     }
