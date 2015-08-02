@@ -44,6 +44,7 @@
         android:paddingLeft="@dimen/activity_horizontal_margin"
         android:paddingRight="@dimen/activity_horizontal_margin"
         android:scrollbarStyle="outsideOverlay"
+        android:choiceMode="singleChoice"
         />
 
     <include

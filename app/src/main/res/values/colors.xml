@@ -4,5 +4,6 @@
     <color name="colorPrimaryDark">#43a047</color>
 
     <color name="list_item_touch_background">#a5d6a7</color>
+    <color name="grey">#cccccc</color>
 
 </resources>
