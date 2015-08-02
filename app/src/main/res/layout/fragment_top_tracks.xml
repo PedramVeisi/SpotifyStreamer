@@ -25,40 +25,8 @@
         android:paddingRight="@dimen/activity_horizontal_margin"
         android:scrollbarStyle="outsideOverlay" />
 
-    <LinearLayout
+    <include
         android:id="@+id/empty_top_tracks_list_message_view"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:gravity="center"
-        android:orientation="vertical"
-        android:visibility="gone">
-
-        <ImageView
-            android:id="@+id/imageView"
-            android:layout_width="@dimen/list_view_empty_view_image_width"
-            android:layout_height="@dimen/list_view_empty_view_image_height"
-            android:layout_gravity="center_horizontal"
-            android:alpha="0.2"
-            android:src="@drawable/nothing_found_sad_face" />
-
-        <TextView
-            android:id="@+id/empty_list_not_found_message_textview"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_centerInParent="true"
-            android:text="@string/no_track_found"
-            android:textAppearance="?android:attr/textAppearanceMedium"
-            android:textColor="@android:color/darker_gray" />
-
-        <TextView
-            android:id="@+id/empty_list_refine_search_message_textview"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_centerInParent="true"
-            android:text="@string/refine_search"
-            android:textAppearance="?android:attr/textAppearanceSmall"
-            android:textColor="@android:color/darker_gray" />
-
-    </LinearLayout>
+        layout="@layout/list_empty_view"></include>
 
 </RelativeLayout>
