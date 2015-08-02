@@ -1,19 +1,16 @@
 package si.vei.pedram.spotifystreamer.fragments;
 
-import android.content.ComponentName;
-import android.content.Context;
-import android.content.Intent;
-import android.content.ServiceConnection;
 import android.os.Bundle;
-import android.os.IBinder;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 
 import java.util.ArrayList;
 
 import si.vei.pedram.spotifystreamer.R;
+import si.vei.pedram.spotifystreamer.activities.MusicPlayerActivity;
 import si.vei.pedram.spotifystreamer.models.TrackGist;
 import si.vei.pedram.spotifystreamer.service.MusicService;
 
@@ -24,10 +21,6 @@ public class MusicPlayerFragment extends Fragment {
 
     private ArrayList<TrackGist> mTrackList;
     private int mTrackPosition;
-
-    private MusicService mMusicService;
-    private Intent mPlayIntent;
-    private boolean mMusicBound = false;
 
     public MusicPlayerFragment() {
     }
@@ -42,45 +35,26 @@ public class MusicPlayerFragment extends Fragment {
         if (arguments != null) {
             mTrackList = arguments.getParcelableArrayList(getString(R.string.intent_track_list_key));
             mTrackPosition = arguments.getInt(getString(R.string.intent_selected_track_position));
+
+            Button play = (Button) rootView.findViewById(R.id.play_button);
+
+        play.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                ((MusicPlayerActivity)getActivity()).getMusicService().setTrackPosition(0);
+                ((MusicPlayerActivity)getActivity()).getMusicService().playTrack();
+            }
+        });
         }
 
         return rootView;
     }
 
-    //connect to the service
-    private ServiceConnection musicConnection = new ServiceConnection(){
-
-        @Override
-        public void onServiceConnected(ComponentName name, IBinder service) {
-            MusicService.MusicBinder binder = (MusicService.MusicBinder)service;
-            //get service
-            mMusicService = binder.getService();
-            //pass list
-            mMusicService.setTrackList(mTrackList);
-            mMusicBound = true;
-        }
-
-        @Override
-        public void onServiceDisconnected(ComponentName name) {
-            mMusicBound = false;
-        }
-    };
-
-    @Override
-    public void onStart() {
-        super.onStart();
-        if(mPlayIntent == null){
-            mPlayIntent = new Intent(getActivity(), MusicService.class);
-            getActivity().getApplicationContext().bindService(mPlayIntent, musicConnection, Context.BIND_AUTO_CREATE);
-            getActivity().getApplicationContext().startService(mPlayIntent);
-        }
-    }
-
-    @Override
-    public void onDestroy() {
-        getActivity().getApplicationContext().stopService(mPlayIntent);
-        mMusicService = null;
-        super.onDestroy();
+    public interface Callback {
+        /**
+         * Music player Callback to get the service reference from the activity.
+         */
+        public MusicService getMusicService();
     }
 
 }

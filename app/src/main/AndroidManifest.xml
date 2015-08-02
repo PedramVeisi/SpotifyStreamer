@@ -37,10 +37,7 @@
             android:launchMode="singleTop"
             android:parentActivityName=".activities.TopTracksActivity"></activity>
 
-        <service
-            android:name=".service.MusicService"
-            android:enabled="false"
-            android:exported="false"></service>
+        <service android:name=".service.MusicService"></service>
     </application>
 
 </manifest>
