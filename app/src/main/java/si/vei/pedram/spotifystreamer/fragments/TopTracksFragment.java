@@ -38,7 +38,7 @@ public class TopTracksFragment extends Fragment {
 
     private TopTracksListAdapter mTracksAdapter;
     private ArrayList<TrackGist> tracks = new ArrayList<TrackGist>();
-    private String artistId = "test";
+    private String artistId;
     private String artistImageUrl;
 
     /**
