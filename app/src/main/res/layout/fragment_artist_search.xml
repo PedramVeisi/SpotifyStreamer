@@ -43,7 +43,8 @@
         android:dividerHeight="@dimen/artist_list_divider_height"
         android:paddingLeft="@dimen/activity_horizontal_margin"
         android:paddingRight="@dimen/activity_horizontal_margin"
-        android:scrollbarStyle="outsideOverlay" />
+        android:scrollbarStyle="outsideOverlay"
+        />
 
     <include
         android:id="@+id/no_artist_empty_list_mesage_view"
