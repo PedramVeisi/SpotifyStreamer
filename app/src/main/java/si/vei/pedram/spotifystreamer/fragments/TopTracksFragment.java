@@ -32,7 +32,7 @@ import si.vei.pedram.spotifystreamer.lists.adapters.TopTracksListAdapter;
 import si.vei.pedram.spotifystreamer.models.TrackGist;
 
 /**
- * A placeholder fragment containing a simple view.
+ * A placeholder fragment containing top tracks for a given artist
  *
  * @author Pedram Veisi
  */
@@ -59,8 +59,8 @@ public class TopTracksFragment extends Fragment {
         // Get artistId
         Bundle arguments = getArguments();
         if (arguments != null) {
-            artistId = arguments.getString(getString(R.string.artist_id_key));
-            artistImageUrl = arguments.getString(getString(R.string.artist_image_url_key));
+            artistId = arguments.getString(getString(R.string.intent_artist_id_key));
+            artistImageUrl = arguments.getString(getString(R.string.intent_artist_image_url_key));
         }
 
         final ImageView headerImageView = (ImageView) rootView.findViewById(R.id.top_tracks_header_imageview);
@@ -83,6 +83,7 @@ public class TopTracksFragment extends Fragment {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 Intent intent = new Intent(getActivity(), MusicPlayerActivity.class);
+                intent.putParcelableArrayListExtra(getString(R.string.intent_track_list_key), (ArrayList<TrackGist>) mTracksAdapter.getTracks());
                 startActivity(intent);
             }
         });

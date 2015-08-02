@@ -1,13 +1,21 @@
 package si.vei.pedram.spotifystreamer.activities;
 
-import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
+import android.support.v7.app.ActionBarActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 
-import si.vei.pedram.spotifystreamer.R;
+import java.util.ArrayList;
 
+import si.vei.pedram.spotifystreamer.R;
+import si.vei.pedram.spotifystreamer.models.TrackGist;
+
+/**
+ * Music player activity
+ *
+ * @author Pedram Veisi
+ */
 public class MusicPlayerActivity extends ActionBarActivity {
 
     @Override
@@ -15,10 +23,14 @@ public class MusicPlayerActivity extends ActionBarActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_music_player);
 
+        // Get track list from calling activity
+        ArrayList<TrackGist> tracksList = getIntent().getParcelableArrayListExtra(getString(R.string.intent_track_list_key));
+
         // Set a toolbar to replace the action bar.
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
+        // Display back button on toolbar
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setDisplayShowHomeEnabled(true);
 

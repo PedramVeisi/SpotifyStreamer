@@ -75,6 +75,11 @@ public class TopTracksListAdapter extends ArrayAdapter<TrackGist> {
         return convertView;
     }
 
+
+    public List<TrackGist> getTracks(){
+        return mTracks;
+    }
+
     /*
     * ViewHolder class in order to make the listview scrolling smooth
     */

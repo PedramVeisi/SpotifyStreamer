@@ -32,8 +32,8 @@ public class TopTracksActivity extends AppCompatActivity {
             // Create the top tracks fragment and add it to the activity
             // using a fragment transaction.
             Bundle arguments = new Bundle();
-            arguments.putString(getString(R.string.artist_id_key), getIntent().getStringExtra(getString(R.string.artist_id_key)));
-            arguments.putString(getString(R.string.artist_image_url_key), getIntent().getStringExtra(getString(R.string.artist_image_url_key)));
+            arguments.putString(getString(R.string.intent_artist_id_key), getIntent().getStringExtra(getString(R.string.intent_artist_id_key)));
+            arguments.putString(getString(R.string.intent_artist_image_url_key), getIntent().getStringExtra(getString(R.string.intent_artist_image_url_key)));
 
             TopTracksFragment fragment = new TopTracksFragment();
             fragment.setArguments(arguments);

@@ -212,8 +212,9 @@
     <string name="state_tracks" translatable="false">state_tracks</string>
 
     <!-- Fragments data keys -->
-    <string name="artist_id_key" translatable="false">KEY_ARTIST_ID</string>
-    <string name="artist_image_url_key" translatable="false">KEY_ARTIST_IMAGE_URL</string>
+    <string name="intent_artist_id_key" translatable="false">KEY_ARTIST_ID</string>
+    <string name="intent_artist_image_url_key" translatable="false">KEY_ARTIST_IMAGE_URL</string>
+    <string name="intent_track_list_key" translatable="false">KEY_TRACK_LIST</string>
 
     <!-- Preferences -->
     <string name="title_settings">Settings</string>
@@ -221,7 +222,6 @@
     <string name="country">Country</string>
     <string name="pref_country_key" translatable="false">country</string>
     <string name="pref_country_default_value" translatable="false">ca</string>
-    <string name="title_activity_song_player">SongPlayerActivity</string>
     <string name="hello_world">Hello world!</string>
 
 
