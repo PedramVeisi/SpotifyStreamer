@@ -4,9 +4,11 @@ import android.app.Service;
 import android.content.Intent;
 import android.media.AudioManager;
 import android.media.MediaPlayer;
+import android.net.Uri;
 import android.os.Binder;
 import android.os.IBinder;
 import android.os.PowerManager;
+import android.util.Log;
 
 import java.util.ArrayList;
 
@@ -26,6 +28,8 @@ public class MusicService extends Service  implements
     private ArrayList<TrackGist> mTrackList;
     //current position
     private int mTrackPosition;
+
+    private final IBinder mMusicBinder = new MusicBinder();
 
     @Override
     public void onCreate() {
@@ -58,14 +62,51 @@ public class MusicService extends Service  implements
         mPlayer.setOnErrorListener(this);
     }
 
+    /**
+     *
+     * @param tracks
+     */
     public void setTrackList(ArrayList<TrackGist> tracks){
         mTrackList = tracks;
     }
 
+
+    /**
+     * Make the player ready and start playing the track
+     */
+    public void playTrack(){
+        mPlayer.reset();
+        String trackUrl = mTrackList.get(mTrackPosition).getPreviewUrl();
+        Uri trackUri  = Uri.parse(trackUrl);
+
+        try{
+            mPlayer.setDataSource(getApplicationContext(), trackUri);
+        }
+        catch(Exception e){
+            Log.e("MUSIC SERVICE", "Error setting data source", e);
+        }
+
+        mPlayer.prepareAsync();
+    }
+
+    /**
+     * Allows us to change the track index
+     * @param trackPosition
+     */
+    public void setTrackPosition(int trackPosition){
+        mTrackPosition = trackPosition;
+    }
+
     @Override
     public IBinder onBind(Intent intent) {
-        // TODO: Return the communication channel to the service.
-        throw new UnsupportedOperationException("Not yet implemented");
+        return mMusicBinder;
+    }
+
+    @Override
+    public boolean onUnbind(Intent intent){
+        mPlayer.stop();
+        mPlayer.release();
+        return false;
     }
 
     @Override
@@ -80,7 +121,8 @@ public class MusicService extends Service  implements
 
     @Override
     public void onPrepared(MediaPlayer mp) {
-
+        //start playback
+        mp.start();
     }
 
     public class MusicBinder extends Binder {
