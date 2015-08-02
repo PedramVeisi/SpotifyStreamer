@@ -60,10 +60,14 @@ public class TopTracksFragment extends Fragment {
             artistImageUrl = arguments.getString(getString(R.string.artist_image_url_key));
         }
 
+        final ImageView headerImageView = (ImageView) rootView.findViewById(R.id.top_tracks_header_imageview);
         if (artistImageUrl != null) {
             // Set header image view
-            ImageView headerImageView = (ImageView) rootView.findViewById(R.id.top_tracks_header_imageview);
             Picasso.with(getActivity()).load(artistImageUrl).into(headerImageView);
+        } else {
+            // Hide the image view
+            headerImageView.setVisibility(View.GONE);
+
         }
 
         // Instantiate the adapter
@@ -91,6 +95,11 @@ public class TopTracksFragment extends Fragment {
         }
 
         return rootView;
+    }
+
+    @Override
+    public void onActivityCreated(Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
     }
 
     @Override
