@@ -7,13 +7,13 @@
         android:id="@+id/toolbar"
         layout="@layout/toolbar"></include>
 
-    <fragment
-        android:id="@+id/music_player_fragment"
-        android:name="si.vei.pedram.spotifystreamer.fragments.MusicPlayerFragment"
+
+    <FrameLayout
+        android:id="@+id/music_player_container"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_below="@id/toolbar"
-        tools:context="si.vei.pedram.spotifystreamer.fragments.MusicPlayerFragment"
-        tools:layout="@layout/fragment_music_player" />
+        tools:context="si.vei.pedram.spotifystreamer.activities.TopTracksActivity"
+        tools:ignore="MergeRootFrame"></FrameLayout>
 
 </RelativeLayout>

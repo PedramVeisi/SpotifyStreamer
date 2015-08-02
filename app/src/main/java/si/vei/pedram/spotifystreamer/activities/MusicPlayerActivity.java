@@ -10,6 +10,7 @@ import android.view.MenuItem;
 import java.util.ArrayList;
 
 import si.vei.pedram.spotifystreamer.R;
+import si.vei.pedram.spotifystreamer.fragments.MusicPlayerFragment;
 import si.vei.pedram.spotifystreamer.models.TrackGist;
 import si.vei.pedram.spotifystreamer.service.MusicService;
 
@@ -42,6 +43,21 @@ public class MusicPlayerActivity extends ActionBarActivity {
         // Display back button on toolbar
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setDisplayShowHomeEnabled(true);
+
+        if (savedInstanceState == null) {
+            // Create the music player fragment and add it to the activity
+            // using a fragment transaction.
+            Bundle arguments = new Bundle();
+            arguments.putParcelableArrayList(getString(R.string.intent_track_list_key), trackList);
+            arguments.putInt(getString(R.string.intent_selected_track_position), trackPosition);
+
+            MusicPlayerFragment fragment = new MusicPlayerFragment();
+            fragment.setArguments(arguments);
+
+            getSupportFragmentManager().beginTransaction()
+                    .add(R.id.music_player_container, fragment)
+                    .commit();
+        }
 
     }
 
