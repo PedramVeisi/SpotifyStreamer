@@ -223,6 +223,7 @@
     <string name="pref_country_key" translatable="false">country</string>
     <string name="pref_country_default_value" translatable="false">ca</string>
     <string name="hello_world">Hello world!</string>
+    <string name="intent_selected_track_position">SELECTED_TRACK_POSITION</string>
 
 
 </resources>

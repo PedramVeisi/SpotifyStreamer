@@ -84,6 +84,7 @@ public class TopTracksFragment extends Fragment {
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 Intent intent = new Intent(getActivity(), MusicPlayerActivity.class);
                 intent.putParcelableArrayListExtra(getString(R.string.intent_track_list_key), (ArrayList<TrackGist>) mTracksAdapter.getTracks());
+                intent.putExtra(getString(R.string.intent_selected_track_position), position);
                 startActivity(intent);
             }
         });

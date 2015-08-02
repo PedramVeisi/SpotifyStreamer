@@ -1,5 +1,6 @@
 package si.vei.pedram.spotifystreamer.activities;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.ActionBarActivity;
 import android.support.v7.widget.Toolbar;
@@ -10,6 +11,7 @@ import java.util.ArrayList;
 
 import si.vei.pedram.spotifystreamer.R;
 import si.vei.pedram.spotifystreamer.models.TrackGist;
+import si.vei.pedram.spotifystreamer.service.MusicService;
 
 /**
  * Music player activity
@@ -18,13 +20,20 @@ import si.vei.pedram.spotifystreamer.models.TrackGist;
  */
 public class MusicPlayerActivity extends ActionBarActivity {
 
+    private MusicService mMusicService;
+    private Intent mPlayIntent;
+    private boolean mMusicBound = false;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_music_player);
 
         // Get track list from calling activity
-        ArrayList<TrackGist> tracksList = getIntent().getParcelableArrayListExtra(getString(R.string.intent_track_list_key));
+        ArrayList<TrackGist> trackList = getIntent().getParcelableArrayListExtra(getString(R.string.intent_track_list_key));
+
+        // Get track position in the list
+        int trackPosition = getIntent().getExtras().getInt(getString(R.string.intent_selected_track_position));
 
         // Set a toolbar to replace the action bar.
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
@@ -35,7 +44,6 @@ public class MusicPlayerActivity extends ActionBarActivity {
         getSupportActionBar().setDisplayShowHomeEnabled(true);
 
     }
-
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
