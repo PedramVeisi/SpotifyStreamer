@@ -1,5 +1,7 @@
 package si.vei.pedram.spotifystreamer.service;
 
+import android.app.Notification;
+import android.app.PendingIntent;
 import android.app.Service;
 import android.content.Intent;
 import android.media.AudioManager;
@@ -12,15 +14,20 @@ import android.util.Log;
 
 import java.util.ArrayList;
 
+import si.vei.pedram.spotifystreamer.R;
+import si.vei.pedram.spotifystreamer.activities.MainActivity;
 import si.vei.pedram.spotifystreamer.models.TrackGist;
 
 /**
  * @author Pedram Veisi
- * Music Player Service
+ *         Music Player Service
  */
-public class MusicService extends Service  implements
+public class MusicService extends Service implements
         MediaPlayer.OnPreparedListener, MediaPlayer.OnErrorListener,
-        MediaPlayer.OnCompletionListener{
+        MediaPlayer.OnCompletionListener {
+
+    // Notification id
+    private static final int NOTIFICATION_ID = 1;
 
     //media player
     private MediaPlayer mPlayer;
@@ -49,7 +56,7 @@ public class MusicService extends Service  implements
     /**
      * Set player properties and listeners
      */
-    public void initMusicPlayer(){
+    public void initMusicPlayer() {
         mPlayer.setWakeMode(getApplicationContext(),
                 PowerManager.PARTIAL_WAKE_LOCK);
         mPlayer.setAudioStreamType(AudioManager.STREAM_MUSIC);
@@ -63,10 +70,9 @@ public class MusicService extends Service  implements
     }
 
     /**
-     *
      * @param tracks
      */
-    public void setTrackList(ArrayList<TrackGist> tracks){
+    public void setTrackList(ArrayList<TrackGist> tracks) {
         mTrackList = tracks;
     }
 
@@ -74,15 +80,14 @@ public class MusicService extends Service  implements
     /**
      * Make the player ready and start playing the track
      */
-    public void playTrack(){
+    public void playTrack() {
         mPlayer.reset();
         String trackUrl = mTrackList.get(mTrackPosition).getPreviewUrl();
-        Uri trackUri  = Uri.parse(trackUrl);
+        Uri trackUri = Uri.parse(trackUrl);
 
-        try{
+        try {
             mPlayer.setDataSource(getApplicationContext(), trackUri);
-        }
-        catch(Exception e){
+        } catch (Exception e) {
             Log.e("MUSIC SERVICE", "Error setting data source", e);
         }
 
@@ -91,43 +96,44 @@ public class MusicService extends Service  implements
 
     /**
      * Allows us to change the track index
+     *
      * @param trackPosition
      */
-    public void setTrackPosition(int trackPosition){
+    public void setTrackPosition(int trackPosition) {
         mTrackPosition = trackPosition;
     }
 
 
-    public int getTrackPosition(){
+    public int getPlayingPosition() {
         return mPlayer.getCurrentPosition();
     }
 
-    public int getTrackDuration(){
+    public int getTrackDuration() {
         return mPlayer.getDuration();
     }
 
-    public boolean isPlaying(){
+    public boolean isPlaying() {
         return mPlayer.isPlaying();
     }
 
-    public void pausePlayer(){
+    public void pausePlayer() {
         mPlayer.pause();
     }
 
-    public void seekTo(int position){
+    public void seekTo(int position) {
         mPlayer.seekTo(position);
     }
 
-    public void startPlayer(){
+    public void startPlayer() {
         mPlayer.start();
     }
 
     /**
      * Skip to previous track
      */
-    public void playPreviousTrack(){
+    public void playPreviousTrack() {
         mTrackPosition--;
-        if(mTrackPosition < 0){
+        if (mTrackPosition < 0) {
             mTrackPosition = mTrackList.size() - 1;
         }
         playTrack();
@@ -136,9 +142,9 @@ public class MusicService extends Service  implements
     /**
      * Skip to next track
      */
-    public void playNextTrack(){
+    public void playNextTrack() {
         mTrackPosition++;
-        if(mTrackPosition >= mTrackList.size()){
+        if (mTrackPosition >= mTrackList.size()) {
             mTrackPosition = 0;
         }
         playTrack();
@@ -150,7 +156,7 @@ public class MusicService extends Service  implements
     }
 
     @Override
-    public boolean onUnbind(Intent intent){
+    public boolean onUnbind(Intent intent) {
         mPlayer.stop();
         mPlayer.release();
         return false;
@@ -170,6 +176,31 @@ public class MusicService extends Service  implements
     public void onPrepared(MediaPlayer mp) {
         //start playback
         mp.start();
+
+        String trackName = mTrackList.get(mTrackPosition).getTrackName();
+
+        Intent notificationIntent = new Intent(this, MainActivity.class);
+        notificationIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+        PendingIntent pendInt = PendingIntent.getActivity(this, 0,
+                notificationIntent, PendingIntent.FLAG_UPDATE_CURRENT);
+
+        Notification.Builder builder = new Notification.Builder(this);
+
+        builder.setContentIntent(pendInt)
+                .setSmallIcon(R.mipmap.ic_launcher)
+                .setTicker(trackName)
+                .setOngoing(true)
+                .setContentTitle("Playing")
+                .setContentText(trackName);
+
+        Notification notification = builder.getNotification();
+
+        startForeground(NOTIFICATION_ID, notification);
+    }
+
+    @Override
+    public void onDestroy() {
+        stopForeground(true);
     }
 
     public class MusicBinder extends Binder {

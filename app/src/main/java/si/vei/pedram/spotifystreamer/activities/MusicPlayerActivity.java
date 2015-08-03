@@ -1,11 +1,6 @@
 package si.vei.pedram.spotifystreamer.activities;
 
-import android.content.ComponentName;
-import android.content.Context;
-import android.content.Intent;
-import android.content.ServiceConnection;
 import android.os.Bundle;
-import android.os.IBinder;
 import android.support.v7.app.ActionBarActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
@@ -16,18 +11,13 @@ import java.util.ArrayList;
 import si.vei.pedram.spotifystreamer.R;
 import si.vei.pedram.spotifystreamer.fragments.MusicPlayerFragment;
 import si.vei.pedram.spotifystreamer.models.TrackGist;
-import si.vei.pedram.spotifystreamer.service.MusicService;
 
 /**
  * Music player activity
  *
  * @author Pedram Veisi
  */
-public class MusicPlayerActivity extends ActionBarActivity implements MusicPlayerFragment.Callback {
-
-    private MusicService mMusicService;
-    private Intent mPlayIntent;
-    private boolean mMusicBound = false;
+public class MusicPlayerActivity extends ActionBarActivity {
 
     private ArrayList<TrackGist> mTrackList;
     private int mTrackPosition;
@@ -68,35 +58,6 @@ public class MusicPlayerActivity extends ActionBarActivity implements MusicPlaye
 
     }
 
-    // Connect to the service
-    private ServiceConnection musicConnection = new ServiceConnection(){
-
-        @Override
-        public void onServiceConnected(ComponentName name, IBinder service) {
-            MusicService.MusicBinder binder = (MusicService.MusicBinder)service;
-            //get service
-            mMusicService = binder.getService();
-            //pass list
-            mMusicService.setTrackList(mTrackList);
-            mMusicBound = true;
-        }
-
-        @Override
-        public void onServiceDisconnected(ComponentName name) {
-            mMusicBound = false;
-        }
-    };
-
-    @Override
-    public void onStart() {
-        super.onStart();
-        if(mPlayIntent == null){
-            mPlayIntent = new Intent(this, MusicService.class);
-            bindService(mPlayIntent, musicConnection, Context.BIND_AUTO_CREATE);
-            startService(mPlayIntent);
-        }
-    }
-
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
@@ -119,16 +80,4 @@ public class MusicPlayerActivity extends ActionBarActivity implements MusicPlaye
         return super.onOptionsItemSelected(item);
     }
 
-    @Override
-    public void onDestroy() {
-        unbindService(musicConnection);
-        stopService(mPlayIntent);
-        mMusicService = null;
-        super.onDestroy();
-    }
-
-    @Override
-    public MusicService getMusicService() {
-        return mMusicService;
-    }
 }
