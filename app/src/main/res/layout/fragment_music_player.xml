@@ -1,18 +1,45 @@
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:gravity="center_horizontal"
+    android:orientation="vertical"
     android:paddingBottom="@dimen/activity_vertical_margin"
     android:paddingLeft="@dimen/activity_horizontal_margin"
     android:paddingRight="@dimen/activity_horizontal_margin"
     android:paddingTop="@dimen/activity_vertical_margin"
     tools:context="si.vei.pedram.spotifystreamer.fragments.MusicPlayerFragment">
 
-    <Button
+
+    <TextView
+        android:id="@+id/music_player_artist_name_textview"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="New Button"
-        android:id="@+id/play_button"
-        android:layout_alignParentBottom="true"
-        android:layout_centerHorizontal="true" />
-</RelativeLayout>
+        android:text="Medium Text"
+        android:textAppearance="?android:attr/textAppearanceMedium" />
+
+    <TextView
+        android:id="@+id/music_player_album_name_textview"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:text="Small Text"
+        android:textAppearance="?android:attr/textAppearanceSmall" />
+
+
+    <ImageView
+        android:id="@+id/music_player_track_imageview"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:src="@drawable/no_image_available" />
+
+    <TextView
+        android:id="@+id/music_player_track_name_textview"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:text="Medium Text"
+        android:textAppearance="?android:attr/textAppearanceMedium" />
+
+</LinearLayout>
