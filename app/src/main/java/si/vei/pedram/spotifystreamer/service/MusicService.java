@@ -97,6 +97,53 @@ public class MusicService extends Service  implements
         mTrackPosition = trackPosition;
     }
 
+
+    public int getTrackPosition(){
+        return mPlayer.getCurrentPosition();
+    }
+
+    public int getTrackDuration(){
+        return mPlayer.getDuration();
+    }
+
+    public boolean isPlaying(){
+        return mPlayer.isPlaying();
+    }
+
+    public void pausePlayer(){
+        mPlayer.pause();
+    }
+
+    public void seekTo(int position){
+        mPlayer.seekTo(position);
+    }
+
+    public void startPlayer(){
+        mPlayer.start();
+    }
+
+    /**
+     * Skip to previous track
+     */
+    public void playPreviousTrack(){
+        mTrackPosition--;
+        if(mTrackPosition < 0){
+            mTrackPosition = mTrackList.size() - 1;
+        }
+        playTrack();
+    }
+
+    /**
+     * Skip to next track
+     */
+    public void playNextTrack(){
+        mTrackPosition++;
+        if(mTrackPosition >= mTrackList.size()){
+            mTrackPosition = 0;
+        }
+        playTrack();
+    }
+
     @Override
     public IBinder onBind(Intent intent) {
         return mMusicBinder;
