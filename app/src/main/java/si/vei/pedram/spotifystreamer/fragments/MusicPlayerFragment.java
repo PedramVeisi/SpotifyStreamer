@@ -65,6 +65,9 @@ public class MusicPlayerFragment extends Fragment implements MediaPlayerControl 
             mMusicService.setTrackPosition(mTrackPosition);
             mMusicBound = true;
 
+            // Since we want to play a track every time the service starts, we will call playTrack method to initialize the player and set the track
+            // Set controller
+            setController();
             mMusicService.playTrack();
             mMusicController.show(0);
         }
@@ -78,14 +81,12 @@ public class MusicPlayerFragment extends Fragment implements MediaPlayerControl 
     @Override
     public void onStart() {
         super.onStart();
+        // Start and bind the service when activity starts
         if (mPlayIntent == null) {
             mPlayIntent = new Intent(getActivity(), MusicService.class);
             getActivity().bindService(mPlayIntent, musicConnection, Context.BIND_AUTO_CREATE);
             getActivity().startService(mPlayIntent);
         }
-
-        // Set controller here since we need a view for setAnchor method
-        setController();
     }
 
     @Override
