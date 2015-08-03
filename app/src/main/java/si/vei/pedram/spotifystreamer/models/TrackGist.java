@@ -13,6 +13,7 @@ import android.os.Parcelable;
 public class TrackGist implements Parcelable {
 
     private String mTrackName;
+    private String mArtistName;
     private String mAlbumName;
     private String mLargeAlbumThumbnail;
     private String mSmallAlbumThumbnail;
@@ -27,6 +28,7 @@ public class TrackGist implements Parcelable {
      */
     private TrackGist(Parcel in) {
         this.mTrackName = in.readString();
+        this.mArtistName = in.readString();
         this.mAlbumName = in.readString();
         this.mLargeAlbumThumbnail = in.readString();
         this.mSmallAlbumThumbnail = in.readString();
@@ -42,8 +44,9 @@ public class TrackGist implements Parcelable {
      * @param smallAlbumThumbnail Small album thumbnail for the track
      * @param previewUrl Preview URL of the track
      */
-    public TrackGist(String trackName, String albumName, String largeAlbumThumbnail, String smallAlbumThumbnail, String previewUrl) {
+    public TrackGist(String trackName, String artistName, String albumName, String largeAlbumThumbnail, String smallAlbumThumbnail, String previewUrl) {
         this.mTrackName = trackName;
+        this.mArtistName = artistName;
         this.mAlbumName = albumName;
         this.mLargeAlbumThumbnail = largeAlbumThumbnail;
         this.mSmallAlbumThumbnail = smallAlbumThumbnail;
@@ -56,6 +59,13 @@ public class TrackGist implements Parcelable {
      */
     public String getTrackName() {
         return mTrackName;
+    }
+
+    /**
+     * @return Artist's name
+     */
+    public String getArtistName(){
+        return mArtistName;
     }
 
     /**
@@ -104,6 +114,7 @@ public class TrackGist implements Parcelable {
     @Override
     public void writeToParcel(Parcel dest, int flags) {
         dest.writeString(this.mTrackName);
+        dest.writeString(this.mArtistName);
         dest.writeString(this.mAlbumName);
         dest.writeString(this.mLargeAlbumThumbnail);
         dest.writeString(this.mSmallAlbumThumbnail);

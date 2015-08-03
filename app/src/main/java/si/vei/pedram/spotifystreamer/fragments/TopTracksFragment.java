@@ -174,6 +174,7 @@ public class TopTracksFragment extends Fragment {
 
             String largeAlbumThumbnailUrl;
             String smallAlbumThumbnailUrl;
+            String artistsString = "";
 
             ArrayList<TrackGist> trackGists = new ArrayList<TrackGist>();
 
@@ -192,8 +193,10 @@ public class TopTracksFragment extends Fragment {
                         }
                     }
 
+                    // TODO Send all artist names later
+
                     // Now we have everything. Creating our summarized track
-                    trackGists.add(new TrackGist(track.name, track.album.name, largeAlbumThumbnailUrl, smallAlbumThumbnailUrl, track.preview_url));
+                    trackGists.add(new TrackGist(track.name, track.artists.get(0).name, track.album.name, largeAlbumThumbnailUrl, smallAlbumThumbnailUrl, track.preview_url));
                 }
             }
 
