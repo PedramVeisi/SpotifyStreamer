@@ -11,13 +11,13 @@ import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.MediaController;
 import android.widget.MediaController.MediaPlayerControl;
 
 import java.util.ArrayList;
 
 import si.vei.pedram.spotifystreamer.R;
 import si.vei.pedram.spotifystreamer.models.TrackGist;
+import si.vei.pedram.spotifystreamer.musictools.MusicController;
 import si.vei.pedram.spotifystreamer.service.MusicService;
 
 /**
@@ -28,7 +28,7 @@ public class MusicPlayerFragment extends Fragment implements MediaPlayerControl 
     private ArrayList<TrackGist> mTrackList;
     private int mTrackPosition;
     private Intent mPlayIntent;
-    private MediaController mMusicController;
+    private MusicController mMusicController;
     private MusicService mMusicService;
     private boolean mMusicBound;
 
@@ -64,6 +64,9 @@ public class MusicPlayerFragment extends Fragment implements MediaPlayerControl 
             mMusicService.setTrackList(mTrackList);
             mMusicService.setTrackPosition(mTrackPosition);
             mMusicBound = true;
+
+            mMusicService.playTrack();
+            mMusicController.show(0);
         }
 
         @Override
@@ -80,6 +83,7 @@ public class MusicPlayerFragment extends Fragment implements MediaPlayerControl 
             getActivity().bindService(mPlayIntent, musicConnection, Context.BIND_AUTO_CREATE);
             getActivity().startService(mPlayIntent);
         }
+
         // Set controller here since we need a view for setAnchor method
         setController();
     }
@@ -96,7 +100,7 @@ public class MusicPlayerFragment extends Fragment implements MediaPlayerControl 
      * Set the music controller
      */
     private void setController() {
-        mMusicController = new MediaController(getActivity());
+        mMusicController = new MusicController(getActivity());
 
         // Set listeners for the controller
         mMusicController.setPrevNextListeners(new View.OnClickListener() {
@@ -114,14 +118,6 @@ public class MusicPlayerFragment extends Fragment implements MediaPlayerControl 
         mMusicController.setMediaPlayer(this);
         mMusicController.setAnchorView(getView().findViewById(R.id.player_controller_container));
         mMusicController.setEnabled(true);
-
-        handler.post(new Runnable() {
-            public void run() {
-                mMusicController.setEnabled(true);
-                mMusicController.show(0);
-            }
-        });
-
     }
 
     //play next
