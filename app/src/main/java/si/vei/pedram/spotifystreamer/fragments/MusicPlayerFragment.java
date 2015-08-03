@@ -11,7 +11,11 @@ import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.MediaController.MediaPlayerControl;
+import android.widget.TextView;
+
+import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
 
@@ -51,6 +55,20 @@ public class MusicPlayerFragment extends Fragment implements MediaPlayerControl 
             mTrackList = arguments.getParcelableArrayList(getString(R.string.intent_track_list_key));
             mTrackPosition = arguments.getInt(getString(R.string.intent_selected_track_position));
         }
+
+        // Get UI elements
+        TextView artistNameTextView = (TextView) rootView.findViewById(R.id.music_player_artist_name_textview);
+        TextView albumNameTextView = (TextView) rootView.findViewById(R.id.music_player_album_name_textview);
+        ImageView albumArtImageView = (ImageView) rootView.findViewById(R.id.music_player_album_art_imageview);
+        TextView trackNameTextView = (TextView) rootView.findViewById(R.id.music_player_track_name_textview);
+
+        TrackGist currentTrack = mTrackList.get(mTrackPosition);
+
+        artistNameTextView.setText(currentTrack.getArtistName());
+        albumNameTextView.setText(currentTrack.getAlbumName());
+        trackNameTextView.setText(currentTrack.getTrackName());
+
+        Picasso.with(getActivity()).load(currentTrack.getLargeAlbumThumbnail()).into(albumArtImageView);
 
         return rootView;
     }
