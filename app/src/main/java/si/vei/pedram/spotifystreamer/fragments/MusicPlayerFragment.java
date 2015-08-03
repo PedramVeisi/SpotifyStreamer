@@ -12,7 +12,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
-import android.widget.MediaController.MediaPlayerControl;
 import android.widget.TextView;
 
 import com.squareup.picasso.Picasso;
@@ -21,18 +20,16 @@ import java.util.ArrayList;
 
 import si.vei.pedram.spotifystreamer.R;
 import si.vei.pedram.spotifystreamer.models.TrackGist;
-import si.vei.pedram.spotifystreamer.musictools.MusicController;
 import si.vei.pedram.spotifystreamer.service.MusicService;
 
 /**
  * A placeholder fragment containing a simple view.
  */
-public class MusicPlayerFragment extends Fragment implements MediaPlayerControl {
+public class MusicPlayerFragment extends Fragment {
 
     private ArrayList<TrackGist> mTrackList;
     private int mTrackPosition;
     private Intent mPlayIntent;
-    private MusicController mMusicController;
     private MusicService mMusicService;
     private boolean mMusicBound;
 
@@ -89,11 +86,8 @@ public class MusicPlayerFragment extends Fragment implements MediaPlayerControl 
             // Since we want to play a track every time the service starts, we will call playTrack method to initialize the player and set the track
             mMusicService.playTrack();
             if(mPlaybackPaused){
-                // Set controller
-                setController();
                 mPlaybackPaused = false;
             }
-            mMusicController.show(0);
         }
 
         @Override
@@ -117,7 +111,6 @@ public class MusicPlayerFragment extends Fragment implements MediaPlayerControl 
     public void onResume() {
         super.onResume();
         if(mFragmentPaused){
-            setController();
             mFragmentPaused = false;
         }
     }
@@ -129,12 +122,6 @@ public class MusicPlayerFragment extends Fragment implements MediaPlayerControl 
     }
 
     @Override
-    public void onStop() {
-        mMusicController.hide();
-        super.onStop();
-    }
-
-    @Override
     public void onDestroy() {
         getActivity().unbindService(musicConnection);
         getActivity().stopService(mPlayIntent);
@@ -142,120 +129,20 @@ public class MusicPlayerFragment extends Fragment implements MediaPlayerControl 
         super.onDestroy();
     }
 
-    /**
-     * Set the music controller
-     */
-    private void setController() {
-
-        if (mMusicController == null) {
-            mMusicController = new MusicController(getActivity());
-        }
-
-        // Set listeners for the controller
-        mMusicController.setPrevNextListeners(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                playNextTrack();
-            }
-        }, new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                playPreviousTrack();
-            }
-        });
-
-        mMusicController.setMediaPlayer(this);
-        mMusicController.setAnchorView(getView().findViewById(R.id.player_controller_container));
-        mMusicController.setEnabled(true);
-        mMusicController.requestFocus();
-    }
-
     //play next
     private void playNextTrack() {
         mMusicService.playNextTrack();
         if(mPlaybackPaused){
-            setController();
             mPlaybackPaused = false;
         }
-        mMusicController.show(0);
     }
 
     //play previous
     private void playPreviousTrack() {
         mMusicService.playPreviousTrack();
         if(mPlaybackPaused){
-            setController();
             mPlaybackPaused=false;
         }
-        mMusicController.show(0);
-    }
-
-    @Override
-    public void start() {
-        mMusicService.startPlayer();
-    }
-
-    @Override
-    public void pause() {
-        mPlaybackPaused = true;
-        mMusicService.pausePlayer();
-    }
-
-    @Override
-    public int getDuration() {
-        if (mMusicService != null && mMusicBound && mMusicService.isPlaying()) {
-            return mMusicService.getTrackDuration();
-        } else {
-            return 0;
-        }
-    }
-
-    @Override
-    public int getCurrentPosition() {
-        if (mMusicService != null && mMusicBound && mMusicService.isPlaying()) {
-            return mMusicService.getPlayingPosition();
-        } else {
-            return 0;
-        }
-    }
-
-
-    @Override
-    public void seekTo(int pos) {
-        mMusicService.seekTo(pos);
-    }
-
-    @Override
-    public boolean isPlaying() {
-        if (mMusicService != null && mMusicBound) {
-            return mMusicService.isPlaying();
-        }
-        return false;
-    }
-
-    @Override
-    public int getBufferPercentage() {
-        return 0;
-    }
-
-    @Override
-    public boolean canPause() {
-        return true;
-    }
-
-    @Override
-    public boolean canSeekBackward() {
-        return true;
-    }
-
-    @Override
-    public boolean canSeekForward() {
-        return true;
-    }
-
-    @Override
-    public int getAudioSessionId() {
-        return 0;
     }
 
 }
