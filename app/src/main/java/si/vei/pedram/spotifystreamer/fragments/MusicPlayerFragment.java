@@ -38,13 +38,13 @@ public class MusicPlayerFragment extends Fragment {
 
             Button play = (Button) rootView.findViewById(R.id.play_button);
 
-        play.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                ((MusicPlayerActivity)getActivity()).getMusicService().setTrackPosition(0);
-                ((MusicPlayerActivity)getActivity()).getMusicService().playTrack();
-            }
-        });
+            play.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    ((MusicPlayerActivity) getActivity()).getMusicService().setTrackPosition(0);
+                    ((MusicPlayerActivity) getActivity()).getMusicService().playTrack();
+                }
+            });
         }
 
         return rootView;
