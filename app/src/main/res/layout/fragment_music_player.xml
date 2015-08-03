@@ -52,7 +52,8 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
-        android:orientation="horizontal">
+        android:orientation="horizontal"
+        android:background="@android:color/holo_green_light">
 
         <ImageButton
             android:id="@+id/music_player_previous_track_button"
