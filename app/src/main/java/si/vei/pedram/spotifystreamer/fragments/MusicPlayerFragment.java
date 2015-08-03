@@ -32,6 +32,9 @@ public class MusicPlayerFragment extends Fragment implements MediaPlayerControl 
     private MusicService mMusicService;
     private boolean mMusicBound;
 
+    private boolean mFragmentPaused = false;
+    private boolean mPlaybackPaused = true;
+
     private Handler handler = new Handler();
 
     public MusicPlayerFragment() {
@@ -66,9 +69,12 @@ public class MusicPlayerFragment extends Fragment implements MediaPlayerControl 
             mMusicBound = true;
 
             // Since we want to play a track every time the service starts, we will call playTrack method to initialize the player and set the track
-            // Set controller
-            setController();
             mMusicService.playTrack();
+            if(mPlaybackPaused){
+                // Set controller
+                setController();
+                mPlaybackPaused = false;
+            }
             mMusicController.show(0);
         }
 
@@ -90,6 +96,27 @@ public class MusicPlayerFragment extends Fragment implements MediaPlayerControl 
     }
 
     @Override
+    public void onResume() {
+        super.onResume();
+        if(mFragmentPaused){
+            setController();
+            mFragmentPaused = false;
+        }
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        mFragmentPaused = true;
+    }
+
+    @Override
+    public void onStop() {
+        mMusicController.hide();
+        super.onStop();
+    }
+
+    @Override
     public void onDestroy() {
         getActivity().unbindService(musicConnection);
         getActivity().stopService(mPlayIntent);
@@ -101,7 +128,10 @@ public class MusicPlayerFragment extends Fragment implements MediaPlayerControl 
      * Set the music controller
      */
     private void setController() {
-        mMusicController = new MusicController(getActivity());
+
+        if (mMusicController == null) {
+            mMusicController = new MusicController(getActivity());
+        }
 
         // Set listeners for the controller
         mMusicController.setPrevNextListeners(new View.OnClickListener() {
@@ -119,17 +149,26 @@ public class MusicPlayerFragment extends Fragment implements MediaPlayerControl 
         mMusicController.setMediaPlayer(this);
         mMusicController.setAnchorView(getView().findViewById(R.id.player_controller_container));
         mMusicController.setEnabled(true);
+        mMusicController.requestFocus();
     }
 
     //play next
     private void playNextTrack() {
         mMusicService.playNextTrack();
+        if(mPlaybackPaused){
+            setController();
+            mPlaybackPaused = false;
+        }
         mMusicController.show(0);
     }
 
     //play previous
     private void playPreviousTrack() {
         mMusicService.playPreviousTrack();
+        if(mPlaybackPaused){
+            setController();
+            mPlaybackPaused=false;
+        }
         mMusicController.show(0);
     }
 
@@ -140,6 +179,7 @@ public class MusicPlayerFragment extends Fragment implements MediaPlayerControl 
 
     @Override
     public void pause() {
+        mPlaybackPaused = true;
         mMusicService.pausePlayer();
     }
 

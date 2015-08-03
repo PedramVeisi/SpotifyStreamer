@@ -78,7 +78,7 @@ public class MusicService extends Service implements
 
 
     /**
-     * Make the player ready and start playing the track
+     * Make the player ready to start playing the track
      */
     public void playTrack() {
         mPlayer.reset();
@@ -164,11 +164,15 @@ public class MusicService extends Service implements
 
     @Override
     public void onCompletion(MediaPlayer mp) {
-
+        if(mPlayer.getCurrentPosition() > 0){
+            mp.reset();
+            playNextTrack();
+        }
     }
 
     @Override
     public boolean onError(MediaPlayer mp, int what, int extra) {
+        mp.reset();
         return false;
     }
 
