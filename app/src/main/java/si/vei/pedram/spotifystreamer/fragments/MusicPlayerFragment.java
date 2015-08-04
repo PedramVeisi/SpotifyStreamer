@@ -65,6 +65,31 @@ public class MusicPlayerFragment extends Fragment implements SeekBar.OnSeekBarCh
     private ImageView mAlbumArtImageView;
     private TextView mTrackNameTextView;
     private TrackGist mCurrentTrack;
+    // Connect to the service
+    private ServiceConnection musicConnection = new ServiceConnection() {
+
+        @Override
+        public void onServiceConnected(ComponentName name, IBinder service) {
+            MusicService.MusicBinder binder = (MusicService.MusicBinder) service;
+            //get service
+            mMusicService = binder.getService();
+            //pass list
+            mMusicService.setTrackList(mTrackList);
+            mMusicService.setTrackPosition(mTrackPosition);
+            mMusicBound = true;
+
+            // Since we want to play a track every time the service starts, we will call playTrack method to initialize the player and set the track
+            mMusicService.playTrack();
+            if (mPlaybackPaused) {
+                mPlaybackPaused = false;
+            }
+        }
+
+        @Override
+        public void onServiceDisconnected(ComponentName name) {
+            mMusicBound = false;
+        }
+    };
 
     public MusicPlayerFragment() {
     }
@@ -169,32 +194,6 @@ public class MusicPlayerFragment extends Fragment implements SeekBar.OnSeekBarCh
         return rootView;
     }
 
-    // Connect to the service
-    private ServiceConnection musicConnection = new ServiceConnection() {
-
-        @Override
-        public void onServiceConnected(ComponentName name, IBinder service) {
-            MusicService.MusicBinder binder = (MusicService.MusicBinder) service;
-            //get service
-            mMusicService = binder.getService();
-            //pass list
-            mMusicService.setTrackList(mTrackList);
-            mMusicService.setTrackPosition(mTrackPosition);
-            mMusicBound = true;
-
-            // Since we want to play a track every time the service starts, we will call playTrack method to initialize the player and set the track
-            mMusicService.playTrack();
-            if (mPlaybackPaused) {
-                mPlaybackPaused = false;
-            }
-        }
-
-        @Override
-        public void onServiceDisconnected(ComponentName name) {
-            mMusicBound = false;
-        }
-    };
-
     @Override
     public void onStart() {
         super.onStart();
@@ -244,6 +243,33 @@ public class MusicPlayerFragment extends Fragment implements SeekBar.OnSeekBarCh
         }
     }
 
+    public void updateProgressBar() {
+        mHandler.postDelayed(mUpdateTimeTask, 100);
+    }
+
+    /**
+     * Background Runnable thread
+     */
+    private Runnable mUpdateTimeTask = new Runnable() {
+        public void run() {
+            long totalDuration = mMusicService.getTrackDuration();
+            long currentDuration = mMusicService.getPlayingPosition();
+
+            // Displaying Total Duration time
+            mTrackTotalDuration.setText("" + utils.milliSecondsToTimer(totalDuration));
+            // Displaying time completed playing
+            mTrackCurrentDuration.setText("" + utils.milliSecondsToTimer(currentDuration));
+
+            // Updating progress bar
+            int progress = (int) (utils.getProgressPercentage(currentDuration, totalDuration));
+            //Log.d("Progress", ""+progress);
+            mTrackSeekbar.setProgress(progress);
+
+            // Running this thread after 100 milliseconds
+            mHandler.postDelayed(this, 100);
+        }
+    };
+
     @Override
     public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
 
@@ -251,11 +277,20 @@ public class MusicPlayerFragment extends Fragment implements SeekBar.OnSeekBarCh
 
     @Override
     public void onStartTrackingTouch(SeekBar seekBar) {
-
+        // remove message Handler from updating progress bar
+        mHandler.removeCallbacks(mUpdateTimeTask);
     }
 
     @Override
     public void onStopTrackingTouch(SeekBar seekBar) {
+        mHandler.removeCallbacks(mUpdateTimeTask);
+        int totalDuration = mMusicService.getTrackDuration();
+        int currentPosition = utils.progressToTimer(seekBar.getProgress(), totalDuration);
 
+        // forward or backward to certain seconds
+        mMusicService.seekTo(currentPosition);
+
+        // update timer progress again
+        updateProgressBar();
     }
 }
