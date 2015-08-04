@@ -94,11 +94,26 @@ public class MusicPlayerFragment extends Fragment implements SeekBar.OnSeekBarCh
 
         Picasso.with(getActivity()).load(currentTrack.getLargeAlbumThumbnail()).into(mAlbumArtImageView);
 
+        mTrackSeekbar = (SeekBar) rootView.findViewById(R.id.music_player_seekBar);
+
         mPlayButton = (ImageButton) rootView.findViewById(R.id.music_player_play_pause_button);
         mForwardButton = (ImageButton) rootView.findViewById(R.id.music_player_forward_button);
         mBackwardButton = (ImageButton) rootView.findViewById(R.id.music_player_rewind_button);
         mNextButton = (ImageButton) rootView.findViewById(R.id.music_player_next_track_button);
         mPreviousButton = (ImageButton) rootView.findViewById(R.id.music_player_previous_track_button);
+
+        mForwardButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                int currentPosition = mMusicService.getPlayingPosition();
+                int totalDuration = mMusicService.getTrackDuration();
+                if (currentPosition + seekForwardTime < totalDuration) {
+                    mMusicService.seekTo(mMusicService.getPlayingPosition() + seekForwardTime);
+                } else {
+                    mMusicService.seekTo(totalDuration);
+                }
+            }
+        });
 
         utils = new Utilities();
 
