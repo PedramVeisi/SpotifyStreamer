@@ -11,7 +11,9 @@ import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageButton;
 import android.widget.ImageView;
+import android.widget.SeekBar;
 import android.widget.TextView;
 
 import com.squareup.picasso.Picasso;
@@ -19,13 +21,14 @@ import com.squareup.picasso.Picasso;
 import java.util.ArrayList;
 
 import si.vei.pedram.spotifystreamer.R;
+import si.vei.pedram.spotifystreamer.Utilities;
 import si.vei.pedram.spotifystreamer.models.TrackGist;
 import si.vei.pedram.spotifystreamer.service.MusicService;
 
 /**
  * A placeholder fragment containing a simple view.
  */
-public class MusicPlayerFragment extends Fragment {
+public class MusicPlayerFragment extends Fragment implements SeekBar.OnSeekBarChangeListener {
 
     private ArrayList<TrackGist> mTrackList;
     private int mTrackPosition;
@@ -37,6 +40,30 @@ public class MusicPlayerFragment extends Fragment {
     private boolean mPlaybackPaused = true;
 
     private Handler handler = new Handler();
+
+    private ImageButton mPlayButton;
+    private ImageButton mForwardButton;
+    private ImageButton mBackwardButton;
+    private ImageButton mNextButton;
+    private ImageButton mPreviousButton;
+
+
+    private SeekBar mTrackSeekbar;
+    private TextView mTrackCurrentDuration;
+    private TextView mTrackTotalDuration;
+
+    // Handler to update UI timer, progress bar etc,.
+    private Handler mHandler = new Handler();
+    ;
+
+    private Utilities utils;
+    private int seekForwardTime = 5000; // 5000 milliseconds
+    private int seekBackwardTime = 5000; // 5000 milliseconds
+
+    private TextView mAartistNameTextView;
+    private TextView mAlbumNameTextView;
+    private ImageView mAlbumArtImageView;
+    private TextView mTrackNameTextView;
 
     public MusicPlayerFragment() {
     }
@@ -54,18 +81,29 @@ public class MusicPlayerFragment extends Fragment {
         }
 
         // Get UI elements
-        TextView artistNameTextView = (TextView) rootView.findViewById(R.id.music_player_artist_name_textview);
-        TextView albumNameTextView = (TextView) rootView.findViewById(R.id.music_player_album_name_textview);
-        ImageView albumArtImageView = (ImageView) rootView.findViewById(R.id.music_player_album_art_imageview);
-        TextView trackNameTextView = (TextView) rootView.findViewById(R.id.music_player_track_name_textview);
+        mAartistNameTextView = (TextView) rootView.findViewById(R.id.music_player_artist_name_textview);
+        mAlbumNameTextView = (TextView) rootView.findViewById(R.id.music_player_album_name_textview);
+        mAlbumArtImageView = (ImageView) rootView.findViewById(R.id.music_player_album_art_imageview);
+        mTrackNameTextView = (TextView) rootView.findViewById(R.id.music_player_track_name_textview);
 
         TrackGist currentTrack = mTrackList.get(mTrackPosition);
 
-        artistNameTextView.setText(currentTrack.getArtistName());
-        albumNameTextView.setText(currentTrack.getAlbumName());
-        trackNameTextView.setText(currentTrack.getTrackName());
+        mAartistNameTextView.setText(currentTrack.getArtistName());
+        mAlbumNameTextView.setText(currentTrack.getAlbumName());
+        mTrackNameTextView.setText(currentTrack.getTrackName());
 
-        Picasso.with(getActivity()).load(currentTrack.getLargeAlbumThumbnail()).into(albumArtImageView);
+        Picasso.with(getActivity()).load(currentTrack.getLargeAlbumThumbnail()).into(mAlbumArtImageView);
+
+        mPlayButton = (ImageButton) rootView.findViewById(R.id.music_player_play_pause_button);
+        mForwardButton = (ImageButton) rootView.findViewById(R.id.music_player_forward_button);
+        mBackwardButton = (ImageButton) rootView.findViewById(R.id.music_player_rewind_button);
+        mNextButton = (ImageButton) rootView.findViewById(R.id.music_player_next_track_button);
+        mPreviousButton = (ImageButton) rootView.findViewById(R.id.music_player_previous_track_button);
+
+        utils = new Utilities();
+
+        // Listeners
+        mTrackSeekbar.setOnSeekBarChangeListener(this); // Important
 
         return rootView;
     }
@@ -85,7 +123,7 @@ public class MusicPlayerFragment extends Fragment {
 
             // Since we want to play a track every time the service starts, we will call playTrack method to initialize the player and set the track
             mMusicService.playTrack();
-            if(mPlaybackPaused){
+            if (mPlaybackPaused) {
                 mPlaybackPaused = false;
             }
         }
@@ -110,7 +148,7 @@ public class MusicPlayerFragment extends Fragment {
     @Override
     public void onResume() {
         super.onResume();
-        if(mFragmentPaused){
+        if (mFragmentPaused) {
             mFragmentPaused = false;
         }
     }
@@ -132,7 +170,7 @@ public class MusicPlayerFragment extends Fragment {
     //play next
     private void playNextTrack() {
         mMusicService.playNextTrack();
-        if(mPlaybackPaused){
+        if (mPlaybackPaused) {
             mPlaybackPaused = false;
         }
     }
@@ -140,9 +178,23 @@ public class MusicPlayerFragment extends Fragment {
     //play previous
     private void playPreviousTrack() {
         mMusicService.playPreviousTrack();
-        if(mPlaybackPaused){
-            mPlaybackPaused=false;
+        if (mPlaybackPaused) {
+            mPlaybackPaused = false;
         }
     }
 
+    @Override
+    public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
+
+    }
+
+    @Override
+    public void onStartTrackingTouch(SeekBar seekBar) {
+
+    }
+
+    @Override
+    public void onStopTrackingTouch(SeekBar seekBar) {
+
+    }
 }
