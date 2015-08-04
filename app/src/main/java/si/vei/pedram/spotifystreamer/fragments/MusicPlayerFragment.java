@@ -64,6 +64,7 @@ public class MusicPlayerFragment extends Fragment implements SeekBar.OnSeekBarCh
     private TextView mAlbumNameTextView;
     private ImageView mAlbumArtImageView;
     private TextView mTrackNameTextView;
+    private TrackGist mCurrentTrack;
 
     public MusicPlayerFragment() {
     }
@@ -86,16 +87,26 @@ public class MusicPlayerFragment extends Fragment implements SeekBar.OnSeekBarCh
         mAlbumArtImageView = (ImageView) rootView.findViewById(R.id.music_player_album_art_imageview);
         mTrackNameTextView = (TextView) rootView.findViewById(R.id.music_player_track_name_textview);
 
-        TrackGist currentTrack = mTrackList.get(mTrackPosition);
+        // Get the current track
+        mCurrentTrack = mTrackList.get(mTrackPosition);
 
-        mAartistNameTextView.setText(currentTrack.getArtistName());
-        mAlbumNameTextView.setText(currentTrack.getAlbumName());
-        mTrackNameTextView.setText(currentTrack.getTrackName());
+        // Set UI elements for the current track
+        mAartistNameTextView.setText(mCurrentTrack.getArtistName());
+        mAlbumNameTextView.setText(mCurrentTrack.getAlbumName());
+        mTrackNameTextView.setText(mCurrentTrack.getTrackName());
 
-        Picasso.with(getActivity()).load(currentTrack.getLargeAlbumThumbnail()).into(mAlbumArtImageView);
+        // Load the album art
+        Picasso.with(getActivity()).load(mCurrentTrack.getLargeAlbumThumbnail()).into(mAlbumArtImageView);
 
+        // Seekbar and related labels
         mTrackSeekbar = (SeekBar) rootView.findViewById(R.id.music_player_seekBar);
+        mTrackCurrentDuration = (TextView) rootView.findViewById(R.id.music_player_current_time_textview);
+        mTrackTotalDuration = (TextView) rootView.findViewById(R.id.music_player_track_total_duration_textview);
 
+        mTrackCurrentDuration.setText(getString(R.string.music_player_seekbar_zero_label));
+        mTrackTotalDuration.setText(getString(R.string.music_player_seekbar_total_duration));
+
+        // Media Controller Buttons
         mPlayButton = (ImageButton) rootView.findViewById(R.id.music_player_play_pause_button);
         mForwardButton = (ImageButton) rootView.findViewById(R.id.music_player_forward_button);
         mBackwardButton = (ImageButton) rootView.findViewById(R.id.music_player_rewind_button);
@@ -124,6 +135,29 @@ public class MusicPlayerFragment extends Fragment implements SeekBar.OnSeekBarCh
                 } else {
                     mMusicService.seekTo(0);
                 }
+            }
+        });
+
+        mNextButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                mTrackPosition++;
+                mMusicService.playNextTrack();
+
+                mCurrentTrack = mTrackList.get(mTrackPosition);
+
+                mAartistNameTextView.setText(mCurrentTrack.getArtistName());
+                mAlbumNameTextView.setText(mCurrentTrack.getAlbumName());
+                mTrackNameTextView.setText(mCurrentTrack.getTrackName());
+
+                // Load the album art
+                Picasso.with(getActivity()).load(mCurrentTrack.getLargeAlbumThumbnail()).into(mAlbumArtImageView);
+
+                mTrackCurrentDuration.setText(getString(R.string.music_player_seekbar_zero_label));
+
+                // TODO Spotify API allows to play 30 second samples, so the total duration is 30. For a real app this should be changed to get the duration from music service (after the file is loaded. Simply calling duration won't work here)
+                mTrackTotalDuration.setText(getString(R.string.music_player_seekbar_total_duration));
+
             }
         });
 
