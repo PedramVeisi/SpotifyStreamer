@@ -166,10 +166,10 @@ public class MusicPlayerFragment extends Fragment implements SeekBar.OnSeekBarCh
         mNextButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                mTrackPosition++;
                 mMusicService.playNextTrack();
 
-                mCurrentTrack = mTrackList.get(mTrackPosition);
+                mTrackPosition = mMusicService.getTrackPosition();
+                mCurrentTrack = mMusicService.getCurrentTrack();
 
                 mAartistNameTextView.setText(mCurrentTrack.getArtistName());
                 mAlbumNameTextView.setText(mCurrentTrack.getAlbumName());
