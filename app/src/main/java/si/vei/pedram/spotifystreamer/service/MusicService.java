@@ -103,6 +103,14 @@ public class MusicService extends Service implements
         mTrackPosition = trackPosition;
     }
 
+    public int getTrackPosition() {
+        return mTrackPosition;
+    }
+
+
+    public TrackGist getCurrentTrack() {
+        return mTrackList.get(mTrackPosition);
+    }
 
     public int getPlayingPosition() {
         return mPlayer.getCurrentPosition();
