@@ -121,7 +121,7 @@
         android:layout_height="wrap_content"
         android:textAppearance="?android:attr/textAppearanceSmall"
         android:text="Small Text"
-        android:id="@+id/music_player_track_length_textview"
+        android:id="@+id/music_player_track_total_duration_textview"
         android:layout_alignBottom="@+id/music_player_seekBar"
         android:layout_alignParentRight="true"
         android:layout_alignParentEnd="true" />

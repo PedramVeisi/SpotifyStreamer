@@ -224,6 +224,8 @@
     <string name="pref_country_default_value" translatable="false">ca</string>
     <string name="hello_world">Hello world!</string>
     <string name="intent_selected_track_position">SELECTED_TRACK_POSITION</string>
+    <string name="music_player_seekbar_zero_label">0:00</string>
+    <string name="music_player_seekbar_total_duration">0:30</string>
 
 
 </resources>
