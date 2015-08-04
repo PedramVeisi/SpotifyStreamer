@@ -189,7 +189,7 @@ public class MusicPlayerFragment extends Fragment implements SeekBar.OnSeekBarCh
         utils = new Utilities();
 
         // Listeners
-        mTrackSeekbar.setOnSeekBarChangeListener(this); // Important
+        mTrackSeekbar.setOnSeekBarChangeListener(this);
 
         return rootView;
     }
@@ -244,31 +244,8 @@ public class MusicPlayerFragment extends Fragment implements SeekBar.OnSeekBarCh
     }
 
     public void updateProgressBar() {
-        mHandler.postDelayed(mUpdateTimeTask, 100);
+
     }
-
-    /**
-     * Background Runnable thread
-     */
-    private Runnable mUpdateTimeTask = new Runnable() {
-        public void run() {
-            long totalDuration = mMusicService.getTrackDuration();
-            long currentDuration = mMusicService.getPlayingPosition();
-
-            // Displaying Total Duration time
-            mTrackTotalDuration.setText("" + utils.milliSecondsToTimer(totalDuration));
-            // Displaying time completed playing
-            mTrackCurrentDuration.setText("" + utils.milliSecondsToTimer(currentDuration));
-
-            // Updating progress bar
-            int progress = (int) (utils.getProgressPercentage(currentDuration, totalDuration));
-            //Log.d("Progress", ""+progress);
-            mTrackSeekbar.setProgress(progress);
-
-            // Running this thread after 100 milliseconds
-            mHandler.postDelayed(this, 100);
-        }
-    };
 
     @Override
     public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
@@ -277,20 +254,11 @@ public class MusicPlayerFragment extends Fragment implements SeekBar.OnSeekBarCh
 
     @Override
     public void onStartTrackingTouch(SeekBar seekBar) {
-        // remove message Handler from updating progress bar
-        mHandler.removeCallbacks(mUpdateTimeTask);
+
     }
 
     @Override
     public void onStopTrackingTouch(SeekBar seekBar) {
-        mHandler.removeCallbacks(mUpdateTimeTask);
-        int totalDuration = mMusicService.getTrackDuration();
-        int currentPosition = utils.progressToTimer(seekBar.getProgress(), totalDuration);
 
-        // forward or backward to certain seconds
-        mMusicService.seekTo(currentPosition);
-
-        // update timer progress again
-        updateProgressBar();
     }
 }
