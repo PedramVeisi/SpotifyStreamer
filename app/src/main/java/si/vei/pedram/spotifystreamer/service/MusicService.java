@@ -24,7 +24,7 @@ import si.vei.pedram.spotifystreamer.models.TrackGist;
  */
 public class MusicService extends Service implements
         MediaPlayer.OnPreparedListener, MediaPlayer.OnErrorListener,
-        MediaPlayer.OnCompletionListener {
+        MediaPlayer.OnCompletionListener, MediaPlayer.OnSeekCompleteListener {
 
     // Notification id
     private static final int NOTIFICATION_ID = 1;
@@ -67,6 +67,8 @@ public class MusicService extends Service implements
         mPlayer.setOnCompletionListener(this);
         // Set class as listener for when an error is thrown
         mPlayer.setOnErrorListener(this);
+
+        mPlayer.setOnSeekCompleteListener(this);
     }
 
     /**
@@ -213,6 +215,11 @@ public class MusicService extends Service implements
     @Override
     public void onDestroy() {
         stopForeground(true);
+    }
+
+    @Override
+    public void onSeekComplete(MediaPlayer mp) {
+
     }
 
     public class MusicBinder extends Binder {
