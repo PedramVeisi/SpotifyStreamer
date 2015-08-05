@@ -140,13 +140,7 @@ public class MusicPlayerFragment extends Fragment implements SeekBar.OnSeekBarCh
         mForwardButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                int currentPosition = mMusicService.getPlayingPosition();
-                int totalDuration = mMusicService.getTrackDuration();
-                if (currentPosition + seekForwardTime <= totalDuration) {
-                    mMusicService.seekTo(mMusicService.getPlayingPosition() + seekForwardTime);
-                } else {
-                    mMusicService.seekTo(totalDuration);
-                }
+                seekForward();
             }
         });
 
@@ -270,7 +264,13 @@ public class MusicPlayerFragment extends Fragment implements SeekBar.OnSeekBarCh
     }
 
     private void seekForward() {
-
+        int currentPosition = mMusicService.getPlayingPosition();
+        int totalDuration = mMusicService.getTrackDuration();
+        if (currentPosition + seekForwardTime <= totalDuration) {
+            mMusicService.seekTo(mMusicService.getPlayingPosition() + seekForwardTime);
+        } else {
+            mMusicService.seekTo(totalDuration);
+        }
     }
 
     public void updateProgressBar() {
