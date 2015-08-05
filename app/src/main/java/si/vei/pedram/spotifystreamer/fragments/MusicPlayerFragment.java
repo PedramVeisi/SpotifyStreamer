@@ -307,7 +307,7 @@ public class MusicPlayerFragment extends Fragment implements SeekBar.OnSeekBarCh
 
             // Update the seekbar only if music is playing
             // This condition will prevent calling getDuration method when player is not ready
-            if (mMusicService.isPlaying()) {
+            if (mMusicService != null && mMusicService.isPlaying()) {
                 long totalDuration = mMusicService.getTrackDuration();
                 long currentDuration = mMusicService.getPlayingPosition();
 
