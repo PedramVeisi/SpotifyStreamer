@@ -8,6 +8,7 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.IBinder;
 import android.support.v4.app.Fragment;
+import android.support.v4.content.res.ResourcesCompat;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -149,10 +150,10 @@ public class MusicPlayerFragment extends Fragment implements SeekBar.OnSeekBarCh
             public void onClick(View v) {
                 if (mMusicService.isPlaying()) {
                     mMusicService.pausePlayer();
-                    mPlayButton.setImageDrawable(getResources().getDrawable(android.R.drawable.ic_media_play));
+                    mPlayButton.setImageDrawable(ResourcesCompat.getDrawable(getResources(), android.R.drawable.ic_media_play, null));
                 } else {
                     mMusicService.startPlayer();
-                    mPlayButton.setImageDrawable(getResources().getDrawable(android.R.drawable.ic_media_pause));
+                    mPlayButton.setImageDrawable(ResourcesCompat.getDrawable(getResources(), android.R.drawable.ic_media_pause, null));
                 }
             }
         });
