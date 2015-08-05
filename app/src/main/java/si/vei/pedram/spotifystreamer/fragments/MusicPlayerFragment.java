@@ -80,6 +80,8 @@ public class MusicPlayerFragment extends Fragment implements SeekBar.OnSeekBarCh
 
             // Since we want to play a track every time the service starts, we will call playTrack method to initialize the player and set the track
             mMusicService.playTrack();
+            updateProgressBar();
+
             if (mPlaybackPaused) {
                 mPlaybackPaused = false;
             }
