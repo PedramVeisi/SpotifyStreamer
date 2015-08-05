@@ -169,6 +169,13 @@ public class MusicPlayerFragment extends Fragment implements SeekBar.OnSeekBarCh
             }
         });
 
+        mPreviousButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                playPreviousTrack();
+            }
+        });
+
         utils = new Utilities();
 
         // Listeners
@@ -214,8 +221,6 @@ public class MusicPlayerFragment extends Fragment implements SeekBar.OnSeekBarCh
     private void playNextTrack() {
         mMusicService.playNextTrack();
 
-        mMusicService.playNextTrack();
-
         mTrackPosition = mMusicService.getTrackPosition();
         mCurrentTrack = mMusicService.getCurrentTrack();
 
@@ -239,6 +244,22 @@ public class MusicPlayerFragment extends Fragment implements SeekBar.OnSeekBarCh
     //play previous
     private void playPreviousTrack() {
         mMusicService.playPreviousTrack();
+
+        mTrackPosition = mMusicService.getTrackPosition();
+        mCurrentTrack = mMusicService.getCurrentTrack();
+
+        mAartistNameTextView.setText(mCurrentTrack.getArtistName());
+        mAlbumNameTextView.setText(mCurrentTrack.getAlbumName());
+        mTrackNameTextView.setText(mCurrentTrack.getTrackName());
+
+        // Load the album art
+        Picasso.with(getActivity()).load(mCurrentTrack.getLargeAlbumThumbnail()).into(mAlbumArtImageView);
+
+        mTrackCurrentDuration.setText(getString(R.string.music_player_seekbar_zero_label));
+
+        // TODO Spotify API allows to play 30 second samples, so the total duration is 30. For a real app this should be changed to get the duration from music service (after the file is loaded. Simply calling duration won't work here)
+        mTrackTotalDuration.setText(getString(R.string.music_player_seekbar_total_duration));
+
         if (mPlaybackPaused) {
             mPlaybackPaused = false;
         }
