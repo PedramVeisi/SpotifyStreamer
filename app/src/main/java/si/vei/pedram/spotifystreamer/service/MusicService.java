@@ -15,7 +15,7 @@ import android.util.Log;
 import java.util.ArrayList;
 
 import si.vei.pedram.spotifystreamer.R;
-import si.vei.pedram.spotifystreamer.activities.MainActivity;
+import si.vei.pedram.spotifystreamer.activities.MusicPlayerActivity;
 import si.vei.pedram.spotifystreamer.models.TrackGist;
 
 /**
@@ -36,7 +36,12 @@ public class MusicService extends Service implements
     //current position
     private int mTrackPosition;
 
+    private boolean mMediaPlayerPrepared = false;
+
     private final IBinder mMusicBinder = new MusicBinder();
+
+    public MusicService() {
+    }
 
     @Override
     public void onCreate() {
@@ -50,7 +55,9 @@ public class MusicService extends Service implements
         initMusicPlayer();
     }
 
-    public MusicService() {
+    @Override
+    public int onStartCommand(Intent intent, int flags, int startId) {
+        return START_STICKY;
     }
 
     /**
@@ -160,16 +167,13 @@ public class MusicService extends Service implements
         playTrack();
     }
 
-    @Override
-    public IBinder onBind(Intent intent) {
-        return mMusicBinder;
+    public boolean isMediaPlayerPrepared() {
+        return mMediaPlayerPrepared;
     }
 
     @Override
-    public boolean onUnbind(Intent intent) {
-        mPlayer.stop();
-        mPlayer.release();
-        return false;
+    public IBinder onBind(Intent intent) {
+        return mMusicBinder;
     }
 
     @Override
@@ -182,19 +186,33 @@ public class MusicService extends Service implements
 
     @Override
     public boolean onError(MediaPlayer mp, int what, int extra) {
-        mp.reset();
+
+//        To handle special case of error later
+//        switch (what) {
+//            case MediaPlayer.MEDIA_ERROR_NOT_VALID_FOR_PROGRESSIVE_PLAYBACK:
+//                break;
+//            case MediaPlayer.MEDIA_ERROR_SERVER_DIED:
+//                break;
+//            case MediaPlayer.MEDIA_ERROR_UNKNOWN:
+//                break;
+//        }
+
+        mPlayer.reset();
         return false;
     }
 
     @Override
     public void onPrepared(MediaPlayer mp) {
+
+        mMediaPlayerPrepared = true;
+
         //start playback
         mp.start();
 
         String trackName = mTrackList.get(mTrackPosition).getTrackName();
 
-        Intent notificationIntent = new Intent(this, MainActivity.class);
-        notificationIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+        Intent notificationIntent = new Intent(this, MusicPlayerActivity.class);
+        notificationIntent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP);
         PendingIntent pendInt = PendingIntent.getActivity(this, 0,
                 notificationIntent, PendingIntent.FLAG_UPDATE_CURRENT);
 
@@ -214,6 +232,9 @@ public class MusicService extends Service implements
 
     @Override
     public void onDestroy() {
+        mMediaPlayerPrepared = false;
+        mPlayer.stop();
+        mPlayer.release();
         stopForeground(true);
     }
 

@@ -27,11 +27,13 @@ public class MusicPlayerActivity extends ActionBarActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_music_player);
 
-        // Get track list from calling activity
-        mTrackList = getIntent().getParcelableArrayListExtra(getString(R.string.intent_track_list_key));
+        if (getIntent().getExtras() != null) {
+            // Get track list from calling activity
+            mTrackList = getIntent().getParcelableArrayListExtra(getString(R.string.intent_track_list_key));
 
-        // Get track position in the list
-        mTrackPosition = getIntent().getExtras().getInt(getString(R.string.intent_selected_track_position));
+            // Get track position in the list
+            mTrackPosition = getIntent().getExtras().getInt(getString(R.string.intent_selected_track_position));
+        }
 
         // Set a toolbar to replace the action bar.
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);

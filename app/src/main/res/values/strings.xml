@@ -226,6 +226,9 @@
     <string name="intent_selected_track_position">SELECTED_TRACK_POSITION</string>
     <string name="music_player_seekbar_zero_label">0:00</string>
     <string name="music_player_seekbar_total_duration">0:30</string>
+    <string name="error_media_not_valid_for_playback">"MEDIA ERROR NOT VALID FOR PROGRESSIVE PLAYBACK "</string>
+    <string name="error_media_server_died">"MEDIA ERROR SERVER DIED "</string>
+    <string name="error_media_unknown">"MEDIA ERROR UNKNOWN "</string>
 
 
 </resources>
