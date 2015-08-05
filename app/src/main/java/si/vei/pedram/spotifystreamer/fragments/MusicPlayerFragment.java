@@ -137,10 +137,23 @@ public class MusicPlayerFragment extends Fragment implements SeekBar.OnSeekBarCh
         mNextButton = (ImageButton) rootView.findViewById(R.id.music_player_next_track_button);
         mPreviousButton = (ImageButton) rootView.findViewById(R.id.music_player_previous_track_button);
 
-        mForwardButton.setOnClickListener(new View.OnClickListener() {
+        mPreviousButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                seekForward();
+                playPreviousTrack();
+            }
+        });
+
+        mPlayButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (mMusicService.isPlaying()) {
+                    mMusicService.pausePlayer();
+                    mPlayButton.setImageDrawable(getResources().getDrawable(android.R.drawable.ic_media_play));
+                } else {
+                    mMusicService.startPlayer();
+                    mPlayButton.setImageDrawable(getResources().getDrawable(android.R.drawable.ic_media_pause));
+                }
             }
         });
 
@@ -151,17 +164,17 @@ public class MusicPlayerFragment extends Fragment implements SeekBar.OnSeekBarCh
             }
         });
 
+        mForwardButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                seekForward();
+            }
+        });
+
         mNextButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 playNextTrack();
-            }
-        });
-
-        mPreviousButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                playPreviousTrack();
             }
         });
 
