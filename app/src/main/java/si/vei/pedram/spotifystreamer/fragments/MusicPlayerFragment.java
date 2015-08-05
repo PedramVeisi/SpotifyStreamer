@@ -296,18 +296,23 @@ public class MusicPlayerFragment extends Fragment implements SeekBar.OnSeekBarCh
      */
     private Runnable mUpdateTimeTask = new Runnable() {
         public void run() {
-            long totalDuration = mMusicService.getTrackDuration();
-            long currentDuration = mMusicService.getPlayingPosition();
 
-            // Displaying Total Duration time
-            mTrackTotalDuration.setText("" + utils.milliSecondsToTimer(totalDuration));
-            // Displaying time completed playing
-            mTrackCurrentDuration.setText("" + utils.milliSecondsToTimer(currentDuration));
+            // Update the seekbar only if music is playing
+            // This condition will prevent calling getDuration method when player is not ready
+            if (mMusicService.isPlaying()) {
+                long totalDuration = mMusicService.getTrackDuration();
+                long currentDuration = mMusicService.getPlayingPosition();
 
-            // Updating progress bar
-            int progress = (int) (utils.getProgressPercentage(currentDuration, totalDuration));
-            //Log.d("Progress", ""+progress);
-            mTrackSeekbar.setProgress(progress);
+                // Displaying Total Duration time
+                mTrackTotalDuration.setText("" + utils.milliSecondsToTimer(totalDuration));
+                // Displaying time completed playing
+                mTrackCurrentDuration.setText("" + utils.milliSecondsToTimer(currentDuration));
+
+                // Updating progress bar
+                int progress = (int) (utils.getProgressPercentage(currentDuration, totalDuration));
+                //Log.d("Progress", ""+progress);
+                mTrackSeekbar.setProgress(progress);
+            }
 
             // Running this thread after 100 milliseconds
             mHandler.postDelayed(this, 100);
