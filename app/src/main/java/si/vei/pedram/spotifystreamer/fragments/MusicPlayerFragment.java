@@ -321,9 +321,7 @@ public class MusicPlayerFragment extends Fragment implements SeekBar.OnSeekBarCh
 
     @Override
     public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
-        if (fromUser) {
-            mMusicService.seekTo(progress);
-        }
+
     }
 
     @Override
