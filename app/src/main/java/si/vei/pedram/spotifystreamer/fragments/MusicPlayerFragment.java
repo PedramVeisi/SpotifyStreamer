@@ -238,6 +238,9 @@ public class MusicPlayerFragment extends Fragment implements SeekBar.OnSeekBarCh
 
         mTrackCurrentDuration.setText(getString(R.string.music_player_seekbar_zero_label));
 
+        // Reset seekbar
+        mTrackSeekbar.setProgress(0);
+
         // TODO Spotify API allows to play 30 second samples, so the total duration is 30. For a real app this should be changed to get the duration from music service (after the file is loaded. Simply calling duration won't work here)
         mTrackTotalDuration.setText(getString(R.string.music_player_seekbar_total_duration));
 
@@ -280,6 +283,9 @@ public class MusicPlayerFragment extends Fragment implements SeekBar.OnSeekBarCh
         Picasso.with(getActivity()).load(mCurrentTrack.getLargeAlbumThumbnail()).into(mAlbumArtImageView);
 
         mTrackCurrentDuration.setText(getString(R.string.music_player_seekbar_zero_label));
+
+        // Reset seekbar
+        mTrackSeekbar.setProgress(0);
 
         // TODO Spotify API allows to play 30 second samples, so the total duration is 30. For a real app this should be changed to get the duration from music service (after the file is loaded. Simply calling duration won't work here)
         mTrackTotalDuration.setText(getString(R.string.music_player_seekbar_total_duration));
