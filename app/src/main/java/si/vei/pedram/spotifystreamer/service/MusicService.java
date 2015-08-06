@@ -6,6 +6,9 @@ import android.app.Service;
 import android.content.Intent;
 import android.media.AudioManager;
 import android.media.MediaPlayer;
+import android.media.session.MediaController;
+import android.media.session.MediaSession;
+import android.media.session.MediaSessionManager;
 import android.net.Uri;
 import android.os.Binder;
 import android.os.IBinder;
@@ -26,6 +29,14 @@ public class MusicService extends Service implements
         MediaPlayer.OnPreparedListener, MediaPlayer.OnErrorListener,
         MediaPlayer.OnCompletionListener, MediaPlayer.OnSeekCompleteListener {
 
+    public static final String ACTION_PLAY = "action_play";
+    public static final String ACTION_PAUSE = "action_pause";
+    public static final String ACTION_REWIND = "action_rewind";
+    public static final String ACTION_FAST_FORWARD = "action_fast_foward";
+    public static final String ACTION_NEXT = "action_next";
+    public static final String ACTION_PREVIOUS = "action_previous";
+    public static final String ACTION_STOP = "action_stop";
+
     // Notification id
     private static final int NOTIFICATION_ID = 1;
 
@@ -38,6 +49,10 @@ public class MusicService extends Service implements
 
     private boolean mMediaPlayerPrepared = false;
 
+    private MediaSessionManager mManager;
+    private MediaSession mSession;
+    private MediaController mController;
+
     private final IBinder mMusicBinder = new MusicBinder();
 
     public MusicService() {
@@ -45,15 +60,6 @@ public class MusicService extends Service implements
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
-        return START_STICKY;
-    }
-
-    @Override
-    public void onCreate() {
-        super.onCreate();
-        //initialize position
-        mTrackPosition = 0;
-
         if (mPlayer == null) {
             //create player
             mPlayer = new MediaPlayer();
@@ -61,8 +67,9 @@ public class MusicService extends Service implements
 
         // Initialize the player
         initMusicPlayer();
-    }
 
+        return START_STICKY;
+    }
 
     /**
      * Set player properties and listeners

@@ -7,6 +7,9 @@
     <!-- Use to let music playback continue when the user's device becomes idle. -->
     <uses-permission android:name="android.permission.WAKE_LOCK" />
 
+    <!-- For controling music using lock screen notification -->
+    <permission android:name="android.permission.MEDIA_CONTENT_CONTROL" />
+
     <application
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"

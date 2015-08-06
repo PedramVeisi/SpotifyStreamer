@@ -83,6 +83,7 @@ public class MusicPlayerFragment extends DialogFragment implements SeekBar.OnSee
 
         // Start and bind the service when activity startsq
         mPlayIntent = new Intent(getActivity(), MusicService.class);
+        mPlayIntent.setAction(MusicService.ACTION_PLAY);
         if (savedInstanceState == null) {
             getActivity().startService(mPlayIntent);
         }
