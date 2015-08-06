@@ -63,20 +63,28 @@ public class MusicPlayerFragment extends Fragment implements SeekBar.OnSeekBarCh
     private TextView mTrackNameTextView;
     private TrackGist mCurrentTrack;
 
+    private boolean mServiceBound = false;
+
     public MusicPlayerFragment() {
+    }
+
+    // this method is only called once for this fragment
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        // retain this fragment
+        setRetainInstance(true);
+    }
+
+    public void setData(ArrayList<TrackGist> trackList, int trackPosition) {
+        this.mTrackList = trackList;
+        this.mTrackPosition = trackPosition;
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.fragment_music_player, container, false);
-
-        // Get track list and track position
-        Bundle arguments = getArguments();
-        if (arguments != null) {
-            mTrackList = arguments.getParcelableArrayList(getString(R.string.intent_track_list_key));
-            mTrackPosition = arguments.getInt(getString(R.string.intent_selected_track_position));
-        }
 
         // Get UI elements
         mAartistNameTextView = (TextView) rootView.findViewById(R.id.music_player_artist_name_textview);
@@ -194,11 +202,11 @@ public class MusicPlayerFragment extends Fragment implements SeekBar.OnSeekBarCh
     public void onStart() {
         super.onStart();
         // Start and bind the service when activity starts
-        if (mPlayIntent == null) {
-            mPlayIntent = new Intent(getActivity(), MusicService.class);
-            getActivity().startService(mPlayIntent);
-            getActivity().bindService(mPlayIntent, musicConnection, Context.BIND_AUTO_CREATE);
-        }
+        mPlayIntent = new Intent(getActivity(), MusicService.class);
+        getActivity().startService(mPlayIntent);
+        getActivity().bindService(mPlayIntent, musicConnection, Context.BIND_AUTO_CREATE);
+        mServiceBound = true;
+
     }
 
     @Override
@@ -218,11 +226,11 @@ public class MusicPlayerFragment extends Fragment implements SeekBar.OnSeekBarCh
     @Override
     public void onStop() {
         super.onStop();
-        // remove message Handler from updating progress bar
-        mHandler.removeCallbacks(mUpdateTimeTask);
-        getActivity().unbindService(musicConnection);
-//        getActivity().stopService(mPlayIntent);
-//        mMusicService = null;
+        if (mServiceBound) {
+            // remove message Handler from updating progress bar
+            mHandler.removeCallbacks(mUpdateTimeTask);
+            getActivity().unbindService(musicConnection);
+        }
     }
 
     //play previous
@@ -299,7 +307,7 @@ public class MusicPlayerFragment extends Fragment implements SeekBar.OnSeekBarCh
     }
 
     public void updateProgressBar() {
-        mHandler.postDelayed(mUpdateTimeTask, 100);
+        mHandler.postDelayed(mUpdateTimeTask, 1000);
     }
 
     /**
