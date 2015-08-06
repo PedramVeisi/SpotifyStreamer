@@ -17,7 +17,7 @@ import si.vei.pedram.spotifystreamer.fragments.TopTracksFragment;
 public class MainActivity extends AppCompatActivity implements ArtistSearchFragment.Callback {
 
     private static final String TOPTRACKSFRAGMENT_TAG = "TTFTAG";
-    private boolean mTwoPane;
+    private boolean mTwoPane = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

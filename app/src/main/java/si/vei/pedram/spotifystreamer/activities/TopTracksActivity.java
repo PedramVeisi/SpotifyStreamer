@@ -15,6 +15,8 @@ import si.vei.pedram.spotifystreamer.fragments.TopTracksFragment;
  */
 public class TopTracksActivity extends AppCompatActivity {
 
+    private final String MUSICPLAYERFRAGMENT_TAG = "MPFTAG";
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -70,4 +72,5 @@ public class TopTracksActivity extends AppCompatActivity {
 
         return super.onOptionsItemSelected(item);
     }
+
 }

@@ -7,7 +7,7 @@ import android.content.ServiceConnection;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.IBinder;
-import android.support.v4.app.Fragment;
+import android.support.v4.app.DialogFragment;
 import android.support.v4.content.res.ResourcesCompat;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -29,7 +29,7 @@ import si.vei.pedram.spotifystreamer.service.MusicService;
 /**
  * A placeholder fragment containing a simple view.
  */
-public class MusicPlayerFragment extends Fragment implements SeekBar.OnSeekBarChangeListener {
+public class MusicPlayerFragment extends DialogFragment implements SeekBar.OnSeekBarChangeListener {
 
     private ArrayList<TrackGist> mTrackList;
     private int mTrackPosition;
@@ -60,10 +60,19 @@ public class MusicPlayerFragment extends Fragment implements SeekBar.OnSeekBarCh
     private TextView mTrackNameTextView;
     private TrackGist mCurrentTrack;
 
+    private Context mContext;
+
     private boolean mServiceBound = false;
 
-    public MusicPlayerFragment() {
-    }
+//    public static MusicPlayerFragment newInstance(Context context, ArrayList<TrackGist> trackList, int trackPosition) {
+//        MusicPlayerFragment fragment = new MusicPlayerFragment();
+//
+//        Bundle arguments = new Bundle();
+//        arguments.putParcelableArrayList(context.getString(R.string.intent_track_list_key), trackList);
+//        arguments.putInt(context.getString(R.string.intent_selected_track_position), trackPosition);
+//
+//        return fragment;
+//    }
 
     // this method is only called once for this fragment
     @Override
@@ -72,7 +81,7 @@ public class MusicPlayerFragment extends Fragment implements SeekBar.OnSeekBarCh
         // retain this fragment
         setRetainInstance(true);
 
-        // Start and bind the service when activity starts
+        // Start and bind the service when activity startsq
         mPlayIntent = new Intent(getActivity(), MusicService.class);
         if (savedInstanceState == null) {
             getActivity().startService(mPlayIntent);
@@ -82,15 +91,17 @@ public class MusicPlayerFragment extends Fragment implements SeekBar.OnSeekBarCh
 
     }
 
-    public void setData(ArrayList<TrackGist> trackList, int trackPosition) {
-        this.mTrackList = trackList;
-        this.mTrackPosition = trackPosition;
-    }
-
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.fragment_music_player, container, false);
+
+        // Get track list and track position
+        Bundle arguments = getArguments();
+        if (arguments != null) {
+            mTrackList = arguments.getParcelableArrayList(getString(R.string.intent_track_list_key));
+            mTrackPosition = arguments.getInt(getString(R.string.intent_selected_track_position));
+        }
 
         // Get UI elements
         mAartistNameTextView = (TextView) rootView.findViewById(R.id.music_player_artist_name_textview);

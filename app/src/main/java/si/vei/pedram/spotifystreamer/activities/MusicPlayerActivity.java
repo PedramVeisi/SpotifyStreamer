@@ -2,7 +2,7 @@ package si.vei.pedram.spotifystreamer.activities;
 
 import android.os.Bundle;
 import android.support.v4.app.FragmentManager;
-import android.support.v7.app.ActionBarActivity;
+import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -18,11 +18,12 @@ import si.vei.pedram.spotifystreamer.models.TrackGist;
  *
  * @author Pedram Veisi
  */
-public class MusicPlayerActivity extends ActionBarActivity {
+public class MusicPlayerActivity extends AppCompatActivity {
+
+    private final String MUSICPLAYERFRAGMENT_TAG = "MPFTAG";
 
     private ArrayList<TrackGist> mTrackList;
     private int mTrackPosition;
-    private MusicPlayerFragment mMusicPlayerFragment;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -46,17 +47,16 @@ public class MusicPlayerActivity extends ActionBarActivity {
         getSupportActionBar().setDisplayShowHomeEnabled(true);
 
         FragmentManager fm = getSupportFragmentManager();
-        mMusicPlayerFragment = (MusicPlayerFragment) fm.findFragmentByTag("MPF");
 
-        // create the fragment and data the first time
-        if (mMusicPlayerFragment == null) {
-            // add the fragment
-            mMusicPlayerFragment = new MusicPlayerFragment();
-            fm.beginTransaction().add(R.id.music_player_container, mMusicPlayerFragment, "MPF").commit();
-            // Set the data
-            mMusicPlayerFragment.setData(mTrackList, mTrackPosition);
-        }
+        // Create the music player fragment and add it to the activity
+        // using a fragment transaction.
+        Bundle arguments = new Bundle();
+        arguments.putParcelableArrayList(getString(R.string.intent_track_list_key), mTrackList);
+        arguments.putInt(getString(R.string.intent_selected_track_position), mTrackPosition);
 
+        MusicPlayerFragment musicPlayerFragment = new MusicPlayerFragment();
+        musicPlayerFragment.setArguments(arguments);
+        musicPlayerFragment.show(fm, MUSICPLAYERFRAGMENT_TAG);
 
     }
 
@@ -82,9 +82,4 @@ public class MusicPlayerActivity extends ActionBarActivity {
         return super.onOptionsItemSelected(item);
     }
 
-    @Override
-    protected void onDestroy() {
-        super.onDestroy();
-        mMusicPlayerFragment.setData(mTrackList, mTrackPosition);
-    }
 }

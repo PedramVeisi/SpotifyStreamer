@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.os.Parcelable;
 import android.preference.PreferenceManager;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
@@ -83,7 +84,7 @@ public class TopTracksFragment extends Fragment {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 Intent intent = new Intent(getActivity(), MusicPlayerActivity.class);
-                intent.putParcelableArrayListExtra(getString(R.string.intent_track_list_key), (ArrayList<TrackGist>) mTracksAdapter.getTracks());
+                intent.putParcelableArrayListExtra(getString(R.string.intent_track_list_key), (ArrayList<? extends Parcelable>) mTracksAdapter.getTracks());
                 intent.putExtra(getString(R.string.intent_selected_track_position), position);
                 startActivity(intent);
             }

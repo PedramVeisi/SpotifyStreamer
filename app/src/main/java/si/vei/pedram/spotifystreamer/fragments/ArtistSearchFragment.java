@@ -249,7 +249,7 @@ public class ArtistSearchFragment extends Fragment {
 
     public interface Callback {
         /**
-         * TopTracksFragmentCallback for when an item has been selected.
+         * ArtistSearchFragmentCallback for when an item has been selected.
          */
         public void onItemSelected(String artistId, String artistImageUrl);
     }
