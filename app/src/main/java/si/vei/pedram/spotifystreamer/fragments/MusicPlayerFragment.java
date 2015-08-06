@@ -209,7 +209,7 @@ public class MusicPlayerFragment extends Fragment implements SeekBar.OnSeekBarCh
     @Override
     public void onStop() {
         super.onStop();
-        if (mServiceBound) {
+        if (mServiceBound && getActivity().isFinishing()) {
             // remove message Handler from updating progress bar
             mHandler.removeCallbacks(mUpdateTimeTask);
             getActivity().unbindService(musicConnection);

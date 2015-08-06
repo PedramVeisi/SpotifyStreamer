@@ -43,20 +43,26 @@ public class MusicService extends Service implements
     public MusicService() {
     }
 
-
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
+        return START_STICKY;
+    }
+
+    @Override
+    public void onCreate() {
         super.onCreate();
         //initialize position
         mTrackPosition = 0;
-        //create player
-        mPlayer = new MediaPlayer();
+
+        if (mPlayer == null) {
+            //create player
+            mPlayer = new MediaPlayer();
+        }
 
         // Initialize the player
         initMusicPlayer();
-
-        return START_STICKY;
     }
+
 
     /**
      * Set player properties and listeners
@@ -89,6 +95,7 @@ public class MusicService extends Service implements
      */
     public void playTrack() {
         mPlayer.reset();
+        mMediaPlayerPrepared = false;
         String trackUrl = mTrackList.get(mTrackPosition).getPreviewUrl();
         Uri trackUri = Uri.parse(trackUrl);
 
