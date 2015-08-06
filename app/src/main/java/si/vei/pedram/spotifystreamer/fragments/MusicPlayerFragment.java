@@ -51,8 +51,8 @@ public class MusicPlayerFragment extends Fragment implements SeekBar.OnSeekBarCh
     private Handler mHandler = new Handler();
 
     private Utilities utils;
-    private int seekForwardTime = 5000; // 5000 milliseconds
-    private int seekBackwardTime = 5000; // 5000 milliseconds
+    private int seekForwardTime = 3000; // 5000 milliseconds
+    private int seekBackwardTime = 3000; // 5000 milliseconds
 
     private TextView mAartistNameTextView;
     private TextView mAlbumNameTextView;
@@ -280,7 +280,7 @@ public class MusicPlayerFragment extends Fragment implements SeekBar.OnSeekBarCh
     }
 
     public void updateProgressBar() {
-        mHandler.postDelayed(mUpdateTimeTask, 1000);
+        mHandler.postDelayed(mUpdateTimeTask, 500);
     }
 
     /**
@@ -307,7 +307,7 @@ public class MusicPlayerFragment extends Fragment implements SeekBar.OnSeekBarCh
             }
 
             // Running this thread after 1000 milliseconds
-            mHandler.postDelayed(this, 1000);
+            mHandler.postDelayed(this, 500);
         }
     };
 
