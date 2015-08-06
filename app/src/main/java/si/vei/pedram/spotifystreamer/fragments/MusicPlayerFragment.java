@@ -9,6 +9,7 @@ import android.os.Handler;
 import android.os.IBinder;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.res.ResourcesCompat;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -35,9 +36,6 @@ public class MusicPlayerFragment extends Fragment implements SeekBar.OnSeekBarCh
     private int mTrackPosition;
     private Intent mPlayIntent;
     private MusicService mMusicService;
-
-    private boolean mFragmentPaused = false;
-    private boolean mPlaybackPaused = true;
 
     private ImageButton mPlayButton;
     private ImageButton mForwardButton;
@@ -74,6 +72,15 @@ public class MusicPlayerFragment extends Fragment implements SeekBar.OnSeekBarCh
         super.onCreate(savedInstanceState);
         // retain this fragment
         setRetainInstance(true);
+
+        // Start and bind the service when activity starts
+        mPlayIntent = new Intent(getActivity(), MusicService.class);
+        if (savedInstanceState == null) {
+            getActivity().startService(mPlayIntent);
+        }
+        getActivity().bindService(mPlayIntent, musicConnection, Context.BIND_AUTO_CREATE);
+        mServiceBound = true;
+
     }
 
     public void setData(ArrayList<TrackGist> trackList, int trackPosition) {
@@ -107,8 +114,12 @@ public class MusicPlayerFragment extends Fragment implements SeekBar.OnSeekBarCh
         mTrackCurrentDuration = (TextView) rootView.findViewById(R.id.music_player_current_time_textview);
         mTrackTotalDuration = (TextView) rootView.findViewById(R.id.music_player_track_total_duration_textview);
 
+        Log.e("TEST", "I AM HERE");
+
         mTrackCurrentDuration.setText(getString(R.string.music_player_seekbar_zero_label));
         mTrackTotalDuration.setText(getString(R.string.music_player_seekbar_total_duration));
+
+        Log.e("TEST", getString(R.string.music_player_seekbar_total_duration));
 
         // Media Controller Buttons
         mPlayButton = (ImageButton) rootView.findViewById(R.id.music_player_play_pause_button);
@@ -182,9 +193,6 @@ public class MusicPlayerFragment extends Fragment implements SeekBar.OnSeekBarCh
             mMusicService.playTrack();
             updateProgressBar();
 
-            if (mPlaybackPaused) {
-                mPlaybackPaused = false;
-            }
         }
 
         @Override
@@ -199,37 +207,13 @@ public class MusicPlayerFragment extends Fragment implements SeekBar.OnSeekBarCh
     }
 
     @Override
-    public void onStart() {
-        super.onStart();
-        // Start and bind the service when activity starts
-        mPlayIntent = new Intent(getActivity(), MusicService.class);
-        getActivity().startService(mPlayIntent);
-        getActivity().bindService(mPlayIntent, musicConnection, Context.BIND_AUTO_CREATE);
-        mServiceBound = true;
-
-    }
-
-    @Override
-    public void onResume() {
-        super.onResume();
-        if (mFragmentPaused) {
-            mFragmentPaused = false;
-        }
-    }
-
-    @Override
-    public void onPause() {
-        super.onPause();
-        mFragmentPaused = true;
-    }
-
-    @Override
     public void onStop() {
         super.onStop();
         if (mServiceBound) {
             // remove message Handler from updating progress bar
             mHandler.removeCallbacks(mUpdateTimeTask);
             getActivity().unbindService(musicConnection);
+            mServiceBound = false;
         }
     }
 
@@ -255,9 +239,6 @@ public class MusicPlayerFragment extends Fragment implements SeekBar.OnSeekBarCh
         // TODO Spotify API allows to play 30 second samples, so the total duration is 30. For a real app this should be changed to get the duration from music service (after the file is loaded. Simply calling duration won't work here)
         mTrackTotalDuration.setText(getString(R.string.music_player_seekbar_total_duration));
 
-        if (mPlaybackPaused) {
-            mPlaybackPaused = false;
-        }
     }
 
     private void seekBackward() {
@@ -301,9 +282,6 @@ public class MusicPlayerFragment extends Fragment implements SeekBar.OnSeekBarCh
         // TODO Spotify API allows to play 30 second samples, so the total duration is 30. For a real app this should be changed to get the duration from music service (after the file is loaded. Simply calling duration won't work here)
         mTrackTotalDuration.setText(getString(R.string.music_player_seekbar_total_duration));
 
-        if (mPlaybackPaused) {
-            mPlaybackPaused = false;
-        }
     }
 
     public void updateProgressBar() {
@@ -340,7 +318,7 @@ public class MusicPlayerFragment extends Fragment implements SeekBar.OnSeekBarCh
 
     @Override
     public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
-
+        updateProgressBar();
     }
 
     @Override
