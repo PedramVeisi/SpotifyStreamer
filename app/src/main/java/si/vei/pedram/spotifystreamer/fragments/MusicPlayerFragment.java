@@ -9,7 +9,6 @@ import android.os.Handler;
 import android.os.IBinder;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.res.ResourcesCompat;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -114,12 +113,8 @@ public class MusicPlayerFragment extends Fragment implements SeekBar.OnSeekBarCh
         mTrackCurrentDuration = (TextView) rootView.findViewById(R.id.music_player_current_time_textview);
         mTrackTotalDuration = (TextView) rootView.findViewById(R.id.music_player_track_total_duration_textview);
 
-        Log.e("TEST", "I AM HERE");
-
         mTrackCurrentDuration.setText(getString(R.string.music_player_seekbar_zero_label));
         mTrackTotalDuration.setText(getString(R.string.music_player_seekbar_total_duration));
-
-        Log.e("TEST", getString(R.string.music_player_seekbar_total_duration));
 
         // Media Controller Buttons
         mPlayButton = (ImageButton) rootView.findViewById(R.id.music_player_play_pause_button);
