@@ -4,7 +4,6 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.os.Parcelable;
 import android.preference.PreferenceManager;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
@@ -38,6 +37,8 @@ import si.vei.pedram.spotifystreamer.models.TrackGist;
  * @author Pedram Veisi
  */
 public class TopTracksFragment extends Fragment {
+
+    private final String MUSICPLAYERFRAGMENT_TAG = "MPFTAG";
 
     private TopTracksListAdapter mTracksAdapter;
     private ArrayList<TrackGist> tracks = new ArrayList<TrackGist>();
@@ -80,13 +81,30 @@ public class TopTracksFragment extends Fragment {
         ListView topTracksListView = (ListView) rootView.findViewById(R.id.artist_top_tracks_listview);
         topTracksListView.setAdapter(mTracksAdapter);
 
+        final boolean hasTwoPanes = getResources().getBoolean(R.bool.has_two_panes);
+
         topTracksListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                Intent intent = new Intent(getActivity(), MusicPlayerActivity.class);
-                intent.putParcelableArrayListExtra(getString(R.string.intent_track_list_key), (ArrayList<? extends Parcelable>) mTracksAdapter.getTracks());
-                intent.putExtra(getString(R.string.intent_selected_track_position), position);
-                startActivity(intent);
+                if (hasTwoPanes) {
+                    MusicPlayerFragment fragment = new MusicPlayerFragment();
+                    // Create the music player fragment and add it to the activity
+                    // using a fragment transaction.
+                    Bundle arguments = new Bundle();
+                    arguments.putParcelableArrayList(getString(R.string.intent_track_list_key), (ArrayList<TrackGist>) mTracksAdapter.getTracks());
+                    arguments.putInt(getString(R.string.intent_selected_track_position), position);
+                    arguments.putBoolean(getString(R.string.intent_has_two_pane), hasTwoPanes);
+
+                    MusicPlayerFragment musicPlayerFragment = new MusicPlayerFragment();
+                    musicPlayerFragment.setArguments(arguments);
+                    musicPlayerFragment.show(getActivity().getSupportFragmentManager(), MUSICPLAYERFRAGMENT_TAG);
+                } else {
+                    Intent intent = new Intent(getActivity(), MusicPlayerActivity.class);
+                    intent.putParcelableArrayListExtra(getString(R.string.intent_track_list_key), (ArrayList<TrackGist>) mTracksAdapter.getTracks());
+                    intent.putExtra(getString(R.string.intent_selected_track_position), position);
+                    intent.putExtra(getString(R.string.intent_has_two_pane), hasTwoPanes);
+                    startActivity(intent);
+                }
             }
         });
 

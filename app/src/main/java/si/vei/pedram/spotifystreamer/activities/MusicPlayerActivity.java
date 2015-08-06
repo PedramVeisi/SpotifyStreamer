@@ -56,8 +56,7 @@ public class MusicPlayerActivity extends AppCompatActivity {
 
         MusicPlayerFragment musicPlayerFragment = new MusicPlayerFragment();
         musicPlayerFragment.setArguments(arguments);
-        musicPlayerFragment.show(fm, MUSICPLAYERFRAGMENT_TAG);
-
+        getSupportFragmentManager().beginTransaction().add(R.id.music_player_container, musicPlayerFragment, MUSICPLAYERFRAGMENT_TAG).commit();
     }
 
     @Override

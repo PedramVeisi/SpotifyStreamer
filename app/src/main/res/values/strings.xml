@@ -230,6 +230,7 @@
     <string name="error_media_server_died">"MEDIA ERROR SERVER DIED "</string>
     <string name="error_media_unknown">"MEDIA ERROR UNKNOWN "</string>
     <string name="state_current_track">state_current_track</string>
+    <string name="intent_has_two_pane">HAS_TWO_PANE</string>
 
 
 </resources>

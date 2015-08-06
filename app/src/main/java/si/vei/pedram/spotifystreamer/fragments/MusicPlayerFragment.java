@@ -96,12 +96,17 @@ public class MusicPlayerFragment extends DialogFragment implements SeekBar.OnSee
                              Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.fragment_music_player, container, false);
 
+        boolean hasTwoPanes = false;
+
         // Get track list and track position
         Bundle arguments = getArguments();
         if (arguments != null) {
             mTrackList = arguments.getParcelableArrayList(getString(R.string.intent_track_list_key));
             mTrackPosition = arguments.getInt(getString(R.string.intent_selected_track_position));
+            hasTwoPanes = arguments.getBoolean(getString(R.string.intent_has_two_pane));
         }
+
+        setShowsDialog(hasTwoPanes);
 
         // Get UI elements
         mAartistNameTextView = (TextView) rootView.findViewById(R.id.music_player_artist_name_textview);
