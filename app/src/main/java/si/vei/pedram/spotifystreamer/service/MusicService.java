@@ -40,6 +40,9 @@ public class MusicService extends Service implements
     public static final String ACTION_PREVIOUS = "action_previous";
     public static final String ACTION_STOP = "action_stop";
 
+    private int seekForwardTime = 3000; // 3000 milliseconds
+    private int seekBackwardTime = 3000; // 3000 milliseconds
+
     // Notification id
     private static final int NOTIFICATION_ID = 1;
 
@@ -135,21 +138,21 @@ public class MusicService extends Service implements
                                  @Override
                                  public void onPlay() {
                                      super.onPlay();
-                                     Log.e("MediaPlayerService", "onPlay");
+                                     startPlayer();
                                      buildNotification(generateAction(android.R.drawable.ic_media_pause, "Pause", ACTION_PAUSE));
                                  }
 
                                  @Override
                                  public void onPause() {
                                      super.onPause();
-                                     Log.e("MediaPlayerService", "onPause");
+                                     pausePlayer();
                                      buildNotification(generateAction(android.R.drawable.ic_media_play, "Play", ACTION_PLAY));
                                  }
 
                                  @Override
                                  public void onSkipToNext() {
                                      super.onSkipToNext();
-                                     Log.e("MediaPlayerService", "onSkipToNext");
+                                     playNextTrack();
                                      //Change media here
                                      buildNotification(generateAction(android.R.drawable.ic_media_pause, "Pause", ACTION_PAUSE));
                                  }
@@ -157,7 +160,7 @@ public class MusicService extends Service implements
                                  @Override
                                  public void onSkipToPrevious() {
                                      super.onSkipToPrevious();
-                                     Log.e("MediaPlayerService", "onSkipToPrevious");
+                                     playPreviousTrack();
                                      //Change media here
                                      buildNotification(generateAction(android.R.drawable.ic_media_pause, "Pause", ACTION_PAUSE));
                                  }
@@ -165,21 +168,21 @@ public class MusicService extends Service implements
                                  @Override
                                  public void onFastForward() {
                                      super.onFastForward();
-                                     Log.e("MediaPlayerService", "onFastForward");
+                                     seekForward();
                                      //Manipulate current media here
                                  }
 
                                  @Override
                                  public void onRewind() {
                                      super.onRewind();
-                                     Log.e("MediaPlayerService", "onRewind");
+                                     seekBackward();
                                      //Manipulate current media here
                                  }
 
                                  @Override
                                  public void onStop() {
                                      super.onStop();
-                                     Log.e("MediaPlayerService", "onStop");
+                                     stopSelf();
                                      //Stop media player here
                                      NotificationManager notificationManager = (NotificationManager) getApplicationContext().getSystemService(Context.NOTIFICATION_SERVICE);
                                      notificationManager.cancel(1);
@@ -280,6 +283,25 @@ public class MusicService extends Service implements
             mTrackPosition = 0;
         }
         playTrack();
+    }
+
+    public void seekForward() {
+        int currentPosition = getPlayingPosition();
+        int totalDuration = getTrackDuration();
+        if (currentPosition + seekForwardTime <= totalDuration) {
+            seekTo(getPlayingPosition() + seekForwardTime);
+        } else {
+            seekTo(totalDuration);
+        }
+    }
+
+    public void seekBackward() {
+        int currentPosition = getPlayingPosition();
+        if (currentPosition - seekBackwardTime >= 0) {
+            seekTo(currentPosition - seekBackwardTime);
+        } else {
+            seekTo(0);
+        }
     }
 
     public boolean isMediaPlayerPrepared() {

@@ -51,8 +51,6 @@ public class MusicPlayerFragment extends DialogFragment implements SeekBar.OnSee
     private Handler mHandler = new Handler();
 
     private Utilities utils;
-    private int seekForwardTime = 3000; // 5000 milliseconds
-    private int seekBackwardTime = 3000; // 5000 milliseconds
 
     private TextView mAartistNameTextView;
     private TextView mAlbumNameTextView;
@@ -258,22 +256,11 @@ public class MusicPlayerFragment extends DialogFragment implements SeekBar.OnSee
     }
 
     private void seekBackward() {
-        int currentPosition = mMusicService.getPlayingPosition();
-        if (currentPosition - seekBackwardTime >= 0) {
-            mMusicService.seekTo(currentPosition - seekBackwardTime);
-        } else {
-            mMusicService.seekTo(0);
-        }
+        mMusicService.seekBackward();
     }
 
     private void seekForward() {
-        int currentPosition = mMusicService.getPlayingPosition();
-        int totalDuration = mMusicService.getTrackDuration();
-        if (currentPosition + seekForwardTime <= totalDuration) {
-            mMusicService.seekTo(mMusicService.getPlayingPosition() + seekForwardTime);
-        } else {
-            mMusicService.seekTo(totalDuration);
-        }
+        mMusicService.seekForward();
     }
 
     //play next
