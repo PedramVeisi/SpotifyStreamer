@@ -35,7 +35,6 @@ public class MusicPlayerFragment extends Fragment implements SeekBar.OnSeekBarCh
     private int mTrackPosition;
     private Intent mPlayIntent;
     private MusicService mMusicService;
-    private boolean mMusicBound;
 
     private boolean mFragmentPaused = false;
     private boolean mPlaybackPaused = true;
@@ -85,7 +84,6 @@ public class MusicPlayerFragment extends Fragment implements SeekBar.OnSeekBarCh
         mAlbumArtImageView = (ImageView) rootView.findViewById(R.id.music_player_album_art_imageview);
         mTrackNameTextView = (TextView) rootView.findViewById(R.id.music_player_track_name_textview);
 
-        // Get the current track
         mCurrentTrack = mTrackList.get(mTrackPosition);
 
         // Set UI elements for the current track
@@ -171,7 +169,6 @@ public class MusicPlayerFragment extends Fragment implements SeekBar.OnSeekBarCh
             //pass list
             mMusicService.setTrackList(mTrackList);
             mMusicService.setTrackPosition(mTrackPosition);
-            mMusicBound = true;
 
             // Since we want to play a track every time the service starts, we will call playTrack method to initialize the player and set the track
             mMusicService.playTrack();
@@ -184,10 +181,14 @@ public class MusicPlayerFragment extends Fragment implements SeekBar.OnSeekBarCh
 
         @Override
         public void onServiceDisconnected(ComponentName name) {
-            mMusicBound = false;
         }
     };
 
+    @Override
+    public void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        outState.putParcelable(mMusicService.getString(R.string.state_current_track), mCurrentTrack);
+    }
 
     @Override
     public void onStart() {

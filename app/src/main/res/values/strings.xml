@@ -229,6 +229,7 @@
     <string name="error_media_not_valid_for_playback">"MEDIA ERROR NOT VALID FOR PROGRESSIVE PLAYBACK "</string>
     <string name="error_media_server_died">"MEDIA ERROR SERVER DIED "</string>
     <string name="error_media_unknown">"MEDIA ERROR UNKNOWN "</string>
+    <string name="state_current_track">state_current_track</string>
 
 
 </resources>

@@ -43,8 +43,9 @@ public class MusicService extends Service implements
     public MusicService() {
     }
 
+
     @Override
-    public void onCreate() {
+    public int onStartCommand(Intent intent, int flags, int startId) {
         super.onCreate();
         //initialize position
         mTrackPosition = 0;
@@ -53,10 +54,7 @@ public class MusicService extends Service implements
 
         // Initialize the player
         initMusicPlayer();
-    }
 
-    @Override
-    public int onStartCommand(Intent intent, int flags, int startId) {
         return START_STICKY;
     }
 
