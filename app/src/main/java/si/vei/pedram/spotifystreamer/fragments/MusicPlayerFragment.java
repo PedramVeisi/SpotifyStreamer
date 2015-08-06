@@ -80,16 +80,6 @@ public class MusicPlayerFragment extends DialogFragment implements SeekBar.OnSee
         super.onCreate(savedInstanceState);
         // retain this fragment
         setRetainInstance(true);
-
-        // Start and bind the service when activity startsq
-        mPlayIntent = new Intent(getActivity(), MusicService.class);
-        mPlayIntent.setAction(MusicService.ACTION_PLAY);
-        if (savedInstanceState == null) {
-            getActivity().startService(mPlayIntent);
-        }
-        getActivity().bindService(mPlayIntent, musicConnection, Context.BIND_AUTO_CREATE);
-        mServiceBound = true;
-
     }
 
     @Override
@@ -189,6 +179,20 @@ public class MusicPlayerFragment extends DialogFragment implements SeekBar.OnSee
         return rootView;
     }
 
+    @Override
+    public void onStart() {
+        super.onStart();
+        mPlayIntent = new Intent(getActivity(), MusicService.class);
+        mPlayIntent.setAction(MusicService.ACTION_PLAY);
+        mPlayIntent.putParcelableArrayListExtra(getString(R.string.intent_track_list_key), mTrackList);
+        mPlayIntent.putExtra(getString(R.string.intent_selected_track_position), mTrackPosition);
+
+        getActivity().startService(mPlayIntent);
+
+        getActivity().bindService(mPlayIntent, musicConnection, Context.BIND_AUTO_CREATE);
+        mServiceBound = true;
+    }
+
     // Connect to the service
     private ServiceConnection musicConnection = new ServiceConnection() {
 
@@ -197,7 +201,7 @@ public class MusicPlayerFragment extends DialogFragment implements SeekBar.OnSee
             MusicService.MusicBinder binder = (MusicService.MusicBinder) service;
             //get service
             mMusicService = binder.getService();
-            //pass list
+
             mMusicService.setTrackList(mTrackList);
             mMusicService.setTrackPosition(mTrackPosition);
 
