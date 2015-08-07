@@ -58,17 +58,22 @@ public class MusicNotificationBroadcastReceiver extends BroadcastReceiver {
 //                    break;
 //            }
         } else {
-            if (intent.getAction().equals(MusicService.ACTION_PLAY_PAUSE)) {
-                Intent intentPlayPause = new Intent(MusicService.ACTION_PLAY_PAUSE);
+            if (intent.getAction().equals(MusicService.ACTION_PLAY)) {
+                Intent intentPlayPause = new Intent(MusicService.ACTION_PLAY);
                 intentPlayPause.setClass(context, MusicService.class);
                 context.startService(intentPlayPause);
+            } else if (intent.getAction().equals(MusicService.ACTION_PAUSE)) {
+                Intent intentPause = new Intent(MusicService.ACTION_PAUSE);
+                intentPause.setClass(context, MusicService.class);
+                context.startService(intentPause);
             } else if (intent.getAction().equals(MusicService.ACTION_NEXT)) {
                 Intent intentNext = new Intent(MusicService.ACTION_NEXT);
                 intentNext.setClass(context, MusicService.class);
                 context.startService(intentNext);
             } else if (intent.getAction().equals(MusicService.ACTION_CLOSE_NOTIFICATION)) {
-                Intent i = new Intent(context, MusicService.class);
-                context.stopService(i);
+                Intent intentCloseNotification = new Intent(MusicService.ACTION_CLOSE_NOTIFICATION);
+                intentCloseNotification.setClass(context, MusicService.class);
+                context.startService(intentCloseNotification);
             } else if (intent.getAction().equals(MusicService.ACTION_PREVIOUS)) {
                 Intent intentPrev = new Intent(MusicService.ACTION_PREVIOUS);
                 intentPrev.setClass(context, MusicService.class);

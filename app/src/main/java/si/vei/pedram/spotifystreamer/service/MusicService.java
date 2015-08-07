@@ -12,9 +12,7 @@ import android.net.Uri;
 import android.os.Binder;
 import android.os.Handler;
 import android.os.IBinder;
-import android.os.Message;
 import android.os.PowerManager;
-import android.os.RemoteException;
 import android.support.v4.app.NotificationCompat;
 import android.support.v4.media.session.MediaControllerCompat;
 import android.support.v4.media.session.MediaSessionCompat;
@@ -27,7 +25,6 @@ import com.squareup.picasso.Picasso;
 import java.util.ArrayList;
 
 import si.vei.pedram.spotifystreamer.R;
-import si.vei.pedram.spotifystreamer.fragments.MusicPlayerFragment;
 import si.vei.pedram.spotifystreamer.models.TrackGist;
 
 /**
@@ -38,15 +35,14 @@ public class MusicService extends Service implements
         MediaPlayer.OnPreparedListener, MediaPlayer.OnErrorListener,
         MediaPlayer.OnCompletionListener, MediaPlayer.OnSeekCompleteListener {
 
-    public static final String ACTION_PLAY_PAUSE = "si.vei.spotifystreamer.mediaplayer.mediaplayer.action_play_pause";
-    public static final String ACTION_PLAY = "si.vei.spotifystreamer.mediaplayer.mediaplayer.action_play";
-    public static final String ACTION_PAUSE = "si.vei.spotifystreamer.mediaplayer.mediaplayer.action_pause";
+    public static final String ACTION_PLAY = "si.vei.spotifystreamer.mediaplayer.action_play";
+    public static final String ACTION_PAUSE = "si.vei.spotifystreamer.mediaplayer.action_pause";
     //public static final String ACTION_REWIND = "action_rewind";
     //public static final String ACTION_FAST_FORWARD = "action_fast_foward";
-    public static final String ACTION_NEXT = "si.vei.spotifystreamer.mediaplayer.mediaplayer.action_next";
-    public static final String ACTION_PREVIOUS = "si.vei.spotifystreamer.mediaplayer.mediaplayer.action_previous";
-    public static final String ACTION_STOP = "si.vei.spotifystreamer.mediaplayer.mediaplayer.action_stop";
-    public static final String ACTION_CLOSE_NOTIFICATION = "si.vei.spotifystreamer.mediaplayer.mediaplayer.action_close_notification";
+    public static final String ACTION_NEXT = "si.vei.spotifystreamer.mediaplayer.action_next";
+    public static final String ACTION_PREVIOUS = "si.vei.spotifystreamer.mediaplayer.action_previous";
+    public static final String ACTION_STOP = "si.vei.spotifystreamer.mediaplayer.action_stop";
+    public static final String ACTION_CLOSE_NOTIFICATION = "si.vei.spotifystreamer.mediaplayer.action_close_notification";
 
 
     private int seekForwardTime = 3000; // 3000 milliseconds
@@ -74,6 +70,7 @@ public class MusicService extends Service implements
     private RemoteControlClient remoteControlClient;
     private ComponentName remoteComponentName;
     private AudioManager audioManager;
+    private boolean mPlaybackPaused = false;
 
     public MusicService() {
     }
@@ -145,16 +142,18 @@ public class MusicService extends Service implements
         String action = intent.getAction();
 
         if (action.equalsIgnoreCase(ACTION_PLAY)) {
-            playTrack();
-        } else if (action.equalsIgnoreCase(ACTION_PLAY_PAUSE)) {
-            if (mPlayer.isPlaying()) {
-                mPlayer.pause();
+            if (mPlaybackPaused) {
+                startPlayer();
+                buildNotification();
             } else {
-                mPlayer.start();
+                playTrack();
             }
+        } else if (action.equalsIgnoreCase(ACTION_PAUSE)) {
+            pausePlayer();
+            buildNotification();
         } else if (action.equalsIgnoreCase(ACTION_NEXT)) {
             playNextTrack();
-        } else if (action.equalsIgnoreCase(ACTION_STOP)) {
+        } else if (action.equalsIgnoreCase(ACTION_CLOSE_NOTIFICATION)) {
             stopSelf();
         }
     }
@@ -189,7 +188,10 @@ public class MusicService extends Service implements
      */
     public void playTrack() {
         mPlayer.reset();
+
+        mPlaybackPaused = false;
         mMediaPlayerPrepared = false;
+
         String trackUrl = mTrackList.get(mTrackPosition).getPreviewUrl();
         Uri trackUri = Uri.parse(trackUrl);
 
@@ -263,6 +265,7 @@ public class MusicService extends Service implements
 
     public void pausePlayer() {
         mPlayer.pause();
+        mPlaybackPaused = true;
     }
 
     public void seekTo(int position) {
@@ -271,6 +274,7 @@ public class MusicService extends Service implements
 
     public void startPlayer() {
         mPlayer.start();
+        mPlaybackPaused = false;
     }
 
     /**
@@ -349,7 +353,7 @@ public class MusicService extends Service implements
             e.printStackTrace();
         }
 
-        if (isPlaying()) {
+        if (mPlaybackPaused) {
             notification.contentView.setViewVisibility(R.id.notification_pause_button, View.GONE);
             notification.contentView.setViewVisibility(R.id.notification_play_button, View.VISIBLE);
 
@@ -375,9 +379,9 @@ public class MusicService extends Service implements
     public void setListeners(RemoteViews view) {
         Intent previous = new Intent(ACTION_PREVIOUS);
         Intent delete = new Intent(ACTION_CLOSE_NOTIFICATION);
-        Intent pause = new Intent(ACTION_PLAY_PAUSE);
+        Intent pause = new Intent(ACTION_PAUSE);
         Intent next = new Intent(ACTION_NEXT);
-        Intent play = new Intent(ACTION_PLAY_PAUSE);
+        Intent play = new Intent(ACTION_PLAY);
 
         PendingIntent pPrevious = PendingIntent.getBroadcast(getApplicationContext(), 0, previous, PendingIntent.FLAG_UPDATE_CURRENT);
         view.setOnClickPendingIntent(R.id.notification_previous_button, pPrevious);
@@ -440,6 +444,7 @@ public class MusicService extends Service implements
         mPlayer.stop();
         mPlayer.release();
         stopForeground(true);
+        super.onDestroy();
     }
 
     @Override
