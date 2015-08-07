@@ -33,7 +33,7 @@
                 android:selectAllOnFocus="true"
                 android:singleLine="true"
                 android:textColor="@android:color/white"
-                android:textSize="20dp" />
+                android:textSize="18dp" />
 
             <TextView
                 android:id="@+id/notification_album_name_textview"
@@ -45,7 +45,7 @@
                 android:selectAllOnFocus="true"
                 android:singleLine="true"
                 android:textColor="#C0C0C0"
-                android:textSize="15dp" />
+                android:textSize="14dp" />
         </LinearLayout>
 
         <LinearLayout

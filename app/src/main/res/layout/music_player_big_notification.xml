@@ -36,7 +36,7 @@
                     android:gravity="center_vertical"
                     android:singleLine="true"
                     android:textColor="@android:color/white"
-                    android:textSize="20dp" />
+                    android:textSize="18dp" />
 
                 <Button
                     android:id="@+id/notification_close_button"
@@ -53,7 +53,7 @@
                 android:gravity="center_vertical"
                 android:singleLine="true"
                 android:textColor="#C0C0C0"
-                android:textSize="15dp" />
+                android:textSize="14dp" />
 
             <LinearLayout
                 android:layout_width="fill_parent"
