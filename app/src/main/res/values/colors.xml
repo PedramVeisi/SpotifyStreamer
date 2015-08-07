@@ -6,4 +6,6 @@
     <color name="list_item_touch_background">#a5d6a7</color>
     <color name="grey">#cccccc</color>
 
+    <color name="notification_background">#4D4D4D</color>
+
 </resources>
