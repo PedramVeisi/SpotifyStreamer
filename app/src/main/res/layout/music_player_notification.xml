@@ -78,7 +78,7 @@
         </LinearLayout>
 
         <Button
-            android:id="@+id/notification_remove_button"
+            android:id="@+id/notification_close_button"
             android:layout_width="28dp"
             android:layout_height="28dp"
             android:layout_marginLeft="5dp"

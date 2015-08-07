@@ -1,27 +1,33 @@
 package si.vei.pedram.spotifystreamer.service;
 
-import android.app.NotificationManager;
+import android.app.Notification;
 import android.app.PendingIntent;
 import android.app.Service;
 import android.content.ComponentName;
-import android.content.Context;
 import android.content.Intent;
 import android.media.AudioManager;
 import android.media.MediaPlayer;
+import android.media.RemoteControlClient;
 import android.net.Uri;
 import android.os.Binder;
+import android.os.Handler;
 import android.os.IBinder;
+import android.os.Message;
 import android.os.PowerManager;
 import android.os.RemoteException;
 import android.support.v4.app.NotificationCompat;
 import android.support.v4.media.session.MediaControllerCompat;
 import android.support.v4.media.session.MediaSessionCompat;
-import android.support.v7.app.NotificationCompat.MediaStyle;
 import android.util.Log;
+import android.view.View;
+import android.widget.RemoteViews;
+
+import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
 
 import si.vei.pedram.spotifystreamer.R;
+import si.vei.pedram.spotifystreamer.fragments.MusicPlayerFragment;
 import si.vei.pedram.spotifystreamer.models.TrackGist;
 
 /**
@@ -32,13 +38,16 @@ public class MusicService extends Service implements
         MediaPlayer.OnPreparedListener, MediaPlayer.OnErrorListener,
         MediaPlayer.OnCompletionListener, MediaPlayer.OnSeekCompleteListener {
 
-    public static final String ACTION_PLAY = "action_play";
-    public static final String ACTION_PAUSE = "action_pause";
-    public static final String ACTION_REWIND = "action_rewind";
-    public static final String ACTION_FAST_FORWARD = "action_fast_foward";
-    public static final String ACTION_NEXT = "action_next";
-    public static final String ACTION_PREVIOUS = "action_previous";
-    public static final String ACTION_STOP = "action_stop";
+    public static final String ACTION_PLAY_PAUSE = "si.vei.spotifystreamer.mediaplayer.mediaplayer.action_play_pause";
+    public static final String ACTION_PLAY = "si.vei.spotifystreamer.mediaplayer.mediaplayer.action_play";
+    public static final String ACTION_PAUSE = "si.vei.spotifystreamer.mediaplayer.mediaplayer.action_pause";
+    //public static final String ACTION_REWIND = "action_rewind";
+    //public static final String ACTION_FAST_FORWARD = "action_fast_foward";
+    public static final String ACTION_NEXT = "si.vei.spotifystreamer.mediaplayer.mediaplayer.action_next";
+    public static final String ACTION_PREVIOUS = "si.vei.spotifystreamer.mediaplayer.mediaplayer.action_previous";
+    public static final String ACTION_STOP = "si.vei.spotifystreamer.mediaplayer.mediaplayer.action_stop";
+    public static final String ACTION_CLOSE_NOTIFICATION = "si.vei.spotifystreamer.mediaplayer.mediaplayer.action_close_notification";
+
 
     private int seekForwardTime = 3000; // 3000 milliseconds
     private int seekBackwardTime = 3000; // 3000 milliseconds
@@ -60,16 +69,66 @@ public class MusicService extends Service implements
 
     private final IBinder mMusicBinder = new MusicBinder();
     private TrackGist mCurrentTrack;
+    private Handler mTrackChangeHandler;
+    private Handler mPlayPauseHandler;
+    private RemoteControlClient remoteControlClient;
+    private ComponentName remoteComponentName;
+    private AudioManager audioManager;
 
     public MusicService() {
     }
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
+
+        audioManager = (AudioManager) getSystemService(AUDIO_SERVICE);
+
         // Initialize the player
         initMusicPlayer();
 
+        RegisterRemoteClient();
+
         handleIntent(intent);
+
+//        mTrackChangeHandler = new Handler(new Handler.Callback() {
+//            @Override
+//            public boolean handleMessage(Message msg) {
+//                buildNotification();
+//                try {
+//                    playTrack();
+//                    MusicPlayerFragment.updateUI();
+//                } catch (Exception e) {
+//                    e.printStackTrace();
+//                }
+//                return false;
+//            }
+//        });
+//
+//        mPlayPauseHandler = new Handler(new Handler.Callback() {
+//            @Override
+//            public boolean handleMessage(Message msg) {
+//                String message = (String) msg.obj;
+//                if (mPlayer == null)
+//                    return false;
+//                if (message.equalsIgnoreCase("Play")) {
+//                    remoteControlClient.setPlaybackState(RemoteControlClient.PLAYSTATE_PLAYING);
+//                    mPlayer.start();
+//                } else if (message.equalsIgnoreCase("Pause")) {
+//                    remoteControlClient.setPlaybackState(RemoteControlClient.PLAYSTATE_PAUSED);
+//                    mPlayer.pause();
+//                }
+//                buildNotification();
+//                try {
+//                    MusicPlayerFragment.changeButton();
+//                } catch (Exception e) {
+//                    e.printStackTrace();
+//                }
+//
+//                Log.d("TAG", "TAG Pressed: " + message);
+//                return false;
+//            }
+//        });
+
         return START_STICKY;
     }
 
@@ -86,21 +145,20 @@ public class MusicService extends Service implements
         String action = intent.getAction();
 
         if (action.equalsIgnoreCase(ACTION_PLAY)) {
-            mController.getTransportControls().play();
-        } else if (action.equalsIgnoreCase(ACTION_PAUSE)) {
-            mController.getTransportControls().pause();
-        } else if (action.equalsIgnoreCase(ACTION_FAST_FORWARD)) {
-            mController.getTransportControls().fastForward();
-        } else if (action.equalsIgnoreCase(ACTION_REWIND)) {
-            mController.getTransportControls().rewind();
-        } else if (action.equalsIgnoreCase(ACTION_PREVIOUS)) {
-            mController.getTransportControls().skipToPrevious();
+            playTrack();
+        } else if (action.equalsIgnoreCase(ACTION_PLAY_PAUSE)) {
+            if (mPlayer.isPlaying()) {
+                mPlayer.pause();
+            } else {
+                mPlayer.start();
+            }
         } else if (action.equalsIgnoreCase(ACTION_NEXT)) {
-            mController.getTransportControls().skipToNext();
+            playNextTrack();
         } else if (action.equalsIgnoreCase(ACTION_STOP)) {
-            mController.getTransportControls().stop();
+            stopSelf();
         }
     }
+
 
     /**
      * Set player properties and listeners
@@ -109,16 +167,6 @@ public class MusicService extends Service implements
         if (mPlayer == null) {
             //create player
             mPlayer = new MediaPlayer();
-        }
-
-        ComponentName mRemoteControlResponder = new ComponentName(getPackageName(),
-                MusicIntentReceiver.class.getName());
-
-        mSession = new MediaSessionCompat(getApplicationContext(), "MusicPlayerSession", mRemoteControlResponder, null);
-        try {
-            mController = new MediaControllerCompat(getApplicationContext(), mSession.getSessionToken());
-        } catch (RemoteException e) {
-            e.printStackTrace();
         }
 
         mPlayer.setWakeMode(getApplicationContext(),
@@ -133,69 +181,6 @@ public class MusicService extends Service implements
         mPlayer.setOnErrorListener(this);
 
         mPlayer.setOnSeekCompleteListener(this);
-
-        mSession.setCallback(new MediaSessionCompat.Callback() {
-                                 @Override
-                                 public void onPlay() {
-                                     super.onPlay();
-                                     startPlayer();
-                                     buildNotification(generateAction(android.R.drawable.ic_media_pause, "Pause", ACTION_PAUSE));
-                                 }
-
-                                 @Override
-                                 public void onPause() {
-                                     super.onPause();
-                                     pausePlayer();
-                                     buildNotification(generateAction(android.R.drawable.ic_media_play, "Play", ACTION_PLAY));
-                                 }
-
-                                 @Override
-                                 public void onSkipToNext() {
-                                     super.onSkipToNext();
-                                     playNextTrack();
-                                     //Change media here
-                                     buildNotification(generateAction(android.R.drawable.ic_media_pause, "Pause", ACTION_PAUSE));
-                                 }
-
-                                 @Override
-                                 public void onSkipToPrevious() {
-                                     super.onSkipToPrevious();
-                                     playPreviousTrack();
-                                     //Change media here
-                                     buildNotification(generateAction(android.R.drawable.ic_media_pause, "Pause", ACTION_PAUSE));
-                                 }
-
-                                 @Override
-                                 public void onFastForward() {
-                                     super.onFastForward();
-                                     seekForward();
-                                     //Manipulate current media here
-                                 }
-
-                                 @Override
-                                 public void onRewind() {
-                                     super.onRewind();
-                                     seekBackward();
-                                     //Manipulate current media here
-                                 }
-
-                                 @Override
-                                 public void onStop() {
-                                     super.onStop();
-                                     stopSelf();
-                                     //Stop media player here
-                                     NotificationManager notificationManager = (NotificationManager) getApplicationContext().getSystemService(Context.NOTIFICATION_SERVICE);
-                                     notificationManager.cancel(1);
-                                     Intent intent = new Intent(getApplicationContext(), MusicService.class);
-                                     stopService(intent);
-                                 }
-
-                                 @Override
-                                 public void onSeekTo(long pos) {
-                                     super.onSeekTo(pos);
-                                 }
-                             }
-        );
     }
 
 
@@ -214,7 +199,32 @@ public class MusicService extends Service implements
             Log.e("MUSIC SERVICE", "Error setting data source", e);
         }
 
+        buildNotification();
+        remoteControlClient.setPlaybackState(RemoteControlClient.PLAYSTATE_PLAYING);
         mPlayer.prepareAsync();
+    }
+
+    private void RegisterRemoteClient() {
+        remoteComponentName = new ComponentName(getApplicationContext(), new MusicNotificationBroadcastReceiver().ComponentName());
+        try {
+            if (remoteControlClient == null) {
+                audioManager.registerMediaButtonEventReceiver(remoteComponentName);
+                Intent mediaButtonIntent = new Intent(Intent.ACTION_MEDIA_BUTTON);
+                mediaButtonIntent.setComponent(remoteComponentName);
+                PendingIntent mediaPendingIntent = PendingIntent.getBroadcast(this, 0, mediaButtonIntent, 0);
+                remoteControlClient = new RemoteControlClient(mediaPendingIntent);
+                audioManager.registerRemoteControlClient(remoteControlClient);
+            }
+            remoteControlClient.setTransportControlFlags(
+                    RemoteControlClient.FLAG_KEY_MEDIA_PLAY |
+                            RemoteControlClient.FLAG_KEY_MEDIA_PAUSE |
+                            RemoteControlClient.FLAG_KEY_MEDIA_PLAY_PAUSE |
+                            RemoteControlClient.FLAG_KEY_MEDIA_STOP |
+                            RemoteControlClient.FLAG_KEY_MEDIA_PREVIOUS |
+                            RemoteControlClient.FLAG_KEY_MEDIA_NEXT);
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
     }
 
     public void setTrackList(ArrayList<TrackGist> trackList) {
@@ -308,38 +318,81 @@ public class MusicService extends Service implements
         return mMediaPlayerPrepared;
     }
 
-    private void buildNotification(NotificationCompat.Action action) {
+    private void buildNotification() {
 
         TrackGist currentTrack = mTrackList.get(mTrackPosition);
 
-        MediaStyle style = new MediaStyle();
+        String trackName = currentTrack.getTrackName();
+        String albumName = currentTrack.getAlbumName();
+        RemoteViews simpleContentView = new RemoteViews(getApplicationContext().getPackageName(), R.layout.music_player_notification);
+        RemoteViews expandedView = new RemoteViews(getApplicationContext().getPackageName(), R.layout.music_player_big_notification);
 
-        Intent intent = new Intent(getApplicationContext(), MusicService.class);
-        intent.setAction(ACTION_STOP);
-        PendingIntent pendingIntent = PendingIntent.getService(getApplicationContext(), 1, intent, 0);
-        NotificationCompat.Builder builder = new NotificationCompat.Builder(this)
-                .setSmallIcon(R.mipmap.ic_launcher)
-                .setContentTitle(currentTrack.getTrackName())
-                .setContentText(currentTrack.getArtistName())
-                .setDeleteIntent(pendingIntent)
-                .setStyle(style);
+        Notification notification = new NotificationCompat.Builder(getApplicationContext())
+                .setSmallIcon(R.drawable.ic_music)
+                .setContentTitle(trackName).build();
 
-        builder.addAction(generateAction(android.R.drawable.ic_media_previous, "Previous", ACTION_PREVIOUS));
-        builder.addAction(generateAction(android.R.drawable.ic_media_rew, "Rewind", ACTION_REWIND));
-        builder.addAction(action);
-        builder.addAction(generateAction(android.R.drawable.ic_media_ff, "Fast Foward", ACTION_FAST_FORWARD));
-        builder.addAction(generateAction(android.R.drawable.ic_media_next, "Next", ACTION_NEXT));
-        style.setShowActionsInCompactView(0, 1, 2, 3, 4);
+        setListeners(simpleContentView);
+        setListeners(expandedView);
 
-        NotificationManager notificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
-        notificationManager.notify(1, builder.build());
+        notification.contentView = simpleContentView;
+        notification.bigContentView = expandedView;
+
+        try {
+            // Set a default image to notification and wait for Picasso to load the album art from the internet
+            notification.contentView.setImageViewResource(R.id.notification_album_art_imageview, R.drawable.default_album_art);
+            //notification.bigContentView.setImageViewResource(R.id.notification_album_art_imageview, R.drawable.default_album_art);
+
+            Picasso.with(this).load(currentTrack.getSmallAlbumThumbnail()).into(simpleContentView, R.id.notification_album_art_imageview, NOTIFICATION_ID, notification);
+            Picasso.with(this).load(currentTrack.getSmallAlbumThumbnail()).into(expandedView, R.id.notification_album_art_imageview, NOTIFICATION_ID, notification);
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        if (isPlaying()) {
+            notification.contentView.setViewVisibility(R.id.notification_pause_button, View.GONE);
+            notification.contentView.setViewVisibility(R.id.notification_play_button, View.VISIBLE);
+
+            notification.bigContentView.setViewVisibility(R.id.notification_pause_button, View.GONE);
+            notification.bigContentView.setViewVisibility(R.id.notification_play_button, View.VISIBLE);
+        } else {
+            notification.contentView.setViewVisibility(R.id.notification_pause_button, View.VISIBLE);
+            notification.contentView.setViewVisibility(R.id.notification_play_button, View.GONE);
+
+            notification.bigContentView.setViewVisibility(R.id.notification_pause_button, View.VISIBLE);
+            notification.bigContentView.setViewVisibility(R.id.notification_play_button, View.GONE);
+        }
+
+        notification.contentView.setTextViewText(R.id.notification_track_name_textview, trackName);
+        notification.contentView.setTextViewText(R.id.notification_album_name_textview, albumName);
+        notification.bigContentView.setTextViewText(R.id.notification_track_name_textview, trackName);
+        notification.bigContentView.setTextViewText(R.id.notification_album_name_textview, albumName);
+
+        notification.flags |= Notification.FLAG_ONGOING_EVENT;
+        startForeground(NOTIFICATION_ID, notification);
     }
 
-    private NotificationCompat.Action generateAction(int icon, String title, String intentAction) {
-        Intent intent = new Intent(getApplicationContext(), MusicService.class);
-        intent.setAction(intentAction);
-        PendingIntent pendingIntent = PendingIntent.getService(getApplicationContext(), 1, intent, 0);
-        return new NotificationCompat.Action.Builder(icon, title, pendingIntent).build();
+    public void setListeners(RemoteViews view) {
+        Intent previous = new Intent(ACTION_PREVIOUS);
+        Intent delete = new Intent(ACTION_CLOSE_NOTIFICATION);
+        Intent pause = new Intent(ACTION_PLAY_PAUSE);
+        Intent next = new Intent(ACTION_NEXT);
+        Intent play = new Intent(ACTION_PLAY_PAUSE);
+
+        PendingIntent pPrevious = PendingIntent.getBroadcast(getApplicationContext(), 0, previous, PendingIntent.FLAG_UPDATE_CURRENT);
+        view.setOnClickPendingIntent(R.id.notification_previous_button, pPrevious);
+
+        PendingIntent pDelete = PendingIntent.getBroadcast(getApplicationContext(), 0, delete, PendingIntent.FLAG_UPDATE_CURRENT);
+        view.setOnClickPendingIntent(R.id.notification_close_button, pDelete);
+
+        PendingIntent pPause = PendingIntent.getBroadcast(getApplicationContext(), 0, pause, PendingIntent.FLAG_UPDATE_CURRENT);
+        view.setOnClickPendingIntent(R.id.notification_pause_button, pPause);
+
+        PendingIntent pNext = PendingIntent.getBroadcast(getApplicationContext(), 0, next, PendingIntent.FLAG_UPDATE_CURRENT);
+        view.setOnClickPendingIntent(R.id.notification_next_button, pNext);
+
+        PendingIntent pPlay = PendingIntent.getBroadcast(getApplicationContext(), 0, play, PendingIntent.FLAG_UPDATE_CURRENT);
+        view.setOnClickPendingIntent(R.id.notification_play_button, pPlay);
     }
 
     @Override
@@ -379,26 +432,6 @@ public class MusicService extends Service implements
 
         //start playback
         mp.start();
-
-//        String trackName = mTrackList.get(mTrackPosition).getTrackName();
-//
-//        Intent notificationIntent = new Intent(this, MusicPlayerActivity.class);
-//        notificationIntent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP);
-//        PendingIntent pendInt = PendingIntent.getActivity(this, 0,
-//                notificationIntent, PendingIntent.FLAG_UPDATE_CURRENT);
-//
-//        Notification.Builder builder = new Notification.Builder(this);
-//
-//        builder.setContentIntent(pendInt)
-//                .setSmallIcon(R.mipmap.ic_launcher)
-//                .setTicker(trackName)
-//                .setOngoing(true)
-//                .setContentTitle("Playing")
-//                .setContentText(trackName);
-//
-//        Notification notification = builder.getNotification();
-//
-//        startForeground(NOTIFICATION_ID, notification);
     }
 
     @Override

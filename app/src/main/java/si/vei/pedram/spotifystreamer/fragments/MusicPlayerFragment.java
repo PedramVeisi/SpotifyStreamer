@@ -342,4 +342,10 @@ public class MusicPlayerFragment extends DialogFragment implements SeekBar.OnSee
         // update timer progress again
         updateProgressBar();
     }
+
+    public static void updateUI() {
+    }
+
+    public static void changeButton() {
+    }
 }
