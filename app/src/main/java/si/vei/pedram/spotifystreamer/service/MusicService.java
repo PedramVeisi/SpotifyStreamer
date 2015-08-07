@@ -514,6 +514,7 @@ public class MusicService extends Service implements
         metadataEditor.putString(MediaMetadataRetriever.METADATA_KEY_ARTIST, mCurrentTrack.getArtistName());
         metadataEditor.putString(MediaMetadataRetriever.METADATA_KEY_TITLE, mCurrentTrack.getTrackName());
 
+        //TODO Get album art from the Internet
         Bitmap albumArt = BitmapFactory.decodeResource(getResources(), R.drawable.default_album_art);
 
         metadataEditor.putBitmap(RemoteControlClient.MetadataEditor.BITMAP_KEY_ARTWORK, albumArt);
