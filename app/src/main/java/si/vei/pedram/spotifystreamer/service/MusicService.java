@@ -5,7 +5,10 @@ import android.app.PendingIntent;
 import android.app.Service;
 import android.content.ComponentName;
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.media.AudioManager;
+import android.media.MediaMetadataRetriever;
 import android.media.MediaPlayer;
 import android.media.RemoteControlClient;
 import android.net.Uri;
@@ -67,9 +70,9 @@ public class MusicService extends Service implements
     private TrackGist mCurrentTrack;
     private Handler mTrackChangeHandler;
     private Handler mPlayPauseHandler;
-    private RemoteControlClient remoteControlClient;
-    private ComponentName remoteComponentName;
-    private AudioManager audioManager;
+    private RemoteControlClient mRemoteControlClient;
+    private ComponentName mRemoteComponentName;
+    private AudioManager mAudioManager;
     private boolean mPlaybackPaused = false;
 
     public MusicService() {
@@ -78,7 +81,7 @@ public class MusicService extends Service implements
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
 
-        audioManager = (AudioManager) getSystemService(AUDIO_SERVICE);
+        mAudioManager = (AudioManager) getSystemService(AUDIO_SERVICE);
 
         // Initialize the player
         initMusicPlayer();
@@ -108,10 +111,10 @@ public class MusicService extends Service implements
 //                if (mPlayer == null)
 //                    return false;
 //                if (message.equalsIgnoreCase("Play")) {
-//                    remoteControlClient.setPlaybackState(RemoteControlClient.PLAYSTATE_PLAYING);
+//                    mRemoteControlClient.setPlaybackState(RemoteControlClient.PLAYSTATE_PLAYING);
 //                    mPlayer.start();
 //                } else if (message.equalsIgnoreCase("Pause")) {
-//                    remoteControlClient.setPlaybackState(RemoteControlClient.PLAYSTATE_PAUSED);
+//                    mRemoteControlClient.setPlaybackState(RemoteControlClient.PLAYSTATE_PAUSED);
 //                    mPlayer.pause();
 //                }
 //                buildNotification();
@@ -134,6 +137,7 @@ public class MusicService extends Service implements
         if (intent.getExtras() != null) {
             mTrackList = intent.getParcelableArrayListExtra(getString(R.string.intent_track_list_key));
             mTrackPosition = intent.getIntExtra(getString(R.string.intent_selected_track_position), 0);
+            mCurrentTrack = mTrackList.get(mTrackPosition);
         }
         if (intent.getAction() == null) {
             return;
@@ -187,37 +191,42 @@ public class MusicService extends Service implements
      * Make the player ready to start playing the track
      */
     public void playTrack() {
+
+        //new UpdateMetadata(mCurrentTrack, mRemoteControlClient).execute(mCurrentTrack.getLargeAlbumThumbnail());
+        UpdateMetadata();
+
         mPlayer.reset();
 
         mPlaybackPaused = false;
         mMediaPlayerPrepared = false;
 
-        String trackUrl = mTrackList.get(mTrackPosition).getPreviewUrl();
+        String trackUrl = mCurrentTrack.getPreviewUrl();
         Uri trackUri = Uri.parse(trackUrl);
 
         try {
             mPlayer.setDataSource(getApplicationContext(), trackUri);
         } catch (Exception e) {
             Log.e("MUSIC SERVICE", "Error setting data source", e);
-        }
 
+        }
         buildNotification();
-        remoteControlClient.setPlaybackState(RemoteControlClient.PLAYSTATE_PLAYING);
+        mRemoteControlClient.setPlaybackState(RemoteControlClient.PLAYSTATE_PLAYING);
         mPlayer.prepareAsync();
     }
 
     private void RegisterRemoteClient() {
-        remoteComponentName = new ComponentName(getApplicationContext(), new MusicNotificationBroadcastReceiver().ComponentName());
+        mRemoteComponentName = new ComponentName(getApplicationContext(), new MusicNotificationBroadcastReceiver().ComponentName());
         try {
-            if (remoteControlClient == null) {
-                audioManager.registerMediaButtonEventReceiver(remoteComponentName);
+            if (mRemoteControlClient == null) {
+                mAudioManager.registerMediaButtonEventReceiver(mRemoteComponentName);
                 Intent mediaButtonIntent = new Intent(Intent.ACTION_MEDIA_BUTTON);
-                mediaButtonIntent.setComponent(remoteComponentName);
+                mediaButtonIntent.setComponent(mRemoteComponentName);
                 PendingIntent mediaPendingIntent = PendingIntent.getBroadcast(this, 0, mediaButtonIntent, 0);
-                remoteControlClient = new RemoteControlClient(mediaPendingIntent);
-                audioManager.registerRemoteControlClient(remoteControlClient);
+                mRemoteControlClient = new RemoteControlClient(mediaPendingIntent);
+                mAudioManager.registerRemoteControlClient(mRemoteControlClient);
             }
-            remoteControlClient.setTransportControlFlags(
+            //TODO Check to see if controls work on older versions without this
+            mRemoteControlClient.setTransportControlFlags(
                     RemoteControlClient.FLAG_KEY_MEDIA_PLAY |
                             RemoteControlClient.FLAG_KEY_MEDIA_PAUSE |
                             RemoteControlClient.FLAG_KEY_MEDIA_PLAY_PAUSE |
@@ -328,6 +337,7 @@ public class MusicService extends Service implements
 
         String trackName = currentTrack.getTrackName();
         String albumName = currentTrack.getAlbumName();
+
         RemoteViews simpleContentView = new RemoteViews(getApplicationContext().getPackageName(), R.layout.music_player_notification);
         RemoteViews expandedView = new RemoteViews(getApplicationContext().getPackageName(), R.layout.music_player_big_notification);
 
@@ -452,9 +462,70 @@ public class MusicService extends Service implements
 
     }
 
+//    private class UpdateMetadata extends AsyncTask<String, Void, Bitmap> {
+//        private final RemoteControlClient remoteControlClient;
+//        TrackGist currentTrack;
+//
+//        public UpdateMetadata(TrackGist currentTrack, RemoteControlClient remoteControlClient) {
+//            this.currentTrack = currentTrack;
+//            this.remoteControlClient = remoteControlClient;
+//        }
+//
+//        protected Bitmap doInBackground(String... urls) {
+//            String albumArtUrl = urls[0];
+//            Bitmap albumArt = null;
+//            try {
+//                InputStream in = new java.net.URL(albumArtUrl).openStream();
+//                albumArt = BitmapFactory.decodeStream(in);
+//            } catch (Exception e) {
+//                Log.e("Error", e.getMessage());
+//                e.printStackTrace();
+//            }
+//            return albumArt;
+//        }
+//
+//        protected void onPostExecute(Bitmap result) {
+//            Log.e("TAG", "1");
+//            if (remoteControlClient == null) {
+//                Log.e("TAG", "2");
+//                return;
+//            }
+//            RemoteControlClient.MetadataEditor metadataEditor = remoteControlClient.editMetadata(true);
+//            metadataEditor.putString(MediaMetadataRetriever.METADATA_KEY_ALBUM, currentTrack.getAlbumName());
+//            metadataEditor.putString(MediaMetadataRetriever.METADATA_KEY_ARTIST, currentTrack.getArtistName());
+//            metadataEditor.putString(MediaMetadataRetriever.METADATA_KEY_TITLE, currentTrack.getTrackName());
+//            Bitmap defualtAlbumArt = null;
+//            if (result == null) {
+//                defualtAlbumArt = BitmapFactory.decodeResource(getResources(), R.drawable.default_album_art);
+//                Log.e("TAG", "3");
+//            }
+//            metadataEditor.putBitmap(RemoteControlClient.MetadataEditor.BITMAP_KEY_ARTWORK, defualtAlbumArt);
+//            metadataEditor.apply();
+//        }
+//    }
+
+
+    private void UpdateMetadata() {
+        if (mRemoteControlClient == null)
+            return;
+
+        RemoteControlClient.MetadataEditor metadataEditor = mRemoteControlClient.editMetadata(true);
+        metadataEditor.putString(MediaMetadataRetriever.METADATA_KEY_ALBUM, mCurrentTrack.getAlbumName());
+        metadataEditor.putString(MediaMetadataRetriever.METADATA_KEY_ARTIST, mCurrentTrack.getArtistName());
+        metadataEditor.putString(MediaMetadataRetriever.METADATA_KEY_TITLE, mCurrentTrack.getTrackName());
+
+        Bitmap albumArt = BitmapFactory.decodeResource(getResources(), R.drawable.default_album_art);
+
+        metadataEditor.putBitmap(RemoteControlClient.MetadataEditor.BITMAP_KEY_ARTWORK, albumArt);
+
+        metadataEditor.apply();
+    }
+
+
     public class MusicBinder extends Binder {
         public MusicService getService() {
             return MusicService.this;
         }
     }
 }
+
