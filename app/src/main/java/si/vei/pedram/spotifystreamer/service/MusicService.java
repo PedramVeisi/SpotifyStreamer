@@ -194,7 +194,7 @@ public class MusicService extends Service implements
     public void playTrack() {
 
         //new UpdateMetadata(mCurrentTrack, mRemoteControlClient).execute(mCurrentTrack.getLargeAlbumThumbnail());
-        UpdateMetadata();
+        //UpdateMetadata();
 
         mPlayer.reset();
 
@@ -506,22 +506,22 @@ public class MusicService extends Service implements
 //    }
 
 
-    private void UpdateMetadata() {
-        if (mRemoteControlClient == null)
-            return;
-
-        RemoteControlClient.MetadataEditor metadataEditor = mRemoteControlClient.editMetadata(true);
-        metadataEditor.putString(MediaMetadataRetriever.METADATA_KEY_ALBUM, mCurrentTrack.getAlbumName());
-        metadataEditor.putString(MediaMetadataRetriever.METADATA_KEY_ARTIST, mCurrentTrack.getArtistName());
-        metadataEditor.putString(MediaMetadataRetriever.METADATA_KEY_TITLE, mCurrentTrack.getTrackName());
-
-        //TODO Get album art from the Internet
-        Bitmap albumArt = BitmapFactory.decodeResource(getResources(), R.drawable.default_album_art);
-
-        metadataEditor.putBitmap(RemoteControlClient.MetadataEditor.BITMAP_KEY_ARTWORK, albumArt);
-
-        metadataEditor.apply();
-    }
+//    private void UpdateMetadata() {
+//        if (mRemoteControlClient == null)
+//            return;
+//
+//        RemoteControlClient.MetadataEditor metadataEditor = mRemoteControlClient.editMetadata(true);
+//        metadataEditor.putString(MediaMetadataRetriever.METADATA_KEY_ALBUM, mCurrentTrack.getAlbumName());
+//        metadataEditor.putString(MediaMetadataRetriever.METADATA_KEY_ARTIST, mCurrentTrack.getArtistName());
+//        metadataEditor.putString(MediaMetadataRetriever.METADATA_KEY_TITLE, mCurrentTrack.getTrackName());
+//
+//        //TODO Get album art from the Internet
+//        Bitmap albumArt = BitmapFactory.decodeResource(getResources(), R.drawable.default_album_art);
+//
+//        metadataEditor.putBitmap(RemoteControlClient.MetadataEditor.BITMAP_KEY_ARTWORK, albumArt);
+//
+//        metadataEditor.apply();
+//    }
 
 
     public class MusicBinder extends Binder {
