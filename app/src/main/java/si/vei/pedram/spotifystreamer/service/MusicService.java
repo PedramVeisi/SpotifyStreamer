@@ -5,10 +5,7 @@ import android.app.PendingIntent;
 import android.app.Service;
 import android.content.ComponentName;
 import android.content.Intent;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.media.AudioManager;
-import android.media.MediaMetadataRetriever;
 import android.media.MediaPlayer;
 import android.media.RemoteControlClient;
 import android.net.Uri;
@@ -68,7 +65,6 @@ public class MusicService extends Service implements
     private MediaControllerCompat mController;
 
     private final IBinder mMusicBinder = new MusicBinder();
-    private TrackGist mCurrentTrack;
     private Handler mTrackChangeHandler;
     private Handler mPlayPauseHandler;
     private RemoteControlClient mRemoteControlClient;
@@ -138,7 +134,6 @@ public class MusicService extends Service implements
         if (intent.getExtras() != null) {
             mTrackList = intent.getParcelableArrayListExtra(getString(R.string.intent_track_list_key));
             mTrackPosition = intent.getIntExtra(getString(R.string.intent_selected_track_position), 0);
-            mCurrentTrack = mTrackList.get(mTrackPosition);
         }
         if (intent.getAction() == null) {
             return;
@@ -158,6 +153,8 @@ public class MusicService extends Service implements
             buildNotification();
         } else if (action.equalsIgnoreCase(ACTION_NEXT)) {
             playNextTrack();
+        } else if (action.equalsIgnoreCase(ACTION_PREVIOUS)) {
+            playPreviousTrack();
         } else if (action.equalsIgnoreCase(ACTION_CLOSE_NOTIFICATION)) {
             stopSelf();
         }
@@ -201,7 +198,7 @@ public class MusicService extends Service implements
         mPlaybackPaused = false;
         mMediaPlayerPrepared = false;
 
-        String trackUrl = mCurrentTrack.getPreviewUrl();
+        String trackUrl = getCurrentTrack().getPreviewUrl();
         Uri trackUri = Uri.parse(trackUrl);
 
         try {
