@@ -274,6 +274,7 @@ public class MusicService extends Service implements
 
         Notification notification = new NotificationCompat.Builder(getApplicationContext())
                 .setSmallIcon(R.drawable.ic_music)
+                .setPriority(Notification.PRIORITY_MAX)
                 .setContentTitle(trackName).build();
 
         setListeners(simpleContentView);
