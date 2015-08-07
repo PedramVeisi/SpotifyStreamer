@@ -291,6 +291,21 @@ public class MusicPlayerFragment extends DialogFragment implements SeekBar.OnSee
         mHandler.postDelayed(mUpdateTimeTask, 500);
     }
 
+//    public void updateUI() {
+//        mCurrentTrack = mMusicService.getCurrentTrack();
+//        mAartistNameTextView.setText(mCurrentTrack.getArtistName());
+//        mAlbumNameTextView.setText(mCurrentTrack.getAlbumName());
+//        mTrackNameTextView.setText(mCurrentTrack.getTrackName());
+//
+//        // Load the album art
+//        Picasso.with(getActivity()).load(mCurrentTrack.getLargeAlbumThumbnail()).into(mAlbumArtImageView);
+//
+//        mTrackCurrentDuration.setText(getString(R.string.music_player_seekbar_zero_label));
+//    }
+
+    public static void changeButton() {
+    }
+
     /**
      * Background Runnable thread
      */
@@ -341,11 +356,5 @@ public class MusicPlayerFragment extends DialogFragment implements SeekBar.OnSee
 
         // update timer progress again
         updateProgressBar();
-    }
-
-    public static void updateUI() {
-    }
-
-    public static void changeButton() {
     }
 }

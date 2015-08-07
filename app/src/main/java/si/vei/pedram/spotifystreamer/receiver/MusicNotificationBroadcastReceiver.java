@@ -18,72 +18,13 @@ public class MusicNotificationBroadcastReceiver extends BroadcastReceiver {
         if (intent.getAction().equals(
                 android.media.AudioManager.ACTION_AUDIO_BECOMING_NOISY)) {
 
-            Intent intent1 = new Intent(MusicService.ACTION_PAUSE);
-            intent1.setClass(context,
+            Intent pauseIntent = new Intent(MusicService.ACTION_PAUSE);
+            pauseIntent.setClass(context,
                     MusicService.class);
             // send an intent to our MusicService to telling it to pause the
             // audio
-            context.startService(intent1);
+            context.startService(pauseIntent);
 
-        } else if (intent.getAction().equals(Intent.ACTION_MEDIA_BUTTON)) {
-
-            KeyEvent keyEvent = (KeyEvent) intent.getExtras().get(
-                    Intent.EXTRA_KEY_EVENT);
-            if (keyEvent.getAction() != KeyEvent.ACTION_DOWN)
-                return;
-
-            switch (keyEvent.getKeyCode()) {
-                case KeyEvent.KEYCODE_HEADSETHOOK:
-                case KeyEvent.KEYCODE_MEDIA_PLAY_PAUSE:
-                case KeyEvent.KEYCODE_MEDIA_PLAY:
-                    Intent intentPlay = new Intent(MusicService.ACTION_PLAY);
-                    intentPlay.setClass(context, MusicService.class);
-                    context.startService(intentPlay);
-                    break;
-                case KeyEvent.KEYCODE_MEDIA_PAUSE:
-                    Intent intentPause = new Intent(MusicService.ACTION_PAUSE);
-                    intentPause.setClass(context, MusicService.class);
-                    context.startService(intentPause);
-                    break;
-                case KeyEvent.KEYCODE_MEDIA_NEXT:
-                    Intent intentNext = new Intent(MusicService.ACTION_NEXT);
-                    intentNext.setClass(context,
-                            MusicService.class);
-                    context.startService(intentNext);
-
-                    break;
-                case KeyEvent.KEYCODE_MEDIA_PREVIOUS:
-                    Intent intentPrev = new Intent(MusicService.ACTION_PREVIOUS);
-                    intentPrev.setClass(context,
-                            MusicService.class);
-                    context.startService(intentPrev);
-
-                    break;
-                default:
-                    break;
-            }
-        } else {
-            if (intent.getAction().equals(MusicService.ACTION_PLAY)) {
-                Intent intentPlay = new Intent(MusicService.ACTION_PLAY);
-                intentPlay.setClass(context, MusicService.class);
-                context.startService(intentPlay);
-            } else if (intent.getAction().equals(MusicService.ACTION_PAUSE)) {
-                Intent intentPause = new Intent(MusicService.ACTION_PAUSE);
-                intentPause.setClass(context, MusicService.class);
-                context.startService(intentPause);
-            } else if (intent.getAction().equals(MusicService.ACTION_NEXT)) {
-                Intent intentNext = new Intent(MusicService.ACTION_NEXT);
-                intentNext.setClass(context, MusicService.class);
-                context.startService(intentNext);
-            } else if (intent.getAction().equals(MusicService.ACTION_CLOSE_NOTIFICATION)) {
-                Intent intentCloseNotification = new Intent(MusicService.ACTION_CLOSE_NOTIFICATION);
-                intentCloseNotification.setClass(context, MusicService.class);
-                context.startService(intentCloseNotification);
-            } else if (intent.getAction().equals(MusicService.ACTION_PREVIOUS)) {
-                Intent intentPrev = new Intent(MusicService.ACTION_PREVIOUS);
-                intentPrev.setClass(context, MusicService.class);
-                context.startService(intentPrev);
-            }
         }
     }
 

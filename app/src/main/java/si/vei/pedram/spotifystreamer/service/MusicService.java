@@ -3,8 +3,11 @@ package si.vei.pedram.spotifystreamer.service;
 import android.app.Notification;
 import android.app.PendingIntent;
 import android.app.Service;
+import android.content.BroadcastReceiver;
 import android.content.ComponentName;
+import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.media.AudioManager;
 import android.media.MediaPlayer;
 import android.media.RemoteControlClient;
@@ -14,6 +17,7 @@ import android.os.Handler;
 import android.os.IBinder;
 import android.os.PowerManager;
 import android.support.v4.app.NotificationCompat;
+import android.support.v4.content.LocalBroadcastManager;
 import android.support.v4.media.session.MediaControllerCompat;
 import android.support.v4.media.session.MediaSessionCompat;
 import android.util.Log;
@@ -25,6 +29,7 @@ import com.squareup.picasso.Picasso;
 import java.util.ArrayList;
 
 import si.vei.pedram.spotifystreamer.R;
+import si.vei.pedram.spotifystreamer.fragments.MusicPlayerFragment;
 import si.vei.pedram.spotifystreamer.models.TrackGist;
 import si.vei.pedram.spotifystreamer.receiver.MusicNotificationBroadcastReceiver;
 
@@ -38,13 +43,9 @@ public class MusicService extends Service implements
 
     public static final String ACTION_PLAY = "si.vei.spotifystreamer.mediaplayer.action_play";
     public static final String ACTION_PAUSE = "si.vei.spotifystreamer.mediaplayer.action_pause";
-    //public static final String ACTION_REWIND = "action_rewind";
-    //public static final String ACTION_FAST_FORWARD = "action_fast_foward";
     public static final String ACTION_NEXT = "si.vei.spotifystreamer.mediaplayer.action_next";
     public static final String ACTION_PREVIOUS = "si.vei.spotifystreamer.mediaplayer.action_previous";
-    public static final String ACTION_STOP = "si.vei.spotifystreamer.mediaplayer.action_stop";
     public static final String ACTION_CLOSE_NOTIFICATION = "si.vei.spotifystreamer.mediaplayer.action_close_notification";
-
 
     private int seekForwardTime = 3000; // 3000 milliseconds
     private int seekBackwardTime = 3000; // 3000 milliseconds
@@ -67,64 +68,26 @@ public class MusicService extends Service implements
     private final IBinder mMusicBinder = new MusicBinder();
     private Handler mTrackChangeHandler;
     private Handler mPlayPauseHandler;
-    private RemoteControlClient mRemoteControlClient;
-    private ComponentName mRemoteComponentName;
     private AudioManager mAudioManager;
     private boolean mPlaybackPaused = false;
+
 
     public MusicService() {
     }
 
     @Override
-    public int onStartCommand(Intent intent, int flags, int startId) {
-
-        mAudioManager = (AudioManager) getSystemService(AUDIO_SERVICE);
+    public void onCreate() {
+        super.onCreate();
 
         // Initialize the player
         initMusicPlayer();
+    }
 
-        RegisterRemoteClient();
+    @Override
+    public int onStartCommand(Intent intent, int flags, int startId) {
+        mAudioManager = (AudioManager) getSystemService(AUDIO_SERVICE);
 
         handleIntent(intent);
-
-//        mTrackChangeHandler = new Handler(new Handler.Callback() {
-//            @Override
-//            public boolean handleMessage(Message msg) {
-//                buildNotification();
-//                try {
-//                    playTrack();
-//                    MusicPlayerFragment.updateUI();
-//                } catch (Exception e) {
-//                    e.printStackTrace();
-//                }
-//                return false;
-//            }
-//        });
-//
-//        mPlayPauseHandler = new Handler(new Handler.Callback() {
-//            @Override
-//            public boolean handleMessage(Message msg) {
-//                String message = (String) msg.obj;
-//                if (mPlayer == null)
-//                    return false;
-//                if (message.equalsIgnoreCase("Play")) {
-//                    mRemoteControlClient.setPlaybackState(RemoteControlClient.PLAYSTATE_PLAYING);
-//                    mPlayer.start();
-//                } else if (message.equalsIgnoreCase("Pause")) {
-//                    mRemoteControlClient.setPlaybackState(RemoteControlClient.PLAYSTATE_PAUSED);
-//                    mPlayer.pause();
-//                }
-//                buildNotification();
-//                try {
-//                    MusicPlayerFragment.changeButton();
-//                } catch (Exception e) {
-//                    e.printStackTrace();
-//                }
-//
-//                Log.d("TAG", "TAG Pressed: " + message);
-//                return false;
-//            }
-//        });
 
         return START_STICKY;
     }
@@ -208,32 +171,8 @@ public class MusicService extends Service implements
 
         }
         buildNotification();
-        mRemoteControlClient.setPlaybackState(RemoteControlClient.PLAYSTATE_PLAYING);
+        //mRemoteControlClient.setPlaybackState(RemoteControlClient.PLAYSTATE_PLAYING);
         mPlayer.prepareAsync();
-    }
-
-    private void RegisterRemoteClient() {
-        mRemoteComponentName = new ComponentName(getApplicationContext(), new MusicNotificationBroadcastReceiver().ComponentName());
-        try {
-            if (mRemoteControlClient == null) {
-                mAudioManager.registerMediaButtonEventReceiver(mRemoteComponentName);
-                Intent mediaButtonIntent = new Intent(Intent.ACTION_MEDIA_BUTTON);
-                mediaButtonIntent.setComponent(mRemoteComponentName);
-                PendingIntent mediaPendingIntent = PendingIntent.getBroadcast(this, 0, mediaButtonIntent, 0);
-                mRemoteControlClient = new RemoteControlClient(mediaPendingIntent);
-                mAudioManager.registerRemoteControlClient(mRemoteControlClient);
-            }
-            //TODO Check to see if controls work on older versions without this
-            mRemoteControlClient.setTransportControlFlags(
-                    RemoteControlClient.FLAG_KEY_MEDIA_PLAY |
-                            RemoteControlClient.FLAG_KEY_MEDIA_PAUSE |
-                            RemoteControlClient.FLAG_KEY_MEDIA_PLAY_PAUSE |
-                            RemoteControlClient.FLAG_KEY_MEDIA_STOP |
-                            RemoteControlClient.FLAG_KEY_MEDIA_PREVIOUS |
-                            RemoteControlClient.FLAG_KEY_MEDIA_NEXT);
-        } catch (Exception ex) {
-            ex.printStackTrace();
-        }
     }
 
     public void setTrackList(ArrayList<TrackGist> trackList) {
@@ -385,26 +324,32 @@ public class MusicService extends Service implements
     }
 
     public void setListeners(RemoteViews view) {
-        Intent previous = new Intent(ACTION_PREVIOUS);
-        Intent delete = new Intent(ACTION_CLOSE_NOTIFICATION);
-        Intent pause = new Intent(ACTION_PAUSE);
-        Intent next = new Intent(ACTION_NEXT);
-        Intent play = new Intent(ACTION_PLAY);
+        Intent previousIntent = setAction(this, ACTION_PREVIOUS);
+        Intent deleteIntent = setAction(this, ACTION_CLOSE_NOTIFICATION);
+        Intent pauseIntent = setAction(this, ACTION_PAUSE);
+        Intent nextIntent = setAction(this, ACTION_NEXT);
+        Intent playIntent = setAction(this, ACTION_PLAY);
 
-        PendingIntent pPrevious = PendingIntent.getBroadcast(getApplicationContext(), 0, previous, PendingIntent.FLAG_UPDATE_CURRENT);
-        view.setOnClickPendingIntent(R.id.notification_previous_button, pPrevious);
+        PendingIntent previousPendingIntent = PendingIntent.getService(getApplicationContext(), 0, previousIntent, PendingIntent.FLAG_UPDATE_CURRENT);
+        view.setOnClickPendingIntent(R.id.notification_previous_button, previousPendingIntent);
 
-        PendingIntent pDelete = PendingIntent.getBroadcast(getApplicationContext(), 0, delete, PendingIntent.FLAG_UPDATE_CURRENT);
-        view.setOnClickPendingIntent(R.id.notification_close_button, pDelete);
+        PendingIntent deletePendingIntent = PendingIntent.getService(getApplicationContext(), 0, deleteIntent, PendingIntent.FLAG_UPDATE_CURRENT);
+        view.setOnClickPendingIntent(R.id.notification_close_button, deletePendingIntent);
 
-        PendingIntent pPause = PendingIntent.getBroadcast(getApplicationContext(), 0, pause, PendingIntent.FLAG_UPDATE_CURRENT);
-        view.setOnClickPendingIntent(R.id.notification_pause_button, pPause);
+        PendingIntent pausePendingIntent = PendingIntent.getService(getApplicationContext(), 0, pauseIntent, PendingIntent.FLAG_UPDATE_CURRENT);
+        view.setOnClickPendingIntent(R.id.notification_pause_button, pausePendingIntent);
 
-        PendingIntent pNext = PendingIntent.getBroadcast(getApplicationContext(), 0, next, PendingIntent.FLAG_UPDATE_CURRENT);
-        view.setOnClickPendingIntent(R.id.notification_next_button, pNext);
+        PendingIntent nextPendingIntent = PendingIntent.getService(getApplicationContext(), 0, nextIntent, PendingIntent.FLAG_UPDATE_CURRENT);
+        view.setOnClickPendingIntent(R.id.notification_next_button, nextPendingIntent);
 
-        PendingIntent pPlay = PendingIntent.getBroadcast(getApplicationContext(), 0, play, PendingIntent.FLAG_UPDATE_CURRENT);
-        view.setOnClickPendingIntent(R.id.notification_play_button, pPlay);
+        PendingIntent playPendingIntent = PendingIntent.getService(getApplicationContext(), 0, playIntent, PendingIntent.FLAG_UPDATE_CURRENT);
+        view.setOnClickPendingIntent(R.id.notification_play_button, playPendingIntent);
+    }
+
+    public Intent setAction(Context context, String action) {
+        Intent intent = new Intent(context, MusicService.class);
+        intent.setAction(action);
+        return intent;
     }
 
     @Override
