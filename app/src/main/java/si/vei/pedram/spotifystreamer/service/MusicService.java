@@ -29,6 +29,7 @@ import java.util.ArrayList;
 
 import si.vei.pedram.spotifystreamer.R;
 import si.vei.pedram.spotifystreamer.models.TrackGist;
+import si.vei.pedram.spotifystreamer.receiver.MusicNotificationBroadcastReceiver;
 
 /**
  * @author Pedram Veisi

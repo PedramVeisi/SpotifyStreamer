@@ -1,10 +1,12 @@
-package si.vei.pedram.spotifystreamer.service;
+package si.vei.pedram.spotifystreamer.receiver;
 
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.util.Log;
 import android.view.KeyEvent;
+
+import si.vei.pedram.spotifystreamer.service.MusicService;
 
 /**
  * Created by pedram on 06/08/15.

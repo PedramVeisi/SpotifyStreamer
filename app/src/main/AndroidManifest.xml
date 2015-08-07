@@ -44,7 +44,7 @@
         <service android:name=".service.MusicService"></service>
 
         <!-- Media button receiver -->
-        <receiver android:name=".service.MusicNotificationBroadcastReceiver">
+        <receiver android:name=".receiver.MusicNotificationBroadcastReceiver">
             <intent-filter>
                 <action android:name="si.vei.spotifystreamer.mediaplayer.action_play" />
                 <action android:name="si.vei.spotifystreamer.mediaplayer.action_pause" />
