@@ -355,7 +355,7 @@ public class MusicService extends Service implements
         try {
             // Set a default image to notification and wait for Picasso to load the album art from the internet
             notification.contentView.setImageViewResource(R.id.notification_album_art_imageview, R.drawable.default_album_art);
-            //notification.bigContentView.setImageViewResource(R.id.notification_album_art_imageview, R.drawable.default_album_art);
+            notification.bigContentView.setImageViewResource(R.id.notification_album_art_imageview, R.drawable.default_album_art);
 
             Picasso.with(this).load(currentTrack.getSmallAlbumThumbnail()).into(simpleContentView, R.id.notification_album_art_imageview, NOTIFICATION_ID, notification);
             Picasso.with(this).load(currentTrack.getSmallAlbumThumbnail()).into(expandedView, R.id.notification_album_art_imageview, NOTIFICATION_ID, notification);
