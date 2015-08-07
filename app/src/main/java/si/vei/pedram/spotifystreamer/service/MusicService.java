@@ -62,13 +62,7 @@ public class MusicService extends Service implements
 
     private boolean mMediaPlayerPrepared = false;
 
-    private MediaSessionCompat mSession;
-    private MediaControllerCompat mController;
-
     private final IBinder mMusicBinder = new MusicBinder();
-    private Handler mTrackChangeHandler;
-    private Handler mPlayPauseHandler;
-    private AudioManager mAudioManager;
     private boolean mPlaybackPaused = false;
 
 
@@ -85,7 +79,6 @@ public class MusicService extends Service implements
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
-        mAudioManager = (AudioManager) getSystemService(AUDIO_SERVICE);
 
         handleIntent(intent);
 
@@ -120,6 +113,7 @@ public class MusicService extends Service implements
             playPreviousTrack();
         } else if (action.equalsIgnoreCase(ACTION_CLOSE_NOTIFICATION)) {
             stopSelf();
+            stopForeground(true);
         }
     }
 
