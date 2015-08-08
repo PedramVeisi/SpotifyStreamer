@@ -81,6 +81,9 @@ public class MusicService extends Service implements
 
     private void handleIntent(Intent intent) {
 
+        if (intent == null)
+            return;
+
         if (intent.getExtras() != null) {
             mTrackList = intent.getParcelableArrayListExtra(getString(R.string.intent_track_list_key));
             mTrackPosition = intent.getIntExtra(getString(R.string.intent_selected_track_position), 0);
@@ -156,7 +159,6 @@ public class MusicService extends Service implements
 
         }
         buildNotification();
-        broadcast(BROADCAST_TRACK_CHANGED);
         mPlayer.prepareAsync();
     }
 
@@ -224,6 +226,7 @@ public class MusicService extends Service implements
         if (mTrackPosition < 0) {
             mTrackPosition = mTrackList.size() - 1;
         }
+        broadcast(BROADCAST_TRACK_CHANGED);
         playTrack();
     }
 
@@ -235,6 +238,7 @@ public class MusicService extends Service implements
         if (mTrackPosition >= mTrackList.size()) {
             mTrackPosition = 0;
         }
+        broadcast(BROADCAST_TRACK_CHANGED);
         playTrack();
     }
 

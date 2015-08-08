@@ -1,15 +1,17 @@
 package si.vei.pedram.spotifystreamer.fragments;
 
+import android.content.BroadcastReceiver;
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.content.ServiceConnection;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.IBinder;
 import android.support.v4.app.DialogFragment;
+import android.support.v4.content.LocalBroadcastManager;
 import android.support.v4.content.res.ResourcesCompat;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -63,15 +65,13 @@ public class MusicPlayerFragment extends DialogFragment implements SeekBar.OnSee
 
     private boolean mServiceBound = false;
 
-//    public static MusicPlayerFragment newInstance(Context context, ArrayList<TrackGist> trackList, int trackPosition) {
-//        MusicPlayerFragment fragment = new MusicPlayerFragment();
-//
-//        Bundle arguments = new Bundle();
-//        arguments.putParcelableArrayList(context.getString(R.string.intent_track_list_key), trackList);
-//        arguments.putInt(context.getString(R.string.intent_selected_track_position), trackPosition);
-//
-//        return fragment;
-//    }
+    private BroadcastReceiver mBroadcastReceiver = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            handleBroadcastIntent(intent.getAction());
+        }
+    };
+
 
     // this method is only called once for this fragment
     @Override
@@ -218,6 +218,26 @@ public class MusicPlayerFragment extends DialogFragment implements SeekBar.OnSee
     }
 
     @Override
+    public void onResume() {
+        super.onResume();
+
+        IntentFilter intentFilter = new IntentFilter();
+        intentFilter.addAction(MusicService.BROADCAST_MEDIA_PLAYER_PREPARED);
+        intentFilter.addAction(MusicService.BROADCAST_SERVICE_STOPPED);
+        intentFilter.addAction(MusicService.BROADCAST_TRACK_CHANGED);
+        intentFilter.addAction(MusicService.BROADCAST_TRACK_PAUSED);
+        intentFilter.addAction(MusicService.BROADCAST_TRACK_PLAYED);
+
+        LocalBroadcastManager.getInstance(getActivity()).registerReceiver(mBroadcastReceiver, intentFilter);
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        LocalBroadcastManager.getInstance(getActivity()).unregisterReceiver(mBroadcastReceiver);
+    }
+
+    @Override
     public void onStop() {
         super.onStop();
         if (mServiceBound && getActivity().isFinishing()) {
@@ -288,17 +308,26 @@ public class MusicPlayerFragment extends DialogFragment implements SeekBar.OnSee
         mHandler.postDelayed(mUpdateTimeTask, 500);
     }
 
-//    public void updateUI() {
-//        mCurrentTrack = mMusicService.getCurrentTrack();
-//        mAartistNameTextView.setText(mCurrentTrack.getArtistName());
-//        mAlbumNameTextView.setText(mCurrentTrack.getAlbumName());
-//        mTrackNameTextView.setText(mCurrentTrack.getTrackName());
-//
-//        // Load the album art
-//        Picasso.with(getActivity()).load(mCurrentTrack.getLargeAlbumThumbnail()).into(mAlbumArtImageView);
-//
-//        mTrackCurrentDuration.setText(getString(R.string.music_player_seekbar_zero_label));
-//    }
+    private void handleBroadcastIntent(String action) {
+        if (action.equalsIgnoreCase(MusicService.BROADCAST_MEDIA_PLAYER_PREPARED)) {
+            // update seekbar
+        } else if (action.equalsIgnoreCase(MusicService.BROADCAST_TRACK_CHANGED)) {
+            handleTrackChange();
+        }
+    }
+
+    public void handleTrackChange() {
+        mCurrentTrack = mMusicService.getCurrentTrack();
+
+        mAartistNameTextView.setText(mCurrentTrack.getArtistName());
+        mAlbumNameTextView.setText(mCurrentTrack.getAlbumName());
+        mTrackNameTextView.setText(mCurrentTrack.getTrackName());
+
+        // Load the album art
+        Picasso.with(getActivity()).load(mCurrentTrack.getLargeAlbumThumbnail()).into(mAlbumArtImageView);
+
+        mTrackCurrentDuration.setText(getString(R.string.music_player_seekbar_zero_label));
+    }
 
     public static void changeButton() {
     }
