@@ -66,34 +66,38 @@
                 android:orientation="horizontal"
                 android:showDividers="middle">
 
-                <Button
+                <ImageButton
                     android:id="@+id/notification_previous_button"
                     android:layout_width="32dp"
                     android:layout_height="32dp"
                     android:layout_margin="5dp"
-                    android:background="@android:drawable/ic_media_previous" />
+                    android:background="?android:attr/selectableItemBackground"
+                    android:src="@android:drawable/ic_media_previous" />
 
-                <Button
+                <ImageButton
                     android:id="@+id/notification_pause_button"
                     android:layout_width="32dp"
                     android:layout_height="32dp"
                     android:layout_margin="5dp"
-                    android:background="@android:drawable/ic_media_pause" />
+                    android:background="?android:attr/selectableItemBackground"
+                    android:src="@android:drawable/ic_media_pause" />
 
-                <Button
+                <ImageButton
                     android:id="@+id/notification_play_button"
                     android:layout_width="32dp"
                     android:layout_height="32dp"
                     android:layout_margin="5dp"
-                    android:background="@android:drawable/ic_media_play"
+                    android:background="?android:attr/selectableItemBackground"
+                    android:src="@android:drawable/ic_media_play"
                     android:visibility="gone" />
 
-                <Button
+                <ImageButton
                     android:id="@+id/notification_next_button"
                     android:layout_width="32dp"
                     android:layout_height="32dp"
                     android:layout_margin="5dp"
-                    android:background="@android:drawable/ic_media_next" />
+                    android:background="?android:attr/selectableItemBackground"
+                    android:src="@android:drawable/ic_media_next" />
             </LinearLayout>
         </LinearLayout>
     </LinearLayout>
