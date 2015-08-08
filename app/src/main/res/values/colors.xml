@@ -4,7 +4,7 @@
     <color name="colorPrimaryDark">#689f38</color>
 
     <color name="list_item_touch_background">#a5d6a7</color>
-    <color name="grey">#cccccc</color>
+    <color name="selector_ripple_color">#cccccc</color>
 
     <color name="music_player_notification_background">#404040</color>
 

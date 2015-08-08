@@ -4,7 +4,7 @@
 
     <!-- State when a row is being pressed, but hasn't yet been activated (finger down) -->
     <item android:state_pressed="true">
-        <ripple android:color="@color/list_item_touch_selector" />
+        <ripple android:color="@color/selector_ripple_color" />
     </item>
 
     <!-- When the view is "activated".  In SINGLE_CHOICE_MODE, it flags the active row
