@@ -5,21 +5,22 @@
     android:background="@color/music_player_notification_background"
     android:orientation="vertical">
 
-    <LinearLayout
+    <RelativeLayout
         android:layout_width="fill_parent"
         android:layout_height="fill_parent"
         android:orientation="horizontal">
 
         <ImageView
             android:id="@+id/notification_album_art_imageview"
-            android:layout_width="100dp"
-            android:layout_height="100dp"
+            android:layout_width="128dp"
+            android:layout_height="128dp"
             android:layout_marginRight="10dp"
-            android:src="@mipmap/ic_launcher" />
+            android:src="@drawable/default_album_art" />
 
         <LinearLayout
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
+            android:layout_toRightOf="@id/notification_album_art_imageview"
             android:layout_weight="1"
             android:orientation="vertical"
             android:padding="5dp">
@@ -33,8 +34,8 @@
                     android:id="@+id/notification_track_name_textview"
                     android:layout_width="fill_parent"
                     android:layout_height="wrap_content"
-                    android:background="?android:attr/selectableItemBackground"
                     android:layout_weight="1"
+                    android:background="?android:attr/selectableItemBackground"
                     android:gravity="center_vertical"
                     android:singleLine="true"
                     android:textColor="@android:color/white"
@@ -45,8 +46,8 @@
                     android:layout_width="28dp"
                     android:layout_height="28dp"
                     android:layout_marginLeft="5dp"
-                    android:src="@drawable/ic_action_close"
-                    android:background="?android:attr/selectableItemBackground" />
+                    android:background="?android:attr/selectableItemBackground"
+                    android:src="@drawable/ic_action_close" />
             </LinearLayout>
 
             <TextView
@@ -58,50 +59,61 @@
                 android:textColor="#C0C0C0"
                 android:textSize="14dp" />
 
-            <LinearLayout
-                android:layout_width="fill_parent"
-                android:layout_height="wrap_content"
-                android:layout_alignParentBottom="true"
-                android:divider="@drawable/notification_divider"
-                android:dividerPadding="12.0dip"
-                android:gravity="center"
-                android:orientation="horizontal"
-                android:showDividers="middle">
-
-                <ImageButton
-                    android:id="@+id/notification_previous_button"
-                    android:layout_width="32dp"
-                    android:layout_height="32dp"
-                    android:layout_margin="5dp"
-                    android:background="?android:attr/selectableItemBackground"
-                    android:src="@android:drawable/ic_media_previous" />
-
-                <ImageButton
-                    android:id="@+id/notification_pause_button"
-                    android:layout_width="32dp"
-                    android:layout_height="32dp"
-                    android:layout_margin="5dp"
-                    android:background="?android:attr/selectableItemBackground"
-                    android:src="@android:drawable/ic_media_pause" />
-
-                <ImageButton
-                    android:id="@+id/notification_play_button"
-                    android:layout_width="32dp"
-                    android:layout_height="32dp"
-                    android:layout_margin="5dp"
-                    android:background="?android:attr/selectableItemBackground"
-                    android:src="@android:drawable/ic_media_play"
-                    android:visibility="gone" />
-
-                <ImageButton
-                    android:id="@+id/notification_next_button"
-                    android:layout_width="32dp"
-                    android:layout_height="32dp"
-                    android:layout_margin="5dp"
-                    android:background="?android:attr/selectableItemBackground"
-                    android:src="@android:drawable/ic_media_next" />
-            </LinearLayout>
         </LinearLayout>
-    </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/buttons_layout"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignBottom="@+id/notification_album_art_imageview"
+            android:layout_toEndOf="@+id/notification_album_art_imageview"
+            android:layout_toRightOf="@+id/notification_album_art_imageview"
+            android:divider="@drawable/notification_divider"
+            android:dividerPadding="12.0dip"
+            android:gravity="center"
+            android:orientation="horizontal"
+            android:showDividers="middle">
+
+            <ImageButton
+                android:id="@+id/notification_previous_button"
+                android:layout_width="32dp"
+                android:layout_height="32dp"
+                android:layout_margin="5dp"
+                android:background="?android:attr/selectableItemBackground"
+                android:src="@android:drawable/ic_media_previous"
+                android:layout_weight="1" />
+
+            <ImageButton
+                android:id="@+id/notification_pause_button"
+                android:layout_width="48dp"
+                android:layout_height="48dp"
+                android:adjustViewBounds="true"
+                android:background="?android:attr/selectableItemBackground"
+                android:scaleType="fitCenter"
+                android:src="@android:drawable/ic_media_pause"
+                android:layout_weight="1" />
+
+            <ImageButton
+                android:id="@+id/notification_play_button"
+                android:layout_width="48dp"
+                android:layout_height="48dp"
+                android:adjustViewBounds="true"
+                android:background="?android:attr/selectableItemBackground"
+                android:scaleType="fitCenter"
+                android:src="@android:drawable/ic_media_play"
+                android:visibility="gone"
+                android:layout_weight="1" />
+
+            <ImageButton
+                android:id="@+id/notification_next_button"
+                android:layout_width="32dp"
+                android:layout_height="32dp"
+                android:layout_margin="5dp"
+                android:background="?android:attr/selectableItemBackground"
+                android:src="@android:drawable/ic_media_next"
+                android:layout_weight="1" />
+        </LinearLayout>
+
+    </RelativeLayout>
 
 </LinearLayout>
