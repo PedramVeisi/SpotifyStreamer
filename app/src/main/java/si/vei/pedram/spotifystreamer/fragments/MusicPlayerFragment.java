@@ -311,6 +311,7 @@ public class MusicPlayerFragment extends DialogFragment implements SeekBar.OnSee
             updateProgressBar();
         } else if (action.equalsIgnoreCase(MusicService.BROADCAST_TRACK_CHANGED)) {
             handleTrackChange();
+            mHandler.removeCallbacks(mUpdateTimeTask);
         } else if (action.equalsIgnoreCase(MusicService.BROADCAST_TRACK_PLAYED)) {
             mPlayButton.setImageDrawable(ResourcesCompat.getDrawable(getResources(), android.R.drawable.ic_media_pause, null));
         } else if (action.equalsIgnoreCase(MusicService.BROADCAST_TRACK_PAUSED)) {
@@ -336,21 +337,22 @@ public class MusicPlayerFragment extends DialogFragment implements SeekBar.OnSee
      */
     private Runnable mUpdateTimeTask = new Runnable() {
         public void run() {
+            if (mMusicService.isMediaPlayerPrepared()) {
+                // Update the seekbar only if music is playing
+                // This condition will prevent calling getDuration method when player is not ready
+                long totalDuration = mMusicService.getTrackDuration();
+                long currentDuration = mMusicService.getPlayingPosition();
 
-            // Update the seekbar only if music is playing
-            // This condition will prevent calling getDuration method when player is not ready
-            long totalDuration = mMusicService.getTrackDuration();
-            long currentDuration = mMusicService.getPlayingPosition();
+                // Displaying Total Duration time
+                mTrackTotalDuration.setText("" + utils.milliSecondsToTimer(totalDuration));
+                // Displaying time completed playing
+                mTrackCurrentDuration.setText("" + utils.milliSecondsToTimer(currentDuration));
 
-            // Displaying Total Duration time
-            mTrackTotalDuration.setText("" + utils.milliSecondsToTimer(totalDuration));
-            // Displaying time completed playing
-            mTrackCurrentDuration.setText("" + utils.milliSecondsToTimer(currentDuration));
-
-            // Updating progress bar
-            int progress = (int) (utils.getProgressPercentage(currentDuration, totalDuration));
-            //Log.d("Progress", ""+progress);
-            mTrackSeekbar.setProgress(progress);
+                // Updating progress bar
+                int progress = (int) (utils.getProgressPercentage(currentDuration, totalDuration));
+                //Log.d("Progress", ""+progress);
+                mTrackSeekbar.setProgress(progress);
+            }
 
             // Running this thread after 1000 milliseconds
             mHandler.postDelayed(this, 500);
