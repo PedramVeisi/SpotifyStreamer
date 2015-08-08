@@ -46,12 +46,6 @@
         <!-- Media button receiver -->
         <receiver android:name=".receiver.MusicNotificationBroadcastReceiver">
             <intent-filter>
-                <action android:name="si.vei.spotifystreamer.mediaplayer.action_play" />
-                <action android:name="si.vei.spotifystreamer.mediaplayer.action_pause" />
-                <action android:name="si.vei.spotifystreamer.mediaplayer.action_next" />
-                <action android:name="si.vei.spotifystreamer.mediaplayer.action_previous" />
-                <action android:name="si.vei.spotifystreamer.mediaplayer.action_stop" />
-                <action android:name="si.vei.spotifystreamer.mediaplayer.action_close_notification" />
                 <action android:name="android.intent.action.MEDIA_BUTTON" />
                 <action android:name="android.media.AUDIO_BECOMING_NOISY" />
             </intent-filter>
