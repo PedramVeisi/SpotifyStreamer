@@ -9,6 +9,7 @@ import android.os.Handler;
 import android.os.IBinder;
 import android.support.v4.app.DialogFragment;
 import android.support.v4.content.res.ResourcesCompat;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -174,12 +175,6 @@ public class MusicPlayerFragment extends DialogFragment implements SeekBar.OnSee
         // Listeners
         mTrackSeekbar.setOnSeekBarChangeListener(this);
 
-        return rootView;
-    }
-
-    @Override
-    public void onStart() {
-        super.onStart();
         mPlayIntent = new Intent(getActivity(), MusicService.class);
         mPlayIntent.setAction(MusicService.ACTION_PLAY);
         mPlayIntent.putParcelableArrayListExtra(getString(R.string.intent_track_list_key), mTrackList);
@@ -189,6 +184,8 @@ public class MusicPlayerFragment extends DialogFragment implements SeekBar.OnSee
 
         getActivity().bindService(mPlayIntent, musicConnection, Context.BIND_AUTO_CREATE);
         mServiceBound = true;
+
+        return rootView;
     }
 
     // Connect to the service
