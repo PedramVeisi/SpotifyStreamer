@@ -3,23 +3,15 @@ package si.vei.pedram.spotifystreamer.service;
 import android.app.Notification;
 import android.app.PendingIntent;
 import android.app.Service;
-import android.content.BroadcastReceiver;
-import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
-import android.content.IntentFilter;
 import android.media.AudioManager;
 import android.media.MediaPlayer;
-import android.media.RemoteControlClient;
 import android.net.Uri;
 import android.os.Binder;
-import android.os.Handler;
 import android.os.IBinder;
 import android.os.PowerManager;
 import android.support.v4.app.NotificationCompat;
-import android.support.v4.content.LocalBroadcastManager;
-import android.support.v4.media.session.MediaControllerCompat;
-import android.support.v4.media.session.MediaSessionCompat;
 import android.util.Log;
 import android.view.View;
 import android.widget.RemoteViews;
@@ -29,9 +21,7 @@ import com.squareup.picasso.Picasso;
 import java.util.ArrayList;
 
 import si.vei.pedram.spotifystreamer.R;
-import si.vei.pedram.spotifystreamer.fragments.MusicPlayerFragment;
 import si.vei.pedram.spotifystreamer.models.TrackGist;
-import si.vei.pedram.spotifystreamer.receiver.MusicNotificationBroadcastReceiver;
 
 /**
  * @author Pedram Veisi
@@ -64,7 +54,6 @@ public class MusicService extends Service implements
 
     private final IBinder mMusicBinder = new MusicBinder();
     private boolean mPlaybackPaused = false;
-
 
     public MusicService() {
     }
@@ -100,13 +89,11 @@ public class MusicService extends Service implements
         if (action.equalsIgnoreCase(ACTION_PLAY)) {
             if (mPlaybackPaused) {
                 startPlayer();
-                buildNotification();
             } else {
                 playTrack();
             }
         } else if (action.equalsIgnoreCase(ACTION_PAUSE)) {
             pausePlayer();
-            buildNotification();
         } else if (action.equalsIgnoreCase(ACTION_NEXT)) {
             playNextTrack();
         } else if (action.equalsIgnoreCase(ACTION_PREVIOUS)) {
@@ -203,9 +190,14 @@ public class MusicService extends Service implements
         return mPlayer.isPlaying();
     }
 
+    public boolean isPaused() {
+        return mPlaybackPaused;
+    }
+
     public void pausePlayer() {
         mPlayer.pause();
         mPlaybackPaused = true;
+        buildNotification();
     }
 
     public void seekTo(int position) {
@@ -215,6 +207,7 @@ public class MusicService extends Service implements
     public void startPlayer() {
         mPlayer.start();
         mPlaybackPaused = false;
+        buildNotification();
     }
 
     /**
@@ -283,19 +276,18 @@ public class MusicService extends Service implements
         notification.contentView = simpleContentView;
         notification.bigContentView = expandedView;
 
-        try {
+
+        // If notification is being created for the first time
+        if (!isPlaying() && !isPaused()) {
             // Set a default image to notification and wait for Picasso to load the album art from the internet
             notification.contentView.setImageViewResource(R.id.notification_album_art_imageview, R.drawable.default_album_art);
             notification.bigContentView.setImageViewResource(R.id.notification_album_art_imageview, R.drawable.default_album_art);
-
-            Picasso.with(this).load(currentTrack.getSmallAlbumThumbnail()).into(simpleContentView, R.id.notification_album_art_imageview, NOTIFICATION_ID, notification);
-            Picasso.with(this).load(currentTrack.getSmallAlbumThumbnail()).into(expandedView, R.id.notification_album_art_imageview, NOTIFICATION_ID, notification);
-
-        } catch (Exception e) {
-            e.printStackTrace();
         }
 
-        if (mPlaybackPaused) {
+        Picasso.with(this).load(currentTrack.getSmallAlbumThumbnail()).into(simpleContentView, R.id.notification_album_art_imageview, NOTIFICATION_ID, notification);
+        Picasso.with(this).load(currentTrack.getSmallAlbumThumbnail()).into(expandedView, R.id.notification_album_art_imageview, NOTIFICATION_ID, notification);
+
+        if (isPaused()) {
             notification.contentView.setViewVisibility(R.id.notification_pause_button, View.GONE);
             notification.contentView.setViewVisibility(R.id.notification_play_button, View.VISIBLE);
 
