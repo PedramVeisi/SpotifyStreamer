@@ -6,6 +6,6 @@
     <color name="list_item_touch_background">#a5d6a7</color>
     <color name="grey">#cccccc</color>
 
-    <color name="notification_background">#404040</color>
+    <color name="music_player_notification_background">#404040</color>
 
 </resources>

@@ -3,7 +3,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    android:background="@color/notification_background">
+    android:background="@color/music_player_notification_background">
 
     <LinearLayout
         android:layout_width="fill_parent"
