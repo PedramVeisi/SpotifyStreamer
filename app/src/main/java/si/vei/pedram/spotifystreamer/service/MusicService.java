@@ -12,6 +12,7 @@ import android.os.Binder;
 import android.os.IBinder;
 import android.os.PowerManager;
 import android.support.v4.app.NotificationCompat;
+import android.support.v4.content.LocalBroadcastManager;
 import android.util.Log;
 import android.view.View;
 import android.widget.RemoteViews;
@@ -31,11 +32,17 @@ public class MusicService extends Service implements
         MediaPlayer.OnPreparedListener, MediaPlayer.OnErrorListener,
         MediaPlayer.OnCompletionListener, MediaPlayer.OnSeekCompleteListener {
 
-    public static final String ACTION_PLAY = "si.vei.spotifystreamer.mediaplayer.action_play";
-    public static final String ACTION_PAUSE = "si.vei.spotifystreamer.mediaplayer.action_pause";
-    public static final String ACTION_NEXT = "si.vei.spotifystreamer.mediaplayer.action_next";
-    public static final String ACTION_PREVIOUS = "si.vei.spotifystreamer.mediaplayer.action_previous";
-    public static final String ACTION_CLOSE_NOTIFICATION = "si.vei.spotifystreamer.mediaplayer.action_close_notification";
+    public static final String ACTION_PLAY = "music_service.action_play";
+    public static final String ACTION_PAUSE = "music_service.action_pause";
+    public static final String ACTION_NEXT = "music_service.action_next";
+    public static final String ACTION_PREVIOUS = "music_service.action_previous";
+    public static final String ACTION_CLOSE_NOTIFICATION = "music_service.action_close_notification";
+
+    public static final String BROADCAST_TRACK_PAUSED = "music_service.broadcast_pause";
+    public static final String BROADCAST_TRACK_PLAYED = "music_service.broadcast_play";
+    public static final String BROADCAST_TRACK_CHANGED = "music_service.broadcast_track_change";
+    public static final String BROADCAST_SERVICE_STOPPED = "music_service.broadcast_service_stopped";
+    public static final String BROADCAST_MEDIA_PLAYER_PREPARED = "music_service.broadcast_media_player_prepared";
 
     private int seekForwardTime = 3000; // 3000 milliseconds
     private int seekBackwardTime = 3000; // 3000 milliseconds
@@ -68,9 +75,7 @@ public class MusicService extends Service implements
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
-
         handleIntent(intent);
-
         return START_STICKY;
     }
 
@@ -99,8 +104,7 @@ public class MusicService extends Service implements
         } else if (action.equalsIgnoreCase(ACTION_PREVIOUS)) {
             playPreviousTrack();
         } else if (action.equalsIgnoreCase(ACTION_CLOSE_NOTIFICATION)) {
-            stopSelf();
-            stopForeground(true);
+            stopMusicService();
         }
     }
 
@@ -152,7 +156,7 @@ public class MusicService extends Service implements
 
         }
         buildNotification();
-        //mRemoteControlClient.setPlaybackState(RemoteControlClient.PLAYSTATE_PLAYING);
+        broadcast(BROADCAST_TRACK_CHANGED);
         mPlayer.prepareAsync();
     }
 
@@ -198,6 +202,7 @@ public class MusicService extends Service implements
         mPlayer.pause();
         mPlaybackPaused = true;
         buildNotification();
+        broadcast(BROADCAST_TRACK_PAUSED);
     }
 
     public void seekTo(int position) {
@@ -208,6 +213,7 @@ public class MusicService extends Service implements
         mPlayer.start();
         mPlaybackPaused = false;
         buildNotification();
+        broadcast(BROADCAST_TRACK_PLAYED);
     }
 
     /**
@@ -339,6 +345,18 @@ public class MusicService extends Service implements
         return intent;
     }
 
+    private void broadcast(String message) {
+        Intent intent = new Intent(message);
+        // You can also include some extra data.
+        LocalBroadcastManager.getInstance(this).sendBroadcast(intent);
+    }
+
+    private void stopMusicService() {
+        stopSelf();
+        stopForeground(true);
+        broadcast(BROADCAST_SERVICE_STOPPED);
+    }
+
     @Override
     public IBinder onBind(Intent intent) {
         return mMusicBinder;
@@ -373,6 +391,7 @@ public class MusicService extends Service implements
     public void onPrepared(MediaPlayer mp) {
 
         mMediaPlayerPrepared = true;
+        broadcast(BROADCAST_MEDIA_PLAYER_PREPARED);
 
         //start playback
         mp.start();
