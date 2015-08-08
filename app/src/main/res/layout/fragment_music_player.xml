@@ -24,7 +24,9 @@
         android:layout_below="@+id/music_player_artist_name_textview"
         android:layout_centerHorizontal="true"
         android:text="Small Text"
-        android:textAppearance="?android:attr/textAppearanceMedium" />
+        android:textAppearance="?android:attr/textAppearanceMedium"
+        android:textStyle="bold"
+        android:layout_margin="5dp" />
 
 
     <ImageView
@@ -44,7 +46,9 @@
         android:layout_centerHorizontal="true"
         android:text="Medium Text"
         android:textAppearance="?android:attr/textAppearanceLarge"
-        android:textColor="@android:color/black" />
+        android:textColor="@android:color/black"
+        android:textStyle="bold"
+        android:layout_marginTop="5dp" />
 
     <LinearLayout
         android:id="@+id/music_player_controller_container"
@@ -103,27 +107,28 @@
         android:layout_height="wrap_content"
         android:layout_above="@id/music_player_controller_container"
         android:layout_centerHorizontal="true"
-        android:background="@color/colorPrimary" />
+        android:background="@color/colorPrimary"
+        android:paddingBottom="5dp" />
 
     <TextView
+        android:id="@+id/music_player_current_time_textview"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:textAppearance="?android:attr/textAppearanceSmall"
-        android:text="Small Text"
-        android:id="@+id/music_player_current_time_textview"
         android:layout_above="@id/music_player_controller_container"
         android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true" />
+        android:layout_alignParentStart="true"
+        android:text="Small Text"
+        android:textAppearance="?android:attr/textAppearanceSmall" />
 
 
     <TextView
+        android:id="@+id/music_player_track_total_duration_textview"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:textAppearance="?android:attr/textAppearanceSmall"
-        android:text="Small Text"
-        android:id="@+id/music_player_track_total_duration_textview"
         android:layout_alignBottom="@+id/music_player_seekBar"
+        android:layout_alignParentEnd="true"
         android:layout_alignParentRight="true"
-        android:layout_alignParentEnd="true" />
+        android:text="Small Text"
+        android:textAppearance="?android:attr/textAppearanceSmall" />
 
 </RelativeLayout>
