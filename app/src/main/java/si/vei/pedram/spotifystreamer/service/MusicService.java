@@ -239,6 +239,7 @@ public class MusicService extends Service implements
             mTrackPosition = 0;
         }
         broadcast(BROADCAST_TRACK_CHANGED);
+        Log.e("TAG", "Called");
         playTrack();
     }
 
