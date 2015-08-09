@@ -283,7 +283,7 @@ public class MusicPlayerFragment extends DialogFragment implements SeekBar.OnSee
         mTrackNameTextView.setText(mCurrentTrack.getTrackName());
 
         // Load the album art
-        Picasso.with(getActivity()).load(mCurrentTrack.getLargeAlbumThumbnail()).into(mAlbumArtImageView);
+        Picasso.with(getActivity()).load(mCurrentTrack.getLargeAlbumThumbnail()).error(ResourcesCompat.getDrawable(getResources(), R.drawable.no_image_available, null)).into(mAlbumArtImageView);
 
         if (mMusicService.isMediaPlayerPrepared()) {
             enableControlButtons();
