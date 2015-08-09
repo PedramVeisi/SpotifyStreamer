@@ -22,6 +22,7 @@ import com.squareup.picasso.Picasso;
 import java.util.ArrayList;
 
 import si.vei.pedram.spotifystreamer.R;
+import si.vei.pedram.spotifystreamer.activities.MusicPlayerActivity;
 import si.vei.pedram.spotifystreamer.models.TrackGist;
 
 /**
@@ -284,8 +285,19 @@ public class MusicService extends Service implements
         RemoteViews simpleContentView = new RemoteViews(getApplicationContext().getPackageName(), R.layout.music_player_notification);
         RemoteViews expandedView = new RemoteViews(getApplicationContext().getPackageName(), R.layout.music_player_big_notification);
 
+        Intent notificationIntent = new Intent(this, MusicPlayerActivity.class);
+        notificationIntent.setAction(MusicService.ACTION_RESUME_PLAYER);
+
+        notificationIntent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP
+                | Intent.FLAG_ACTIVITY_SINGLE_TOP);
+
+        PendingIntent pendingIntent = PendingIntent.getActivity(this, 0,
+                notificationIntent, 0);
+
+
         Notification notification = new NotificationCompat.Builder(getApplicationContext())
                 .setSmallIcon(R.drawable.ic_music)
+                .setContentIntent(pendingIntent)
                 .setPriority(Notification.PRIORITY_MAX)
                 .setContentTitle(trackName).build();
 
