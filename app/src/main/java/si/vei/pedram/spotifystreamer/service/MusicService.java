@@ -99,12 +99,10 @@ public class MusicService extends Service implements
         String action = intent.getAction();
 
         if (action.equalsIgnoreCase(ACTION_PLAY)) {
-            if (!isPlaying()) {
-                if (mPlaybackPaused) {
-                    startPlayer();
-                } else {
-                    playTrack();
-                }
+            if (mPlaybackPaused) {
+                startPlayer();
+            } else {
+                playTrack();
             }
         }
         if (action.equalsIgnoreCase(ACTION_PAUSE)) {
