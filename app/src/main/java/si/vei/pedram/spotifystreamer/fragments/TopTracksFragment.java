@@ -145,7 +145,9 @@ public class TopTracksFragment extends Fragment {
     public void onPause() {
         super.onPause();
         // Cancel AsyncTask if fragment is changed
-        getTopTracks.cancel(true);
+        if (getTopTracks != null) {
+            getTopTracks.cancel(true);
+        }
     }
 
     public class GetTopTracks extends AsyncTask<String, Void, ArrayList<TrackGist>> {
