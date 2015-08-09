@@ -133,7 +133,6 @@ public class MusicPlayerFragment extends DialogFragment implements SeekBar.OnSee
                     mPlayButton.setImageDrawable(ResourcesCompat.getDrawable(getResources(), android.R.drawable.ic_media_play, null));
                 } else {
                     mMusicService.startPlayer();
-                    mPlayButton.setEnabled(false);
                     mPlayButton.setImageDrawable(ResourcesCompat.getDrawable(getResources(), android.R.drawable.ic_media_pause, null));
                 }
             }
