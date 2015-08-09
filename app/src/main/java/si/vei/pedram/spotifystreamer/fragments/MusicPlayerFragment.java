@@ -124,7 +124,6 @@ public class MusicPlayerFragment extends DialogFragment implements SeekBar.OnSee
         mTrackTotalDuration = (TextView) rootView.findViewById(R.id.music_player_track_total_duration_textview);
 
         mTrackCurrentDuration.setText(getString(R.string.music_player_seekbar_zero_label));
-        mTrackTotalDuration.setText(getString(R.string.music_player_seekbar_total_duration));
 
         // Media Controller Buttons
         mPlayButton = (ImageButton) rootView.findViewById(R.id.music_player_play_pause_button);
@@ -270,9 +269,6 @@ public class MusicPlayerFragment extends DialogFragment implements SeekBar.OnSee
         // Reset seekbar
         mTrackSeekbar.setProgress(0);
 
-        // TODO Spotify API allows to play 30 second samples, so the total duration is 30. For a real app this should be changed to get the duration from music service (after the file is loaded. Simply calling duration won't work here)
-        mTrackTotalDuration.setText(getString(R.string.music_player_seekbar_total_duration));
-
     }
 
     private void seekBackward() {
@@ -302,9 +298,6 @@ public class MusicPlayerFragment extends DialogFragment implements SeekBar.OnSee
         // Reset seekbar
         mTrackSeekbar.setProgress(0);
 
-        // TODO Spotify API allows to play 30 second samples, so the total duration is 30. For a real app this should be changed to get the duration from music service (after the file is loaded. Simply calling duration won't work here)
-        mTrackTotalDuration.setText(getString(R.string.music_player_seekbar_total_duration));
-
     }
 
     public void updateProgressBar() {
@@ -315,6 +308,7 @@ public class MusicPlayerFragment extends DialogFragment implements SeekBar.OnSee
         if (action.equalsIgnoreCase(MusicService.BROADCAST_MEDIA_PLAYER_PREPARED)) {
             updateProgressBar();
             mStreamingProgressDialog.dismiss();
+            mTrackTotalDuration.setText(Integer.toString(mMusicService.getTrackDuration()));
         } else if (action.equalsIgnoreCase(MusicService.BROADCAST_TRACK_CHANGED)) {
             handleTrackChange();
             mHandler.removeCallbacks(mUpdateTimeTask);
