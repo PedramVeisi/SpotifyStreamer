@@ -37,6 +37,7 @@ public class MusicService extends Service implements
     public static final String ACTION_NEXT = "music_service.action_next";
     public static final String ACTION_PREVIOUS = "music_service.action_previous";
     public static final String ACTION_CLOSE_NOTIFICATION = "music_service.action_close_notification";
+    public static final String ACTION_RESUME_PLAYER = "music_service.resume_player";
 
     public static final String BROADCAST_TRACK_PAUSED = "music_service.broadcast_pause";
     public static final String BROADCAST_TRACK_PLAYED = "music_service.broadcast_play";
@@ -82,8 +83,9 @@ public class MusicService extends Service implements
 
     private void handleIntent(Intent intent) {
 
-        if (intent == null)
+        if (intent == null) {
             return;
+        }
 
         if (intent.getExtras() != null) {
             mTrackList = intent.getParcelableArrayListExtra(getString(R.string.intent_track_list_key));
@@ -97,10 +99,12 @@ public class MusicService extends Service implements
         String action = intent.getAction();
 
         if (action.equalsIgnoreCase(ACTION_PLAY)) {
-            if (mPlaybackPaused) {
-                startPlayer();
-            } else {
-                playTrack();
+            if (!isPlaying()) {
+                if (mPlaybackPaused) {
+                    startPlayer();
+                } else {
+                    playTrack();
+                }
             }
         }
         if (action.equalsIgnoreCase(ACTION_PAUSE)) {

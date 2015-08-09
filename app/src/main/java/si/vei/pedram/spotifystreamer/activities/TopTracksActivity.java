@@ -13,6 +13,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 
 import si.vei.pedram.spotifystreamer.R;
+import si.vei.pedram.spotifystreamer.fragments.MusicPlayerFragment;
 import si.vei.pedram.spotifystreamer.fragments.TopTracksFragment;
 import si.vei.pedram.spotifystreamer.service.MusicService;
 
@@ -97,6 +98,9 @@ public class TopTracksActivity extends AppCompatActivity {
         }
 
         if (id == R.id.action_now_playing) {
+            Intent intent = new Intent(this, MusicPlayerActivity.class);
+            intent.setAction(MusicService.ACTION_RESUME_PLAYER);
+            startActivity(intent);
             return true;
         }
 

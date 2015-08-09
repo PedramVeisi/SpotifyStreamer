@@ -12,6 +12,7 @@ import java.util.ArrayList;
 import si.vei.pedram.spotifystreamer.R;
 import si.vei.pedram.spotifystreamer.fragments.MusicPlayerFragment;
 import si.vei.pedram.spotifystreamer.models.TrackGist;
+import si.vei.pedram.spotifystreamer.service.MusicService;
 
 /**
  * Music player activity
@@ -24,6 +25,7 @@ public class MusicPlayerActivity extends AppCompatActivity {
 
     private ArrayList<TrackGist> mTrackList;
     private int mTrackPosition;
+    private boolean mPlayerResumed = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -36,6 +38,12 @@ public class MusicPlayerActivity extends AppCompatActivity {
 
             // Get track position in the list
             mTrackPosition = getIntent().getExtras().getInt(getString(R.string.intent_selected_track_position));
+        }
+
+        if (getIntent().getAction() != null) {
+            if (getIntent().getAction().equalsIgnoreCase(MusicService.ACTION_RESUME_PLAYER)) {
+                mPlayerResumed = true;
+            }
         }
 
         // Set a toolbar to replace the action bar.
@@ -53,6 +61,7 @@ public class MusicPlayerActivity extends AppCompatActivity {
         Bundle arguments = new Bundle();
         arguments.putParcelableArrayList(getString(R.string.intent_track_list_key), mTrackList);
         arguments.putInt(getString(R.string.intent_selected_track_position), mTrackPosition);
+        arguments.putBoolean(getString(R.string.intent_player_resumed), mPlayerResumed);
 
         MusicPlayerFragment musicPlayerFragment = new MusicPlayerFragment();
         musicPlayerFragment.setArguments(arguments);

@@ -62,6 +62,8 @@ public class MusicPlayerFragment extends DialogFragment implements SeekBar.OnSee
 
     private boolean mServiceBound = false;
 
+    private boolean mPlayerResumed = false;
+
     private BroadcastReceiver mBroadcastReceiver = new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, Intent intent) {
@@ -90,6 +92,7 @@ public class MusicPlayerFragment extends DialogFragment implements SeekBar.OnSee
         if (arguments != null) {
             mTrackList = arguments.getParcelableArrayList(getString(R.string.intent_track_list_key));
             mTrackPosition = arguments.getInt(getString(R.string.intent_selected_track_position));
+            mPlayerResumed = arguments.getBoolean(getString(R.string.intent_player_resumed));
             hasTwoPanes = arguments.getBoolean(getString(R.string.intent_has_two_pane));
         }
 
@@ -100,16 +103,6 @@ public class MusicPlayerFragment extends DialogFragment implements SeekBar.OnSee
         mAlbumNameTextView = (TextView) rootView.findViewById(R.id.music_player_album_name_textview);
         mAlbumArtImageView = (ImageView) rootView.findViewById(R.id.music_player_album_art_imageview);
         mTrackNameTextView = (TextView) rootView.findViewById(R.id.music_player_track_name_textview);
-
-        mCurrentTrack = mTrackList.get(mTrackPosition);
-
-        // Set UI elements for the current track
-        mAartistNameTextView.setText(mCurrentTrack.getArtistName());
-        mAlbumNameTextView.setText(mCurrentTrack.getAlbumName());
-        mTrackNameTextView.setText(mCurrentTrack.getTrackName());
-
-        // Load the album art
-        Picasso.with(getActivity()).load(mCurrentTrack.getLargeAlbumThumbnail()).into(mAlbumArtImageView);
 
         // Seekbar and related labels
         mTrackSeekbar = (SeekBar) rootView.findViewById(R.id.music_player_seekBar);
@@ -173,14 +166,15 @@ public class MusicPlayerFragment extends DialogFragment implements SeekBar.OnSee
         mTrackSeekbar.setOnSeekBarChangeListener(this);
 
         mPlayIntent = new Intent(getActivity(), MusicService.class);
-        mPlayIntent.setAction(MusicService.ACTION_PLAY);
-        mPlayIntent.putParcelableArrayListExtra(getString(R.string.intent_track_list_key), mTrackList);
-        mPlayIntent.putExtra(getString(R.string.intent_selected_track_position), mTrackPosition);
 
-        getActivity().startService(mPlayIntent);
+        if (!mPlayerResumed) {
+            mPlayIntent.setAction(MusicService.ACTION_PLAY);
+            mPlayIntent.putParcelableArrayListExtra(getString(R.string.intent_track_list_key), mTrackList);
+            mPlayIntent.putExtra(getString(R.string.intent_selected_track_position), mTrackPosition);
+            getActivity().startService(mPlayIntent);
+        }
 
         getActivity().bindService(mPlayIntent, musicConnection, Context.BIND_AUTO_CREATE);
-        mServiceBound = true;
 
         return rootView;
     }
@@ -194,11 +188,11 @@ public class MusicPlayerFragment extends DialogFragment implements SeekBar.OnSee
             //get service
             mMusicService = binder.getService();
 
-            mMusicService.setTrackList(mTrackList);
-            mMusicService.setTrackPosition(mTrackPosition);
+            mCurrentTrack = mMusicService.getCurrentTrack();
 
-            // Since we want to play a track every time the service starts, we will call playTrack method to initialize the player and set the track
-            mMusicService.playTrack();
+            updateUi();
+
+            mServiceBound = true;
         }
 
         @Override
@@ -272,7 +266,7 @@ public class MusicPlayerFragment extends DialogFragment implements SeekBar.OnSee
             enableControlButtons();
             mTrackTotalDuration.setText(Integer.toString(mMusicService.getTrackDuration()));
         } else if (action.equalsIgnoreCase(MusicService.BROADCAST_TRACK_CHANGED)) {
-            handleTrackChange();
+            updateUi();
             mHandler.removeCallbacks(mUpdateTimeTask);
         } else if (action.equalsIgnoreCase(MusicService.BROADCAST_TRACK_PLAYED)) {
             mPlayButton.setImageDrawable(ResourcesCompat.getDrawable(getResources(), android.R.drawable.ic_media_pause, null));
@@ -283,8 +277,7 @@ public class MusicPlayerFragment extends DialogFragment implements SeekBar.OnSee
         }
     }
 
-    public void handleTrackChange() {
-        mCurrentTrack = mMusicService.getCurrentTrack();
+    public void updateUi() {
 
         mAartistNameTextView.setText(mCurrentTrack.getArtistName());
         mAlbumNameTextView.setText(mCurrentTrack.getAlbumName());
@@ -293,12 +286,15 @@ public class MusicPlayerFragment extends DialogFragment implements SeekBar.OnSee
         // Load the album art
         Picasso.with(getActivity()).load(mCurrentTrack.getLargeAlbumThumbnail()).into(mAlbumArtImageView);
 
-        mPlayButton.setImageDrawable(ResourcesCompat.getDrawable(getResources(), android.R.drawable.ic_media_pause, null));
+        if (mMusicService.isMediaPlayerPrepared()) {
+            enableControlButtons();
+            updateProgressBar();
+        } else {
+            mTrackCurrentDuration.setText(getString(R.string.music_player_seekbar_zero_label));
+            mTrackSeekbar.setProgress(0);
+            disableControlButtons();
+        }
 
-        mTrackCurrentDuration.setText(getString(R.string.music_player_seekbar_zero_label));
-        mTrackSeekbar.setProgress(0);
-
-        disableControlButtons();
     }
 
     private void disableControlButtons() {

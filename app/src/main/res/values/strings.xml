@@ -234,6 +234,7 @@
     <string name="loading">Loading</string>
     <string name="please_wait">Please wait...</string>
     <string name="now_playing">Now Playing</string>
+    <string name="intent_player_resumed">PLAYER_RESUMED</string>
 
 
 </resources>
