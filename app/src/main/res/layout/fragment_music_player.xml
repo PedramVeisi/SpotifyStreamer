@@ -7,48 +7,62 @@
     tools:context="si.vei.pedram.spotifystreamer.fragments.MusicPlayerFragment">
 
 
-    <TextView
-        android:id="@+id/music_player_artist_name_textview"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentTop="true"
-        android:layout_centerHorizontal="true"
-        android:text="Medium Text"
-        android:textAppearance="?android:attr/textAppearanceLarge"
-        android:textColor="@android:color/black" />
-
-    <TextView
-        android:id="@+id/music_player_album_name_textview"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/music_player_artist_name_textview"
-        android:layout_centerHorizontal="true"
-        android:text="Small Text"
-        android:textAppearance="?android:attr/textAppearanceMedium"
-        android:textStyle="bold"
-        android:layout_margin="5dp" />
-
-
-    <ImageView
-        android:id="@+id/music_player_album_art_imageview"
+    <ScrollView
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/music_player_album_name_textview"
-        android:layout_centerHorizontal="true"
-        android:adjustViewBounds="true"
-        android:src="@drawable/no_image_available" />
+        android:layout_height="match_parent">
 
-    <TextView
-        android:id="@+id/music_player_track_name_textview"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@id/music_player_album_art_imageview"
-        android:layout_centerHorizontal="true"
-        android:text="Medium Text"
-        android:textAppearance="?android:attr/textAppearanceLarge"
-        android:textColor="@android:color/black"
-        android:textStyle="bold"
-        android:layout_marginTop="5dp" />
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical"
+            android:gravity="center_horizontal">
+
+            <TextView
+                android:id="@+id/music_player_artist_name_textview"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentTop="true"
+                android:layout_centerHorizontal="true"
+                android:text="Medium Text"
+                android:textAppearance="?android:attr/textAppearanceLarge"
+                android:textColor="@android:color/black" />
+
+            <TextView
+                android:id="@+id/music_player_album_name_textview"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/music_player_artist_name_textview"
+                android:layout_centerHorizontal="true"
+                android:layout_margin="5dp"
+                android:text="Small Text"
+                android:textAppearance="?android:attr/textAppearanceMedium"
+                android:textStyle="bold" />
+
+
+            <ImageView
+                android:id="@+id/music_player_album_art_imageview"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/music_player_album_name_textview"
+                android:layout_centerHorizontal="true"
+                android:adjustViewBounds="true"
+                android:src="@drawable/no_image_available" />
+
+            <TextView
+                android:id="@+id/music_player_track_name_textview"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/music_player_album_art_imageview"
+                android:layout_centerHorizontal="true"
+                android:layout_marginTop="5dp"
+                android:text="Medium Text"
+                android:textAppearance="?android:attr/textAppearanceLarge"
+                android:textColor="@android:color/black"
+                android:textStyle="bold" />
+
+        </LinearLayout>
+
+    </ScrollView>
 
     <LinearLayout
         android:id="@+id/music_player_controller_container"
