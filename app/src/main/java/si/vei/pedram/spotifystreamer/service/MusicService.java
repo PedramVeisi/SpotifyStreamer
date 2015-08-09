@@ -165,7 +165,6 @@ public class MusicService extends Service implements
             Log.e("MUSIC SERVICE", "Error setting data source", e);
 
         }
-        buildNotification();
         mPlayer.prepareAsync();
     }
 
@@ -400,6 +399,7 @@ public class MusicService extends Service implements
 
     @Override
     public void onPrepared(MediaPlayer mp) {
+        buildNotification();
 
         mMediaPlayerPrepared = true;
         broadcast(BROADCAST_MEDIA_PLAYER_PREPARED);
@@ -472,7 +472,7 @@ public class MusicService extends Service implements
 //        RemoteControlClient.MetadataEditor metadataEditor = mRemoteControlClient.editMetadata(true);
 //        metadataEditor.putString(MediaMetadataRetriever.METADATA_KEY_ALBUM, mCurrentTrack.getAlbumName());
 //        metadataEditor.putString(MediaMetadataRetriever.METADATA_KEY_ARTIST, mCurrentTrack.getArtistName());
-//        metadataEditor.putString(MediaMetadataRetriever.METADATA_KEY_TITLE, mCurrentTrack.getTrackName());
+//        metadataEditor.putString(MediaMetadataRetriever.META  DATA_KEY_TITLE, mCurrentTrack.getTrackName());
 //
 //        //TODO Get album art from the Internet
 //        Bitmap albumArt = BitmapFactory.decodeResource(getResources(), R.drawable.default_album_art);
