@@ -88,7 +88,7 @@
             android:layout_height="match_parent"
             android:layout_weight="1"
             android:background="?android:attr/selectableItemBackground"
-            android:src="@android:drawable/ic_media_rew" />
+            android:src="@drawable/ic_media_rew_disabled" />
 
         <ImageButton
             android:id="@+id/music_player_play_pause_button"
@@ -96,7 +96,7 @@
             android:layout_height="match_parent"
             android:layout_weight="1"
             android:background="?android:attr/selectableItemBackground"
-            android:src="@android:drawable/ic_media_pause" />
+            android:src="@drawable/ic_media_pause_disabled" />
 
         <ImageButton
             android:id="@+id/music_player_forward_button"
@@ -104,7 +104,7 @@
             android:layout_height="match_parent"
             android:layout_weight="1"
             android:background="?android:attr/selectableItemBackground"
-            android:src="@android:drawable/ic_media_ff" />
+            android:src="@drawable/ic_media_ff_disabled" />
 
         <ImageButton
             android:id="@+id/music_player_next_track_button"
@@ -142,7 +142,7 @@
         android:layout_alignBottom="@+id/music_player_seekBar"
         android:layout_alignParentEnd="true"
         android:layout_alignParentRight="true"
-        android:text="Small Text"
+        android:text="0:00"
         android:textAppearance="?android:attr/textAppearanceSmall" />
 
 </RelativeLayout>

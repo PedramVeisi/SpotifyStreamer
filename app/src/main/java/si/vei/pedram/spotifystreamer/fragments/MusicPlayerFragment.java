@@ -1,6 +1,5 @@
 package si.vei.pedram.spotifystreamer.fragments;
 
-import android.app.ProgressDialog;
 import android.content.BroadcastReceiver;
 import android.content.ComponentName;
 import android.content.Context;
@@ -13,7 +12,6 @@ import android.os.IBinder;
 import android.support.v4.app.DialogFragment;
 import android.support.v4.content.LocalBroadcastManager;
 import android.support.v4.content.res.ResourcesCompat;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -43,7 +41,7 @@ public class MusicPlayerFragment extends DialogFragment implements SeekBar.OnSee
 
     private ImageButton mPlayButton;
     private ImageButton mForwardButton;
-    private ImageButton mBackwardButton;
+    private ImageButton mRewindButton;
     private ImageButton mNextButton;
     private ImageButton mPreviousButton;
 
@@ -63,8 +61,6 @@ public class MusicPlayerFragment extends DialogFragment implements SeekBar.OnSee
     private TrackGist mCurrentTrack;
 
     private boolean mServiceBound = false;
-
-    ProgressDialog mStreamingProgressDialog;
 
     private BroadcastReceiver mBroadcastReceiver = new BroadcastReceiver() {
         @Override
@@ -99,9 +95,6 @@ public class MusicPlayerFragment extends DialogFragment implements SeekBar.OnSee
 
         setShowsDialog(hasTwoPanes);
 
-        mStreamingProgressDialog = ProgressDialog.show(getActivity(), getString(R.string.loading),
-                getString(R.string.please_wait), true);
-
         // Get UI elements
         mAartistNameTextView = (TextView) rootView.findViewById(R.id.music_player_artist_name_textview);
         mAlbumNameTextView = (TextView) rootView.findViewById(R.id.music_player_album_name_textview);
@@ -128,7 +121,7 @@ public class MusicPlayerFragment extends DialogFragment implements SeekBar.OnSee
         // Media Controller Buttons
         mPlayButton = (ImageButton) rootView.findViewById(R.id.music_player_play_pause_button);
         mForwardButton = (ImageButton) rootView.findViewById(R.id.music_player_forward_button);
-        mBackwardButton = (ImageButton) rootView.findViewById(R.id.music_player_rewind_button);
+        mRewindButton = (ImageButton) rootView.findViewById(R.id.music_player_rewind_button);
         mNextButton = (ImageButton) rootView.findViewById(R.id.music_player_next_track_button);
         mPreviousButton = (ImageButton) rootView.findViewById(R.id.music_player_previous_track_button);
 
@@ -147,12 +140,13 @@ public class MusicPlayerFragment extends DialogFragment implements SeekBar.OnSee
                     mPlayButton.setImageDrawable(ResourcesCompat.getDrawable(getResources(), android.R.drawable.ic_media_play, null));
                 } else {
                     mMusicService.startPlayer();
+                    mPlayButton.setEnabled(false);
                     mPlayButton.setImageDrawable(ResourcesCompat.getDrawable(getResources(), android.R.drawable.ic_media_pause, null));
                 }
             }
         });
 
-        mBackwardButton.setOnClickListener(new View.OnClickListener() {
+        mRewindButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 seekBackward();
@@ -253,22 +247,6 @@ public class MusicPlayerFragment extends DialogFragment implements SeekBar.OnSee
     //play previous
     private void playPreviousTrack() {
         mMusicService.playPreviousTrack();
-
-        mTrackPosition = mMusicService.getTrackPosition();
-        mCurrentTrack = mMusicService.getCurrentTrack();
-
-        mAartistNameTextView.setText(mCurrentTrack.getArtistName());
-        mAlbumNameTextView.setText(mCurrentTrack.getAlbumName());
-        mTrackNameTextView.setText(mCurrentTrack.getTrackName());
-
-        // Load the album art
-        Picasso.with(getActivity()).load(mCurrentTrack.getLargeAlbumThumbnail()).into(mAlbumArtImageView);
-
-        mTrackCurrentDuration.setText(getString(R.string.music_player_seekbar_zero_label));
-
-        // Reset seekbar
-        mTrackSeekbar.setProgress(0);
-
     }
 
     private void seekBackward() {
@@ -282,22 +260,6 @@ public class MusicPlayerFragment extends DialogFragment implements SeekBar.OnSee
     //play next
     private void playNextTrack() {
         mMusicService.playNextTrack();
-
-        mTrackPosition = mMusicService.getTrackPosition();
-        mCurrentTrack = mMusicService.getCurrentTrack();
-
-        mAartistNameTextView.setText(mCurrentTrack.getArtistName());
-        mAlbumNameTextView.setText(mCurrentTrack.getAlbumName());
-        mTrackNameTextView.setText(mCurrentTrack.getTrackName());
-
-        // Load the album art
-        Picasso.with(getActivity()).load(mCurrentTrack.getLargeAlbumThumbnail()).into(mAlbumArtImageView);
-
-        mTrackCurrentDuration.setText(getString(R.string.music_player_seekbar_zero_label));
-
-        // Reset seekbar
-        mTrackSeekbar.setProgress(0);
-
     }
 
     public void updateProgressBar() {
@@ -307,7 +269,7 @@ public class MusicPlayerFragment extends DialogFragment implements SeekBar.OnSee
     private void handleBroadcastIntent(String action) {
         if (action.equalsIgnoreCase(MusicService.BROADCAST_MEDIA_PLAYER_PREPARED)) {
             updateProgressBar();
-            mStreamingProgressDialog.dismiss();
+            enableControlButtons();
             mTrackTotalDuration.setText(Integer.toString(mMusicService.getTrackDuration()));
         } else if (action.equalsIgnoreCase(MusicService.BROADCAST_TRACK_CHANGED)) {
             handleTrackChange();
@@ -331,8 +293,32 @@ public class MusicPlayerFragment extends DialogFragment implements SeekBar.OnSee
         // Load the album art
         Picasso.with(getActivity()).load(mCurrentTrack.getLargeAlbumThumbnail()).into(mAlbumArtImageView);
 
+        mPlayButton.setImageDrawable(ResourcesCompat.getDrawable(getResources(), android.R.drawable.ic_media_pause, null));
+
         mTrackCurrentDuration.setText(getString(R.string.music_player_seekbar_zero_label));
         mTrackSeekbar.setProgress(0);
+
+        disableControlButtons();
+    }
+
+    private void disableControlButtons() {
+        mPlayButton.setEnabled(false);
+        mRewindButton.setEnabled(false);
+        mForwardButton.setEnabled(false);
+
+        mPlayButton.setImageDrawable(ResourcesCompat.getDrawable(getResources(), R.drawable.ic_media_pause_disabled, null));
+        mRewindButton.setImageDrawable(ResourcesCompat.getDrawable(getResources(), R.drawable.ic_media_rew_disabled, null));
+        mForwardButton.setImageDrawable(ResourcesCompat.getDrawable(getResources(), R.drawable.ic_media_ff_disabled, null));
+    }
+
+    private void enableControlButtons() {
+        mPlayButton.setEnabled(true);
+        mRewindButton.setEnabled(true);
+        mForwardButton.setEnabled(true);
+
+        mPlayButton.setImageDrawable(ResourcesCompat.getDrawable(getResources(), android.R.drawable.ic_media_pause, null));
+        mRewindButton.setImageDrawable(ResourcesCompat.getDrawable(getResources(), android.R.drawable.ic_media_rew, null));
+        mForwardButton.setImageDrawable(ResourcesCompat.getDrawable(getResources(), android.R.drawable.ic_media_ff, null));
     }
 
     /**
