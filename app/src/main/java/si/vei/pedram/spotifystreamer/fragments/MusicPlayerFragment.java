@@ -12,7 +12,6 @@ import android.os.IBinder;
 import android.support.v4.app.DialogFragment;
 import android.support.v4.content.LocalBroadcastManager;
 import android.support.v4.content.res.ResourcesCompat;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -294,14 +293,6 @@ public class MusicPlayerFragment extends DialogFragment implements SeekBar.OnSee
             mTrackSeekbar.setProgress(0);
             disableControlButtons();
         }
-
-        if (mPlayerResumed) {
-            if (mMusicService.isPlaying()) {
-                mPlayButton.setImageDrawable(ResourcesCompat.getDrawable(getResources(), android.R.drawable.ic_media_pause, null));
-            } else {
-                mPlayButton.setImageDrawable(ResourcesCompat.getDrawable(getResources(), android.R.drawable.ic_media_play, null));
-            }
-        }
     }
 
     private void disableControlButtons() {
@@ -320,6 +311,11 @@ public class MusicPlayerFragment extends DialogFragment implements SeekBar.OnSee
         mForwardButton.setEnabled(true);
 
         mPlayButton.setImageDrawable(ResourcesCompat.getDrawable(getResources(), android.R.drawable.ic_media_pause, null));
+
+        if (mPlayerResumed && !mMusicService.isPlaying()) {
+            mPlayButton.setImageDrawable(ResourcesCompat.getDrawable(getResources(), android.R.drawable.ic_media_play, null));
+        }
+
         mRewindButton.setImageDrawable(ResourcesCompat.getDrawable(getResources(), android.R.drawable.ic_media_rew, null));
         mForwardButton.setImageDrawable(ResourcesCompat.getDrawable(getResources(), android.R.drawable.ic_media_ff, null));
     }
