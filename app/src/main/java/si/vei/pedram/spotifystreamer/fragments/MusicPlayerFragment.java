@@ -188,8 +188,6 @@ public class MusicPlayerFragment extends DialogFragment implements SeekBar.OnSee
             //get service
             mMusicService = binder.getService();
 
-            mCurrentTrack = mMusicService.getCurrentTrack();
-
             updateUi();
 
             mServiceBound = true;
@@ -278,6 +276,8 @@ public class MusicPlayerFragment extends DialogFragment implements SeekBar.OnSee
     }
 
     public void updateUi() {
+
+        mCurrentTrack = mMusicService.getCurrentTrack();
 
         mAartistNameTextView.setText(mCurrentTrack.getArtistName());
         mAlbumNameTextView.setText(mCurrentTrack.getAlbumName());
