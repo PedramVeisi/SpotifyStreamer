@@ -1,5 +1,6 @@
 package si.vei.pedram.spotifystreamer.fragments;
 
+import android.app.ProgressDialog;
 import android.content.BroadcastReceiver;
 import android.content.ComponentName;
 import android.content.Context;
@@ -46,7 +47,6 @@ public class MusicPlayerFragment extends DialogFragment implements SeekBar.OnSee
     private ImageButton mNextButton;
     private ImageButton mPreviousButton;
 
-
     private SeekBar mTrackSeekbar;
     private TextView mTrackCurrentDuration;
     private TextView mTrackTotalDuration;
@@ -62,9 +62,9 @@ public class MusicPlayerFragment extends DialogFragment implements SeekBar.OnSee
     private TextView mTrackNameTextView;
     private TrackGist mCurrentTrack;
 
-    private Context mContext;
-
     private boolean mServiceBound = false;
+
+    ProgressDialog mStreamingProgressDialog;
 
     private BroadcastReceiver mBroadcastReceiver = new BroadcastReceiver() {
         @Override
@@ -98,6 +98,9 @@ public class MusicPlayerFragment extends DialogFragment implements SeekBar.OnSee
         }
 
         setShowsDialog(hasTwoPanes);
+
+        mStreamingProgressDialog = ProgressDialog.show(getActivity(), getString(R.string.loading),
+                getString(R.string.please_wait), true);
 
         // Get UI elements
         mAartistNameTextView = (TextView) rootView.findViewById(R.id.music_player_artist_name_textview);
@@ -311,6 +314,7 @@ public class MusicPlayerFragment extends DialogFragment implements SeekBar.OnSee
     private void handleBroadcastIntent(String action) {
         if (action.equalsIgnoreCase(MusicService.BROADCAST_MEDIA_PLAYER_PREPARED)) {
             updateProgressBar();
+            mStreamingProgressDialog.dismiss();
         } else if (action.equalsIgnoreCase(MusicService.BROADCAST_TRACK_CHANGED)) {
             handleTrackChange();
             mHandler.removeCallbacks(mUpdateTimeTask);
