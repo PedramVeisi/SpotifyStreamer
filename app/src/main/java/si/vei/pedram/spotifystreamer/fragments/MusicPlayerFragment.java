@@ -12,6 +12,7 @@ import android.os.IBinder;
 import android.support.v4.app.DialogFragment;
 import android.support.v4.content.LocalBroadcastManager;
 import android.support.v4.content.res.ResourcesCompat;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -225,6 +226,7 @@ public class MusicPlayerFragment extends DialogFragment implements SeekBar.OnSee
         intentFilter.addAction(MusicService.BROADCAST_TRACK_CHANGED);
         intentFilter.addAction(MusicService.BROADCAST_TRACK_PAUSED);
         intentFilter.addAction(MusicService.BROADCAST_TRACK_PLAYED);
+        intentFilter.addAction(MusicService.BROADCAST_NOTIFICATION_CLOSED);
 
         LocalBroadcastManager.getInstance(getActivity()).registerReceiver(mBroadcastReceiver, intentFilter);
     }
@@ -316,6 +318,8 @@ public class MusicPlayerFragment extends DialogFragment implements SeekBar.OnSee
             mPlayButton.setImageDrawable(ResourcesCompat.getDrawable(getResources(), android.R.drawable.ic_media_pause, null));
         } else if (action.equalsIgnoreCase(MusicService.BROADCAST_TRACK_PAUSED)) {
             mPlayButton.setImageDrawable(ResourcesCompat.getDrawable(getResources(), android.R.drawable.ic_media_play, null));
+        } else if (action.equalsIgnoreCase(MusicService.BROADCAST_NOTIFICATION_CLOSED)) {
+            getActivity().finish();
         }
     }
 
@@ -330,6 +334,7 @@ public class MusicPlayerFragment extends DialogFragment implements SeekBar.OnSee
         Picasso.with(getActivity()).load(mCurrentTrack.getLargeAlbumThumbnail()).into(mAlbumArtImageView);
 
         mTrackCurrentDuration.setText(getString(R.string.music_player_seekbar_zero_label));
+        mTrackSeekbar.setProgress(0);
     }
 
     /**

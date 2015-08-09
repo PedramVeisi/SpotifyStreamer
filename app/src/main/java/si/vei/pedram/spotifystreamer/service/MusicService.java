@@ -43,6 +43,7 @@ public class MusicService extends Service implements
     public static final String BROADCAST_TRACK_CHANGED = "music_service.broadcast_track_change";
     public static final String BROADCAST_SERVICE_STOPPED = "music_service.broadcast_service_stopped";
     public static final String BROADCAST_MEDIA_PLAYER_PREPARED = "music_service.broadcast_media_player_prepared";
+    public static final String BROADCAST_NOTIFICATION_CLOSED = "music_service.broadcast_notification_closed";
 
     private int seekForwardTime = 3000; // 3000 milliseconds
     private int seekBackwardTime = 3000; // 3000 milliseconds
@@ -88,6 +89,7 @@ public class MusicService extends Service implements
             mTrackList = intent.getParcelableArrayListExtra(getString(R.string.intent_track_list_key));
             mTrackPosition = intent.getIntExtra(getString(R.string.intent_selected_track_position), 0);
         }
+
         if (intent.getAction() == null) {
             return;
         }
@@ -100,13 +102,18 @@ public class MusicService extends Service implements
             } else {
                 playTrack();
             }
-        } else if (action.equalsIgnoreCase(ACTION_PAUSE)) {
+        }
+        if (action.equalsIgnoreCase(ACTION_PAUSE)) {
             pausePlayer();
-        } else if (action.equalsIgnoreCase(ACTION_NEXT)) {
+        }
+        if (action.equalsIgnoreCase(ACTION_NEXT)) {
             playNextTrack();
-        } else if (action.equalsIgnoreCase(ACTION_PREVIOUS)) {
+        }
+        if (action.equalsIgnoreCase(ACTION_PREVIOUS)) {
             playPreviousTrack();
-        } else if (action.equalsIgnoreCase(ACTION_CLOSE_NOTIFICATION)) {
+        }
+        if (action.equalsIgnoreCase(ACTION_CLOSE_NOTIFICATION)) {
+            broadcast(BROADCAST_NOTIFICATION_CLOSED);
             stopMusicService();
         }
     }
@@ -239,7 +246,6 @@ public class MusicService extends Service implements
             mTrackPosition = 0;
         }
         broadcast(BROADCAST_TRACK_CHANGED);
-        Log.e("TAG", "Called");
         playTrack();
     }
 
@@ -323,7 +329,7 @@ public class MusicService extends Service implements
 
     public void setListeners(RemoteViews view) {
         Intent previousIntent = setAction(this, ACTION_PREVIOUS);
-        Intent deleteIntent = setAction(this, ACTION_CLOSE_NOTIFICATION);
+        Intent notificationCloseIntent = setAction(this, ACTION_CLOSE_NOTIFICATION);
         Intent pauseIntent = setAction(this, ACTION_PAUSE);
         Intent nextIntent = setAction(this, ACTION_NEXT);
         Intent playIntent = setAction(this, ACTION_PLAY);
@@ -331,8 +337,8 @@ public class MusicService extends Service implements
         PendingIntent previousPendingIntent = PendingIntent.getService(getApplicationContext(), 0, previousIntent, PendingIntent.FLAG_UPDATE_CURRENT);
         view.setOnClickPendingIntent(R.id.notification_previous_button, previousPendingIntent);
 
-        PendingIntent deletePendingIntent = PendingIntent.getService(getApplicationContext(), 0, deleteIntent, PendingIntent.FLAG_UPDATE_CURRENT);
-        view.setOnClickPendingIntent(R.id.notification_close_button, deletePendingIntent);
+        PendingIntent notificationClosePendingIntent = PendingIntent.getService(getApplicationContext(), 0, notificationCloseIntent, PendingIntent.FLAG_UPDATE_CURRENT);
+        view.setOnClickPendingIntent(R.id.notification_close_button, notificationClosePendingIntent);
 
         PendingIntent pausePendingIntent = PendingIntent.getService(getApplicationContext(), 0, pauseIntent, PendingIntent.FLAG_UPDATE_CURRENT);
         view.setOnClickPendingIntent(R.id.notification_pause_button, pausePendingIntent);
