@@ -1,7 +1,11 @@
 package si.vei.pedram.spotifystreamer.activities;
 
+import android.content.BroadcastReceiver;
+import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.os.Bundle;
+import android.support.v4.content.LocalBroadcastManager;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
@@ -10,6 +14,7 @@ import android.view.MenuItem;
 import si.vei.pedram.spotifystreamer.R;
 import si.vei.pedram.spotifystreamer.fragments.ArtistSearchFragment;
 import si.vei.pedram.spotifystreamer.fragments.TopTracksFragment;
+import si.vei.pedram.spotifystreamer.service.MusicService;
 
 /**
  * @author Pedram Veisi
@@ -18,6 +23,7 @@ public class MainActivity extends AppCompatActivity implements ArtistSearchFragm
 
     private static final String TOPTRACKSFRAGMENT_TAG = "TTFTAG";
     private boolean mTwoPane = false;
+    private boolean mMusicPlaying;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -35,6 +41,13 @@ public class MainActivity extends AppCompatActivity implements ArtistSearchFragm
             // in two-pane mode.
             mTwoPane = true;
         }
+
+        IntentFilter intentFilter = new IntentFilter();
+        intentFilter.addAction(MusicService.BROADCAST_MEDIA_PLAYER_PREPARED);
+        intentFilter.addAction(MusicService.BROADCAST_SERVICE_STOPPED);
+
+        LocalBroadcastManager.getInstance(this).registerReceiver(mBroadcastReceiver, intentFilter);
+
     }
 
     @Override
@@ -42,6 +55,19 @@ public class MainActivity extends AppCompatActivity implements ArtistSearchFragm
         // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.menu_main, menu);
         return true;
+    }
+
+    @Override
+    public boolean onPrepareOptionsMenu(Menu menu) {
+        MenuItem nowPlayingItem = menu.findItem(R.id.action_now_playing);
+
+        if (mMusicPlaying) {
+            nowPlayingItem.setVisible(true);
+        } else {
+            nowPlayingItem.setVisible(false);
+        }
+
+        return super.onPrepareOptionsMenu(menu);
     }
 
     @Override
@@ -60,7 +86,32 @@ public class MainActivity extends AppCompatActivity implements ArtistSearchFragm
             return true;
         }
 
+        if (id == R.id.action_now_playing) {
+            Intent intent = new Intent(this, MusicPlayerActivity.class);
+            intent.setAction(MusicService.ACTION_RESUME_PLAYER);
+            startActivity(intent);
+            return true;
+        }
+
         return super.onOptionsItemSelected(item);
+    }
+
+    private BroadcastReceiver mBroadcastReceiver = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            handleBroadcastIntent(intent.getAction());
+        }
+    };
+
+    private void handleBroadcastIntent(String action) {
+        if (action.equalsIgnoreCase(MusicService.BROADCAST_MEDIA_PLAYER_PREPARED)) {
+            mMusicPlaying = true;
+            invalidateOptionsMenu();
+        }
+        if (action.equalsIgnoreCase(MusicService.BROADCAST_SERVICE_STOPPED)) {
+            mMusicPlaying = false;
+            invalidateOptionsMenu();
+        }
     }
 
     @Override
