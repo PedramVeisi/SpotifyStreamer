@@ -1,4 +1,4 @@
-<resources>
+<resources xmlns:xliff="http://schemas.android.com/apk/res-auto">
     <string name="app_name">Spotify Streamer</string>
 
     <!-- Country Codes and Names -->
@@ -236,5 +236,7 @@
     <string name="now_playing">Now Playing</string>
     <string name="intent_player_resumed">PLAYER_RESUMED</string>
 
+
+    <string name="track_share_text">Listening to <xliff:g id="track_name" example="Alguien Soy Yo">%s</xliff:g> by <xliff:g id="artist_name" example="Enrique Iglesias">%s</xliff:g> <xliff:g id="track_url">%s</xliff:g></string>
 
 </resources>

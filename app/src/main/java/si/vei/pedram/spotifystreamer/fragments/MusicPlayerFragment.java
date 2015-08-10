@@ -12,7 +12,12 @@ import android.os.IBinder;
 import android.support.v4.app.DialogFragment;
 import android.support.v4.content.LocalBroadcastManager;
 import android.support.v4.content.res.ResourcesCompat;
+import android.support.v4.view.MenuItemCompat;
+import android.support.v7.widget.ShareActionProvider;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageButton;
@@ -61,8 +66,10 @@ public class MusicPlayerFragment extends DialogFragment implements SeekBar.OnSee
     private TrackGist mCurrentTrack;
 
     private boolean mServiceBound = false;
-
     private boolean mPlayerResumed = false;
+
+    private ShareActionProvider mShareActionProvider;
+    private String mTrackShareText;
 
     private BroadcastReceiver mBroadcastReceiver = new BroadcastReceiver() {
         @Override
@@ -71,13 +78,13 @@ public class MusicPlayerFragment extends DialogFragment implements SeekBar.OnSee
         }
     };
 
-
     // this method is only called once for this fragment
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         // retain this fragment
         setRetainInstance(true);
+        setHasOptionsMenu(true);
     }
 
     @Override
@@ -164,17 +171,6 @@ public class MusicPlayerFragment extends DialogFragment implements SeekBar.OnSee
         // Listeners
         mTrackSeekbar.setOnSeekBarChangeListener(this);
 
-        mPlayIntent = new Intent(getActivity(), MusicService.class);
-
-        if (!mPlayerResumed) {
-            mPlayIntent.setAction(MusicService.ACTION_PLAY);
-            mPlayIntent.putParcelableArrayListExtra(getString(R.string.intent_track_list_key), mTrackList);
-            mPlayIntent.putExtra(getString(R.string.intent_selected_track_position), mTrackPosition);
-            getActivity().startService(mPlayIntent);
-        }
-
-        getActivity().bindService(mPlayIntent, musicConnection, Context.BIND_AUTO_CREATE);
-
         return rootView;
     }
 
@@ -206,6 +202,17 @@ public class MusicPlayerFragment extends DialogFragment implements SeekBar.OnSee
     @Override
     public void onResume() {
         super.onResume();
+
+        mPlayIntent = new Intent(getActivity(), MusicService.class);
+
+        if (!mPlayerResumed) {
+            mPlayIntent.setAction(MusicService.ACTION_PLAY);
+            mPlayIntent.putParcelableArrayListExtra(getString(R.string.intent_track_list_key), mTrackList);
+            mPlayIntent.putExtra(getString(R.string.intent_selected_track_position), mTrackPosition);
+            getActivity().startService(mPlayIntent);
+        }
+
+        getActivity().bindService(mPlayIntent, musicConnection, Context.BIND_AUTO_CREATE);
 
         IntentFilter intentFilter = new IntentFilter();
         intentFilter.addAction(MusicService.BROADCAST_MEDIA_PLAYER_PREPARED);
@@ -278,6 +285,9 @@ public class MusicPlayerFragment extends DialogFragment implements SeekBar.OnSee
 
         mCurrentTrack = mMusicService.getCurrentTrack();
 
+        mTrackShareText = getString(R.string.track_share_text, mCurrentTrack.getTrackName(), mCurrentTrack.getArtistName(), mCurrentTrack.getPreviewUrl());
+        mShareActionProvider.setShareIntent(createShareTrackIntent(mTrackShareText));
+
         mAartistNameTextView.setText(mCurrentTrack.getArtistName());
         mAlbumNameTextView.setText(mCurrentTrack.getAlbumName());
         mTrackNameTextView.setText(mCurrentTrack.getTrackName());
@@ -348,6 +358,40 @@ public class MusicPlayerFragment extends DialogFragment implements SeekBar.OnSee
             mHandler.postDelayed(this, 500);
         }
     };
+
+    private Intent createShareTrackIntent(String trackShareText) {
+        Intent shareIntent = new Intent(Intent.ACTION_SEND);
+        shareIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_WHEN_TASK_RESET);
+        shareIntent.setType("text/plain");
+        shareIntent.putExtra(Intent.EXTRA_TEXT, trackShareText);
+        return shareIntent;
+    }
+
+    @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        // Inflate the menu; this adds items to the action bar if it is present.
+        getActivity().getMenuInflater().inflate(R.menu.menu_music_player, menu);
+        // Locate MenuItem with ShareActionProvider
+        MenuItem menuItem = menu.findItem(R.id.action_share);
+
+        // Fetch and store ShareActionProvider
+        mShareActionProvider = (ShareActionProvider) MenuItemCompat.getActionProvider(menuItem);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        // Handle action bar item clicks here. The action bar will
+        // automatically handle clicks on the Home/Up button, so long
+        // as you specify a parent activity in AndroidManifest.xml.
+        int id = item.getItemId();
+
+        //noinspection SimplifiableIfStatement
+        if (id == R.id.action_settings) {
+            return true;
+        }
+
+        return super.onOptionsItemSelected(item);
+    }
 
     @Override
     public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
