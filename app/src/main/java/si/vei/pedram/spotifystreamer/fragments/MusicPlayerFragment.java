@@ -14,6 +14,7 @@ import android.support.v4.content.LocalBroadcastManager;
 import android.support.v4.content.res.ResourcesCompat;
 import android.support.v4.view.MenuItemCompat;
 import android.support.v7.widget.ShareActionProvider;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -168,6 +169,18 @@ public class MusicPlayerFragment extends DialogFragment implements SeekBar.OnSee
 
         utils = new Utilities();
 
+        mPlayIntent = new Intent(getActivity(), MusicService.class);
+
+        if (!mPlayerResumed) {
+            mPlayIntent.setAction(MusicService.ACTION_PLAY);
+            mPlayIntent.putParcelableArrayListExtra(getString(R.string.intent_track_list_key), mTrackList);
+            mPlayIntent.putExtra(getString(R.string.intent_selected_track_position), mTrackPosition);
+            getActivity().startService(mPlayIntent);
+        }
+
+        getActivity().bindService(mPlayIntent, musicConnection, Context.BIND_AUTO_CREATE);
+
+
         // Listeners
         mTrackSeekbar.setOnSeekBarChangeListener(this);
 
@@ -203,16 +216,10 @@ public class MusicPlayerFragment extends DialogFragment implements SeekBar.OnSee
     public void onResume() {
         super.onResume();
 
-        mPlayIntent = new Intent(getActivity(), MusicService.class);
-
-        if (!mPlayerResumed) {
-            mPlayIntent.setAction(MusicService.ACTION_PLAY);
-            mPlayIntent.putParcelableArrayListExtra(getString(R.string.intent_track_list_key), mTrackList);
-            mPlayIntent.putExtra(getString(R.string.intent_selected_track_position), mTrackPosition);
-            getActivity().startService(mPlayIntent);
+        // If we are already connected to the service update the UI. Otherwise service connection will take care of it
+        if (mMusicService != null) {
+            updateUi();
         }
-
-        getActivity().bindService(mPlayIntent, musicConnection, Context.BIND_AUTO_CREATE);
 
         IntentFilter intentFilter = new IntentFilter();
         intentFilter.addAction(MusicService.BROADCAST_MEDIA_PLAYER_PREPARED);
