@@ -260,7 +260,7 @@ public class MusicPlayerFragment extends DialogFragment implements SeekBar.OnSee
     private void handleBroadcastIntent(String action) {
         if (action.equalsIgnoreCase(MusicService.BROADCAST_MEDIA_PLAYER_PREPARED)) {
             updateProgressBar();
-            enableControlButtons();
+            enableControls();
             mTrackTotalDuration.setText(Integer.toString(mMusicService.getTrackDuration()));
         } else if (action.equalsIgnoreCase(MusicService.BROADCAST_TRACK_CHANGED)) {
             updateUi();
@@ -286,29 +286,31 @@ public class MusicPlayerFragment extends DialogFragment implements SeekBar.OnSee
         Picasso.with(getActivity()).load(mCurrentTrack.getLargeAlbumThumbnail()).error(ResourcesCompat.getDrawable(getResources(), R.drawable.no_image_available, null)).into(mAlbumArtImageView);
 
         if (mMusicService.isMediaPlayerPrepared()) {
-            enableControlButtons();
+            enableControls();
             updateProgressBar();
         } else {
             mTrackCurrentDuration.setText(getString(R.string.music_player_seekbar_zero_label));
             mTrackSeekbar.setProgress(0);
-            disableControlButtons();
+            disableControls();
         }
     }
 
-    private void disableControlButtons() {
+    private void disableControls() {
         mPlayButton.setEnabled(false);
         mRewindButton.setEnabled(false);
         mForwardButton.setEnabled(false);
+        mTrackSeekbar.setEnabled(false);
 
         mPlayButton.setImageDrawable(ResourcesCompat.getDrawable(getResources(), R.drawable.ic_media_pause_disabled, null));
         mRewindButton.setImageDrawable(ResourcesCompat.getDrawable(getResources(), R.drawable.ic_media_rew_disabled, null));
         mForwardButton.setImageDrawable(ResourcesCompat.getDrawable(getResources(), R.drawable.ic_media_ff_disabled, null));
     }
 
-    private void enableControlButtons() {
+    private void enableControls() {
         mPlayButton.setEnabled(true);
         mRewindButton.setEnabled(true);
         mForwardButton.setEnabled(true);
+        mTrackSeekbar.setEnabled(true);
 
         mPlayButton.setImageDrawable(ResourcesCompat.getDrawable(getResources(), android.R.drawable.ic_media_pause, null));
 
