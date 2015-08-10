@@ -11,9 +11,13 @@ import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 
+import java.util.ArrayList;
+
 import si.vei.pedram.spotifystreamer.R;
 import si.vei.pedram.spotifystreamer.fragments.ArtistSearchFragment;
+import si.vei.pedram.spotifystreamer.fragments.MusicPlayerFragment;
 import si.vei.pedram.spotifystreamer.fragments.TopTracksFragment;
+import si.vei.pedram.spotifystreamer.models.TrackGist;
 import si.vei.pedram.spotifystreamer.service.MusicService;
 
 /**
@@ -22,6 +26,7 @@ import si.vei.pedram.spotifystreamer.service.MusicService;
 public class MainActivity extends AppCompatActivity implements ArtistSearchFragment.Callback {
 
     private static final String TOPTRACKSFRAGMENT_TAG = "TTFTAG";
+    private final String MUSICPLAYERFRAGMENT_TAG = "MPFTAG";
     private boolean mTwoPane = false;
     private boolean mMusicPlaying;
 
@@ -87,9 +92,20 @@ public class MainActivity extends AppCompatActivity implements ArtistSearchFragm
         }
 
         if (id == R.id.action_now_playing) {
-            Intent intent = new Intent(this, MusicPlayerActivity.class);
-            intent.setAction(MusicService.ACTION_RESUME_PLAYER);
-            startActivity(intent);
+            if (mTwoPane) {
+                Bundle arguments = new Bundle();
+                arguments.putBoolean(getString(R.string.intent_player_resumed), true);
+                arguments.putBoolean(getString(R.string.intent_has_two_pane), mTwoPane);
+                MusicPlayerFragment musicPlayerFragment = new MusicPlayerFragment();
+                musicPlayerFragment.setArguments(arguments);
+                musicPlayerFragment.show(getSupportFragmentManager(), MUSICPLAYERFRAGMENT_TAG);
+            } else {
+                Intent intent = new Intent(this, MusicPlayerActivity.class);
+                intent.setAction(MusicService.ACTION_RESUME_PLAYER);
+                startActivity(intent);
+            }
+
+
             return true;
         }
 
