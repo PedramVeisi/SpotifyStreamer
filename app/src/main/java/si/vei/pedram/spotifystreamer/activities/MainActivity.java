@@ -127,6 +127,9 @@ public class MainActivity extends AppCompatActivity implements ArtistSearchFragm
         if (action.equalsIgnoreCase(MusicService.BROADCAST_SERVICE_STOPPED)) {
             mMusicPlaying = false;
             invalidateOptionsMenu();
+            if (mTwoPane) {
+                finish();
+            }
         }
     }
 
