@@ -285,8 +285,12 @@ public class MusicPlayerFragment extends DialogFragment implements SeekBar.OnSee
 
         mCurrentTrack = mMusicService.getCurrentTrack();
 
-        mTrackShareText = getString(R.string.track_share_text, mCurrentTrack.getTrackName(), mCurrentTrack.getArtistName(), mCurrentTrack.getPreviewUrl());
-        mShareActionProvider.setShareIntent(createShareTrackIntent(mTrackShareText));
+        getActivity().invalidateOptionsMenu();
+
+        if (mShareActionProvider != null) {
+            mTrackShareText = getString(R.string.track_share_text, mCurrentTrack.getTrackName(), mCurrentTrack.getArtistName(), mCurrentTrack.getPreviewUrl());
+            mShareActionProvider.setShareIntent(createShareTrackIntent(mTrackShareText));
+        }
 
         mAartistNameTextView.setText(mCurrentTrack.getArtistName());
         mAlbumNameTextView.setText(mCurrentTrack.getAlbumName());
@@ -376,6 +380,8 @@ public class MusicPlayerFragment extends DialogFragment implements SeekBar.OnSee
 
         // Fetch and store ShareActionProvider
         mShareActionProvider = (ShareActionProvider) MenuItemCompat.getActionProvider(menuItem);
+
+        super.onCreateOptionsMenu(menu, inflater);
     }
 
     @Override
