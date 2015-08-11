@@ -54,25 +54,4 @@ public class TopTracksActivity extends AppCompatActivity {
         }
 
     }
-
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.menu_top_tracks, menu);
-        return true;
-    }
-
-    @Override
-    public boolean onPrepareOptionsMenu(Menu menu) {
-        MenuItem nowPlayingItem = menu.findItem(R.id.action_now_playing);
-
-        if (mMusicPlaying) {
-            nowPlayingItem.setVisible(true);
-        } else {
-            nowPlayingItem.setVisible(false);
-        }
-
-        return super.onPrepareOptionsMenu(menu);
-    }
-
 }
