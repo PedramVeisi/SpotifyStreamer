@@ -78,6 +78,7 @@ public class MusicPlayerFragment extends DialogFragment implements SeekBar.OnSee
             handleBroadcastIntent(intent.getAction());
         }
     };
+    private boolean mHasTwoPanes;
 
     // this method is only called once for this fragment
     @Override
@@ -93,7 +94,7 @@ public class MusicPlayerFragment extends DialogFragment implements SeekBar.OnSee
                              Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.fragment_music_player, container, false);
 
-        boolean hasTwoPanes = false;
+        mHasTwoPanes = false;
 
         // Get track list and track position
         Bundle arguments = getArguments();
@@ -101,10 +102,10 @@ public class MusicPlayerFragment extends DialogFragment implements SeekBar.OnSee
             mTrackList = arguments.getParcelableArrayList(getString(R.string.intent_track_list_key));
             mTrackPosition = arguments.getInt(getString(R.string.intent_selected_track_position));
             mPlayerResumed = arguments.getBoolean(getString(R.string.intent_player_resumed));
-            hasTwoPanes = arguments.getBoolean(getString(R.string.intent_has_two_pane));
+            mHasTwoPanes = arguments.getBoolean(getString(R.string.intent_has_two_pane));
         }
 
-        setShowsDialog(hasTwoPanes);
+        setShowsDialog(mHasTwoPanes);
 
         // Get UI elements
         mAartistNameTextView = (TextView) rootView.findViewById(R.id.music_player_artist_name_textview);
@@ -293,7 +294,7 @@ public class MusicPlayerFragment extends DialogFragment implements SeekBar.OnSee
 
         getActivity().invalidateOptionsMenu();
 
-        if (mShareActionProvider != null) {
+        if (mShareActionProvider != null && !mHasTwoPanes) {
             mTrackShareText = getString(R.string.track_share_text, mCurrentTrack.getTrackName(), mCurrentTrack.getArtistName(), mCurrentTrack.getPreviewUrl());
             mShareActionProvider.setShareIntent(createShareTrackIntent(mTrackShareText));
         }
@@ -379,13 +380,17 @@ public class MusicPlayerFragment extends DialogFragment implements SeekBar.OnSee
 
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
-        // Inflate the menu; this adds items to the action bar if it is present.
-        getActivity().getMenuInflater().inflate(R.menu.menu_music_player, menu);
-        // Locate MenuItem with ShareActionProvider
-        MenuItem menuItem = menu.findItem(R.id.action_share);
 
-        // Fetch and store ShareActionProvider
-        mShareActionProvider = (ShareActionProvider) MenuItemCompat.getActionProvider(menuItem);
+        if (!mHasTwoPanes) {
+            // Inflate the menu; this adds items to the action bar if it is present.
+            getActivity().getMenuInflater().inflate(R.menu.menu_music_player, menu);
+
+            // Locate MenuItem with ShareActionProvider
+            MenuItem menuItem = menu.findItem(R.id.action_share);
+
+            // Fetch and store ShareActionProvider
+            mShareActionProvider = (ShareActionProvider) MenuItemCompat.getActionProvider(menuItem);
+        }
 
         super.onCreateOptionsMenu(menu, inflater);
     }

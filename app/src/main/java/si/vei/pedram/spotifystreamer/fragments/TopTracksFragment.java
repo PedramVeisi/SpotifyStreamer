@@ -1,12 +1,22 @@
 package si.vei.pedram.spotifystreamer.fragments;
 
+import android.content.BroadcastReceiver;
+import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.v4.app.Fragment;
+import android.support.v4.content.LocalBroadcastManager;
+import android.support.v4.view.MenuItemCompat;
+import android.support.v7.widget.ShareActionProvider;
+import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
@@ -28,8 +38,10 @@ import kaaes.spotify.webapi.android.models.Track;
 import retrofit.RetrofitError;
 import si.vei.pedram.spotifystreamer.R;
 import si.vei.pedram.spotifystreamer.activities.MusicPlayerActivity;
+import si.vei.pedram.spotifystreamer.activities.SettingsActivity;
 import si.vei.pedram.spotifystreamer.lists.adapters.TopTracksListAdapter;
 import si.vei.pedram.spotifystreamer.models.TrackGist;
+import si.vei.pedram.spotifystreamer.service.MusicService;
 
 /**
  * A placeholder fragment containing top tracks for a given artist
@@ -45,11 +57,25 @@ public class TopTracksFragment extends Fragment {
     private String artistId;
     private String artistImageUrl;
     private GetTopTracks getTopTracks;
+    private boolean mHasTwoPanes;
+    private String mTrackShareText;
+    private ShareActionProvider mShareActionProvider;
+    private boolean mMusicPlaying = false;
 
     /**
      * Constructor
      */
     public TopTracksFragment() {
+    }
+
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        IntentFilter intentFilter = new IntentFilter();
+        intentFilter.addAction(MusicService.BROADCAST_MEDIA_PLAYER_PREPARED);
+        intentFilter.addAction(MusicService.BROADCAST_SERVICE_STOPPED);
+
+        LocalBroadcastManager.getInstance(getActivity()).registerReceiver(mBroadcastReceiver, intentFilter);
     }
 
     @Override
@@ -81,28 +107,42 @@ public class TopTracksFragment extends Fragment {
         ListView topTracksListView = (ListView) rootView.findViewById(R.id.artist_top_tracks_listview);
         topTracksListView.setAdapter(mTracksAdapter);
 
-        final boolean hasTwoPanes = getResources().getBoolean(R.bool.has_two_panes);
+        mHasTwoPanes = getResources().getBoolean(R.bool.has_two_panes);
+
+        if (mHasTwoPanes) {
+            setHasOptionsMenu(true);
+        }
 
         topTracksListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                if (hasTwoPanes) {
+                ArrayList<TrackGist> trackList = (ArrayList<TrackGist>) mTracksAdapter.getTracks();
+                if (mHasTwoPanes) {
                     MusicPlayerFragment fragment = new MusicPlayerFragment();
                     // Create the music player fragment and add it to the activity
                     // using a fragment transaction.
                     Bundle arguments = new Bundle();
-                    arguments.putParcelableArrayList(getString(R.string.intent_track_list_key), (ArrayList<TrackGist>) mTracksAdapter.getTracks());
+                    arguments.putParcelableArrayList(getString(R.string.intent_track_list_key), trackList);
                     arguments.putInt(getString(R.string.intent_selected_track_position), position);
-                    arguments.putBoolean(getString(R.string.intent_has_two_pane), hasTwoPanes);
+                    arguments.putBoolean(getString(R.string.intent_has_two_pane), mHasTwoPanes);
 
                     MusicPlayerFragment musicPlayerFragment = new MusicPlayerFragment();
                     musicPlayerFragment.setArguments(arguments);
                     musicPlayerFragment.show(getActivity().getSupportFragmentManager(), MUSICPLAYERFRAGMENT_TAG);
+
+                    getActivity().invalidateOptionsMenu();
+
+                    if (mShareActionProvider != null && mMusicPlaying) {
+                        TrackGist currentTrack = trackList.get(position);
+                        mTrackShareText = getString(R.string.track_share_text, currentTrack.getTrackName(), currentTrack.getArtistName(), currentTrack.getPreviewUrl());
+                        mShareActionProvider.setShareIntent(createShareTrackIntent(mTrackShareText));
+                    }
+
                 } else {
                     Intent intent = new Intent(getActivity(), MusicPlayerActivity.class);
                     intent.putParcelableArrayListExtra(getString(R.string.intent_track_list_key), (ArrayList<TrackGist>) mTracksAdapter.getTracks());
                     intent.putExtra(getString(R.string.intent_selected_track_position), position);
-                    intent.putExtra(getString(R.string.intent_has_two_pane), hasTwoPanes);
+                    intent.putExtra(getString(R.string.intent_has_two_pane), mHasTwoPanes);
                     startActivity(intent);
                 }
             }
@@ -142,6 +182,58 @@ public class TopTracksFragment extends Fragment {
     }
 
     @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        if (mHasTwoPanes && mMusicPlaying) {
+            // Inflate the menu; this adds items to the action bar if it is present.
+            getActivity().getMenuInflater().inflate(R.menu.menu_top_tracks, menu);
+
+            // Locate MenuItem with ShareActionProvider
+            MenuItem menuItem = menu.findItem(R.id.action_share);
+
+            // Make item visible
+            menuItem.setVisible(true);
+
+            // Fetch and store ShareActionProvider
+            mShareActionProvider = (ShareActionProvider) MenuItemCompat.getActionProvider(menuItem);
+        }
+        super.onCreateOptionsMenu(menu, inflater);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        // Handle action bar item clicks here. The action bar will
+        // automatically handle clicks on the Home/Up button, so long
+        // as you specify a parent activity in AndroidManifest.xml.
+        int id = item.getItemId();
+
+        //noinspection SimplifiableIfStatement
+        if (id == R.id.action_settings) {
+            // Start SettingsActivity from menu
+            Intent intent = new Intent(getActivity(), SettingsActivity.class);
+            startActivity(intent);
+
+            return true;
+        }
+
+        if (id == R.id.action_now_playing) {
+            Intent intent = new Intent(getActivity(), MusicPlayerActivity.class);
+            intent.setAction(MusicService.ACTION_RESUME_PLAYER);
+            startActivity(intent);
+            return true;
+        }
+
+        return super.onOptionsItemSelected(item);
+    }
+
+    private Intent createShareTrackIntent(String trackShareText) {
+        Intent shareIntent = new Intent(Intent.ACTION_SEND);
+        shareIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_WHEN_TASK_RESET);
+        shareIntent.setType("text/plain");
+        shareIntent.putExtra(Intent.EXTRA_TEXT, trackShareText);
+        return shareIntent;
+    }
+
+    @Override
     public void onPause() {
         super.onPause();
         // Cancel AsyncTask if fragment is changed
@@ -149,6 +241,31 @@ public class TopTracksFragment extends Fragment {
             getTopTracks.cancel(true);
         }
     }
+
+    @Override
+    public void onStop() {
+        super.onStop();
+        LocalBroadcastManager.getInstance(getActivity()).unregisterReceiver(mBroadcastReceiver);
+    }
+
+    private BroadcastReceiver mBroadcastReceiver = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            handleBroadcastIntent(intent.getAction());
+        }
+    };
+
+    private void handleBroadcastIntent(String action) {
+        if (action.equalsIgnoreCase(MusicService.BROADCAST_MEDIA_PLAYER_PREPARED)) {
+            mMusicPlaying = true;
+            getActivity().invalidateOptionsMenu();
+        }
+        if (action.equalsIgnoreCase(MusicService.BROADCAST_SERVICE_STOPPED)) {
+            mMusicPlaying = false;
+            getActivity().invalidateOptionsMenu();
+        }
+    }
+
 
     public class GetTopTracks extends AsyncTask<String, Void, ArrayList<TrackGist>> {
         @Override

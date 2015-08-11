@@ -53,12 +53,6 @@ public class TopTracksActivity extends AppCompatActivity {
                     .commit();
         }
 
-        IntentFilter intentFilter = new IntentFilter();
-        intentFilter.addAction(MusicService.BROADCAST_MEDIA_PLAYER_PREPARED);
-        intentFilter.addAction(MusicService.BROADCAST_SERVICE_STOPPED);
-
-        LocalBroadcastManager.getInstance(this).registerReceiver(mBroadcastReceiver, intentFilter);
-
     }
 
     @Override
@@ -79,56 +73,6 @@ public class TopTracksActivity extends AppCompatActivity {
         }
 
         return super.onPrepareOptionsMenu(menu);
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
-        int id = item.getItemId();
-
-        //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
-            // Start SettingsActivity from menu
-            Intent intent = new Intent(this, SettingsActivity.class);
-            startActivity(intent);
-
-            return true;
-        }
-
-        if (id == R.id.action_now_playing) {
-            Intent intent = new Intent(this, MusicPlayerActivity.class);
-            intent.setAction(MusicService.ACTION_RESUME_PLAYER);
-            startActivity(intent);
-            return true;
-        }
-
-        return super.onOptionsItemSelected(item);
-    }
-
-    @Override
-    protected void onStop() {
-        super.onStop();
-        LocalBroadcastManager.getInstance(this).unregisterReceiver(mBroadcastReceiver);
-    }
-
-    private BroadcastReceiver mBroadcastReceiver = new BroadcastReceiver() {
-        @Override
-        public void onReceive(Context context, Intent intent) {
-            handleBroadcastIntent(intent.getAction());
-        }
-    };
-
-    private void handleBroadcastIntent(String action) {
-        if (action.equalsIgnoreCase(MusicService.BROADCAST_MEDIA_PLAYER_PREPARED)) {
-            mMusicPlaying = true;
-            invalidateOptionsMenu();
-        }
-        if (action.equalsIgnoreCase(MusicService.BROADCAST_SERVICE_STOPPED)) {
-            mMusicPlaying = false;
-            invalidateOptionsMenu();
-        }
     }
 
 }
