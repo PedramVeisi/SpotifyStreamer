@@ -60,7 +60,7 @@ public class TopTracksFragment extends Fragment {
     private boolean mHasTwoPanes;
     private String mTrackShareText;
     private ShareActionProvider mShareActionProvider;
-    private boolean mMusicPlaying = false;
+    private boolean mMusicPlaying;
 
     /**
      * Constructor
@@ -157,71 +157,69 @@ public class TopTracksFragment extends Fragment {
     }
 
     @Override
-    public void onActivityCreated(Bundle savedInstanceState) {
-        super.onActivityCreated(savedInstanceState);
-    }
-
-    @Override
     public void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
         // Saving state in case user is rotating the device
         outState.putParcelableArrayList(getString(R.string.state_tracks), tracks);
     }
 
-    @Override
-    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
-        // Inflate the menu; this adds items to the action bar if it is present.
-        getActivity().getMenuInflater().inflate(R.menu.menu_top_tracks, menu);
-
-        MenuItem nowPlayingItem = menu.findItem(R.id.action_now_playing);
-
-        if (mMusicPlaying) {
-            nowPlayingItem.setVisible(true);
-        } else {
-            nowPlayingItem.setVisible(false);
-        }
-
-        if (mHasTwoPanes && mMusicPlaying) {
-            // Inflate the menu; this adds items to the action bar if it is present.
-            getActivity().getMenuInflater().inflate(R.menu.menu_top_tracks, menu);
-
-            // Locate MenuItem with ShareActionProvider
-            MenuItem menuItem = menu.findItem(R.id.action_share);
-
-            // Make item visible
-            menuItem.setVisible(true);
-
-            // Fetch and store ShareActionProvider
-            mShareActionProvider = (ShareActionProvider) MenuItemCompat.getActionProvider(menuItem);
-        }
-        super.onCreateOptionsMenu(menu, inflater);
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
-        int id = item.getItemId();
-
-        //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
-            // Start SettingsActivity from menu
-            Intent intent = new Intent(getActivity(), SettingsActivity.class);
-            startActivity(intent);
-
-            return true;
-        }
-
-        if (id == R.id.action_now_playing) {
-            Intent intent = new Intent(getActivity(), MusicPlayerActivity.class);
-            intent.setAction(MusicService.ACTION_RESUME_PLAYER);
-            startActivity(intent);
-            return true;
-        }
-
-        return super.onOptionsItemSelected(item);
-    }
+//    @Override
+//    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+//
+//        // Inflate the menu; this adds items to the action bar if it is present.
+//        getActivity().getMenuInflater().inflate(R.menu.menu_top_tracks, menu);
+//
+//        if(!mHasTwoPanes){
+//            MenuItem nowPlayingItem = menu.findItem(R.id.action_now_playing);
+//
+//            if (mMusicPlaying) {
+//                nowPlayingItem.setVisible(true);
+//            } else {
+//                nowPlayingItem.setVisible(false);
+//            }
+//        }
+//
+//        if (mHasTwoPanes && mMusicPlaying) {
+//            // Inflate the menu; this adds items to the action bar if it is present.
+//            getActivity().getMenuInflater().inflate(R.menu.menu_top_tracks, menu);
+//
+//            // Locate MenuItem with ShareActionProvider
+//            MenuItem menuItem = menu.findItem(R.id.action_share);
+//
+//            // Make item visible
+//            menuItem.setVisible(true);
+//
+//            // Fetch and store ShareActionProvider
+//            mShareActionProvider = (ShareActionProvider) MenuItemCompat.getActionProvider(menuItem);
+//        }
+//        super.onCreateOptionsMenu(menu, inflater);
+//    }
+//
+//    @Override
+//    public boolean onOptionsItemSelected(MenuItem item) {
+//        // Handle action bar item clicks here. The action bar will
+//        // automatically handle clicks on the Home/Up button, so long
+//        // as you specify a parent activity in AndroidManifest.xml.
+//        int id = item.getItemId();
+//
+//        //noinspection SimplifiableIfStatement
+//        if (id == R.id.action_settings) {
+//            // Start SettingsActivity from menu
+//            Intent intent = new Intent(getActivity(), SettingsActivity.class);
+//            startActivity(intent);
+//
+//            return true;
+//        }
+//
+//        if (id == R.id.action_now_playing) {
+//            Intent intent = new Intent(getActivity(), MusicPlayerActivity.class);
+//            intent.setAction(MusicService.ACTION_RESUME_PLAYER);
+//            startActivity(intent);
+//            return true;
+//        }
+//
+//        return super.onOptionsItemSelected(item);
+//    }
 
     private Intent createShareTrackIntent(String trackShareText) {
         Intent shareIntent = new Intent(Intent.ACTION_SEND);
@@ -232,42 +230,12 @@ public class TopTracksFragment extends Fragment {
     }
 
     @Override
-    public void onResume() {
-        super.onResume();
-        IntentFilter intentFilter = new IntentFilter();
-        intentFilter.addAction(MusicService.BROADCAST_MEDIA_PLAYER_PREPARED);
-        intentFilter.addAction(MusicService.BROADCAST_SERVICE_STOPPED);
-
-        LocalBroadcastManager.getInstance(getActivity()).registerReceiver(mBroadcastReceiver, intentFilter);
-    }
-
-    @Override
     public void onPause() {
-        super.onPause();
-        LocalBroadcastManager.getInstance(getActivity()).unregisterReceiver(mBroadcastReceiver);
         // Cancel AsyncTask if fragment is changed
         if (getTopTracks != null) {
             getTopTracks.cancel(true);
         }
-    }
-
-
-    private BroadcastReceiver mBroadcastReceiver = new BroadcastReceiver() {
-        @Override
-        public void onReceive(Context context, Intent intent) {
-            handleBroadcastIntent(intent.getAction());
-        }
-    };
-
-    private void handleBroadcastIntent(String action) {
-        if (action.equalsIgnoreCase(MusicService.BROADCAST_MEDIA_PLAYER_PREPARED)) {
-            mMusicPlaying = true;
-            getActivity().invalidateOptionsMenu();
-        }
-        if (action.equalsIgnoreCase(MusicService.BROADCAST_SERVICE_STOPPED)) {
-            mMusicPlaying = false;
-            getActivity().invalidateOptionsMenu();
-        }
+        super.onPause();
     }
 
 

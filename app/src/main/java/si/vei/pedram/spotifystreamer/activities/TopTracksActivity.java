@@ -1,6 +1,5 @@
 package si.vei.pedram.spotifystreamer.activities;
 
-import android.app.IntentService;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
@@ -13,7 +12,6 @@ import android.view.Menu;
 import android.view.MenuItem;
 
 import si.vei.pedram.spotifystreamer.R;
-import si.vei.pedram.spotifystreamer.fragments.MusicPlayerFragment;
 import si.vei.pedram.spotifystreamer.fragments.TopTracksFragment;
 import si.vei.pedram.spotifystreamer.service.MusicService;
 
@@ -23,6 +21,7 @@ import si.vei.pedram.spotifystreamer.service.MusicService;
 public class TopTracksActivity extends AppCompatActivity {
 
     private final String MUSICPLAYERFRAGMENT_TAG = "MPFTAG";
+    private boolean mMusicPlaying = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -52,5 +51,78 @@ public class TopTracksActivity extends AppCompatActivity {
                     .commit();
         }
 
+        IntentFilter intentFilter = new IntentFilter();
+        intentFilter.addAction(MusicService.BROADCAST_MEDIA_PLAYER_PREPARED);
+        intentFilter.addAction(MusicService.BROADCAST_SERVICE_STOPPED);
+
+        LocalBroadcastManager.getInstance(this).registerReceiver(mBroadcastReceiver, intentFilter);
+
     }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        // Inflate the menu; this adds items to the action bar if it is present.
+        getMenuInflater().inflate(R.menu.menu_top_tracks, menu);
+
+        MenuItem nowPlayingItem = menu.findItem(R.id.action_now_playing);
+
+        if (mMusicPlaying) {
+            nowPlayingItem.setVisible(true);
+        } else {
+            nowPlayingItem.setVisible(false);
+        }
+
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        // Handle action bar item clicks here. The action bar will
+        // automatically handle clicks on the Home/Up button, so long
+        // as you specify a parent activity in AndroidManifest.xml.
+        int id = item.getItemId();
+
+        //noinspection SimplifiableIfStatement
+        if (id == R.id.action_settings) {
+            // Start SettingsActivity from menu
+            Intent intent = new Intent(this, SettingsActivity.class);
+            startActivity(intent);
+
+            return true;
+        }
+
+        if (id == R.id.action_now_playing) {
+            Intent intent = new Intent(this, MusicPlayerActivity.class);
+            intent.setAction(MusicService.ACTION_RESUME_PLAYER);
+            startActivity(intent);
+            return true;
+        }
+
+        return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        LocalBroadcastManager.getInstance(this).unregisterReceiver(mBroadcastReceiver);
+    }
+
+    private BroadcastReceiver mBroadcastReceiver = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            handleBroadcastIntent(intent.getAction());
+        }
+    };
+
+    private void handleBroadcastIntent(String action) {
+        if (action.equalsIgnoreCase(MusicService.BROADCAST_MEDIA_PLAYER_PREPARED)) {
+            mMusicPlaying = true;
+            invalidateOptionsMenu();
+        }
+        if (action.equalsIgnoreCase(MusicService.BROADCAST_SERVICE_STOPPED)) {
+            mMusicPlaying = false;
+            invalidateOptionsMenu();
+        }
+    }
+
 }
