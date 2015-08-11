@@ -23,7 +23,6 @@ import si.vei.pedram.spotifystreamer.service.MusicService;
 public class TopTracksActivity extends AppCompatActivity {
 
     private final String MUSICPLAYERFRAGMENT_TAG = "MPFTAG";
-    private boolean mMusicPlaying = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
