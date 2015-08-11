@@ -69,16 +69,6 @@ public class TopTracksFragment extends Fragment {
     }
 
     @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        IntentFilter intentFilter = new IntentFilter();
-        intentFilter.addAction(MusicService.BROADCAST_MEDIA_PLAYER_PREPARED);
-        intentFilter.addAction(MusicService.BROADCAST_SERVICE_STOPPED);
-
-        LocalBroadcastManager.getInstance(getActivity()).registerReceiver(mBroadcastReceiver, intentFilter);
-    }
-
-    @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflating fragment's view to customize it
@@ -98,7 +88,6 @@ public class TopTracksFragment extends Fragment {
         } else {
             // Hide the image view
             headerImageView.setVisibility(View.GONE);
-
         }
 
         // Instantiate the adapter
@@ -109,9 +98,7 @@ public class TopTracksFragment extends Fragment {
 
         mHasTwoPanes = getResources().getBoolean(R.bool.has_two_panes);
 
-        if (mHasTwoPanes) {
-            setHasOptionsMenu(true);
-        }
+        setHasOptionsMenu(true);
 
         topTracksListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
@@ -183,6 +170,17 @@ public class TopTracksFragment extends Fragment {
 
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        // Inflate the menu; this adds items to the action bar if it is present.
+        getActivity().getMenuInflater().inflate(R.menu.menu_top_tracks, menu);
+
+        MenuItem nowPlayingItem = menu.findItem(R.id.action_now_playing);
+
+        if (mMusicPlaying) {
+            nowPlayingItem.setVisible(true);
+        } else {
+            nowPlayingItem.setVisible(false);
+        }
+
         if (mHasTwoPanes && mMusicPlaying) {
             // Inflate the menu; this adds items to the action bar if it is present.
             getActivity().getMenuInflater().inflate(R.menu.menu_top_tracks, menu);
@@ -234,19 +232,25 @@ public class TopTracksFragment extends Fragment {
     }
 
     @Override
+    public void onResume() {
+        super.onResume();
+        IntentFilter intentFilter = new IntentFilter();
+        intentFilter.addAction(MusicService.BROADCAST_MEDIA_PLAYER_PREPARED);
+        intentFilter.addAction(MusicService.BROADCAST_SERVICE_STOPPED);
+
+        LocalBroadcastManager.getInstance(getActivity()).registerReceiver(mBroadcastReceiver, intentFilter);
+    }
+
+    @Override
     public void onPause() {
         super.onPause();
+        LocalBroadcastManager.getInstance(getActivity()).unregisterReceiver(mBroadcastReceiver);
         // Cancel AsyncTask if fragment is changed
         if (getTopTracks != null) {
             getTopTracks.cancel(true);
         }
     }
 
-    @Override
-    public void onStop() {
-        super.onStop();
-        LocalBroadcastManager.getInstance(getActivity()).unregisterReceiver(mBroadcastReceiver);
-    }
 
     private BroadcastReceiver mBroadcastReceiver = new BroadcastReceiver() {
         @Override
@@ -256,6 +260,8 @@ public class TopTracksFragment extends Fragment {
     };
 
     private void handleBroadcastIntent(String action) {
+        Log.e("HERE", action);
+
         if (action.equalsIgnoreCase(MusicService.BROADCAST_MEDIA_PLAYER_PREPARED)) {
             mMusicPlaying = true;
             getActivity().invalidateOptionsMenu();
