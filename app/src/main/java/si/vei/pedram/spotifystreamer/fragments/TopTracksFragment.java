@@ -79,6 +79,7 @@ public class TopTracksFragment extends Fragment {
         if (arguments != null) {
             artistId = arguments.getString(getString(R.string.intent_artist_id_key));
             artistImageUrl = arguments.getString(getString(R.string.intent_artist_image_url_key));
+            mMusicPlaying = arguments.getBoolean(getString(R.string.intent_music_playing_flag));
         }
 
         final ImageView headerImageView = (ImageView) rootView.findViewById(R.id.top_tracks_header_imageview);

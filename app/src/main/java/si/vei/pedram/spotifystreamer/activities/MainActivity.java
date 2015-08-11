@@ -139,6 +139,7 @@ public class MainActivity extends AppCompatActivity implements ArtistSearchFragm
             Bundle args = new Bundle();
             args.putString(getString(R.string.intent_artist_id_key), artistId);
             args.putString(getString(R.string.intent_artist_image_url_key), artistImageUrl);
+            args.putBoolean(getString(R.string.intent_music_playing_flag), mMusicPlaying);
 
             TopTracksFragment fragment = new TopTracksFragment();
             fragment.setArguments(args);
@@ -151,6 +152,7 @@ public class MainActivity extends AppCompatActivity implements ArtistSearchFragm
             Intent intent = new Intent(this, TopTracksActivity.class);
             intent.putExtra(getString(R.string.intent_artist_id_key), artistId);
             intent.putExtra(getString(R.string.intent_artist_image_url_key), artistImageUrl);
+            intent.putExtra(getString(R.string.intent_music_playing_flag), mMusicPlaying);
             startActivity(intent);
         }
     }

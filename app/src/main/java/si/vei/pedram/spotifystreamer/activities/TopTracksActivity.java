@@ -43,6 +43,9 @@ public class TopTracksActivity extends AppCompatActivity {
             arguments.putString(getString(R.string.intent_artist_id_key), getIntent().getStringExtra(getString(R.string.intent_artist_id_key)));
             arguments.putString(getString(R.string.intent_artist_image_url_key), getIntent().getStringExtra(getString(R.string.intent_artist_image_url_key)));
 
+            mMusicPlaying = getIntent().getBooleanExtra(getString(R.string.intent_music_playing_flag), false);
+            arguments.putBoolean(getString(R.string.intent_music_playing_flag), mMusicPlaying);
+
             TopTracksFragment fragment = new TopTracksFragment();
             fragment.setArguments(arguments);
 
