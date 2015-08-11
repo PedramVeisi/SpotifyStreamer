@@ -260,8 +260,6 @@ public class TopTracksFragment extends Fragment {
     };
 
     private void handleBroadcastIntent(String action) {
-        Log.e("HERE", action);
-
         if (action.equalsIgnoreCase(MusicService.BROADCAST_MEDIA_PLAYER_PREPARED)) {
             mMusicPlaying = true;
             getActivity().invalidateOptionsMenu();
