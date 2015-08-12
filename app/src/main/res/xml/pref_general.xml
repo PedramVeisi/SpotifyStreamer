@@ -12,4 +12,14 @@
 
     </PreferenceCategory>
 
+    <PreferenceCategory android:title="@string/prefs_notification_settings">
+
+        <SwitchPreference
+            android:key="@string/pref_notification_setting_key"
+            android:title="@string/notification"
+            android:defaultValue="true" />
+
+    </PreferenceCategory>
+
+
 </PreferenceScreen>

@@ -240,5 +240,8 @@
     <string name="track_share_text">Listening to <xliff:g id="track_name" example="Alguien Soy Yo">%s</xliff:g> by <xliff:g id="artist_name" example="Enrique Iglesias">%s</xliff:g> <xliff:g id="track_url">%s</xliff:g></string>
     <string name="share">Share</string>
     <string name="intent_music_playing_flag">MUSIC_PLAYING_FLAG</string>
+    <string name="prefs_notification_settings">Notification Settings</string>
+    <string name="pref_notification_setting_key">notification_setting</string>
+    <string name="notification">Notification</string>
 
 </resources>

@@ -5,12 +5,14 @@ import android.app.PendingIntent;
 import android.app.Service;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.media.AudioManager;
 import android.media.MediaPlayer;
 import android.net.Uri;
 import android.os.Binder;
 import android.os.IBinder;
 import android.os.PowerManager;
+import android.preference.PreferenceManager;
 import android.support.v4.app.NotificationCompat;
 import android.support.v4.content.LocalBroadcastManager;
 import android.util.Log;
@@ -276,6 +278,14 @@ public class MusicService extends Service implements
     }
 
     private void buildNotification() {
+
+        // Reading notification settings from settings
+        SharedPreferences sharedPrefs = PreferenceManager.getDefaultSharedPreferences(this);
+        Boolean notificationOn = sharedPrefs.getBoolean(getString(R.string.pref_notification_setting_key), true);
+
+        if (!notificationOn) {
+            return;
+        }
 
         TrackGist currentTrack = mTrackList.get(mTrackPosition);
 
