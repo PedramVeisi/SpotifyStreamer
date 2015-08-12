@@ -222,26 +222,25 @@
     <string name="country">Country</string>
     <string name="pref_country_key" translatable="false">country</string>
     <string name="pref_country_default_value" translatable="false">ca</string>
-    <string name="hello_world">Hello world!</string>
-    <string name="intent_selected_track_position">SELECTED_TRACK_POSITION</string>
+    <string name="prefs_notification_settings">Notification Settings</string>
+    <string name="pref_notification_setting_key" translatable="false">notification_setting</string>
+    <string name="notification">Notification</string>
+
+    <!-- Intent keys -->
+    <string name="intent_selected_track_position" translatable="false">SELECTED_TRACK_POSITION</string>
+    <string name="intent_has_two_pane" translatable="false">HAS_TWO_PANE</string>
+    <string name="intent_player_resumed" translatable="false">PLAYER_RESUMED</string>
+    <string name="intent_music_playing_flag" translatable="false">MUSIC_PLAYING_FLAG</string>
+
+    <!-- Music Player Activity -->
+    <string name="state_current_track" translatable="false">state_current_track</string>
     <string name="music_player_seekbar_zero_label">0:00</string>
-    <string name="music_player_seekbar_total_duration">0:30</string>
     <string name="error_media_not_valid_for_playback">"MEDIA ERROR NOT VALID FOR PROGRESSIVE PLAYBACK "</string>
     <string name="error_media_server_died">"MEDIA ERROR SERVER DIED "</string>
     <string name="error_media_unknown">"MEDIA ERROR UNKNOWN "</string>
-    <string name="state_current_track">state_current_track</string>
-    <string name="intent_has_two_pane">HAS_TWO_PANE</string>
     <string name="loading">Loading</string>
     <string name="please_wait">Please wait...</string>
     <string name="now_playing">Now Playing</string>
-    <string name="intent_player_resumed">PLAYER_RESUMED</string>
-
-
     <string name="track_share_text">Listening to <xliff:g id="track_name" example="Alguien Soy Yo">%s</xliff:g> by <xliff:g id="artist_name" example="Enrique Iglesias">%s</xliff:g> <xliff:g id="track_url">%s</xliff:g></string>
     <string name="share">Share</string>
-    <string name="intent_music_playing_flag">MUSIC_PLAYING_FLAG</string>
-    <string name="prefs_notification_settings">Notification Settings</string>
-    <string name="pref_notification_setting_key">notification_setting</string>
-    <string name="notification">Notification</string>
-
 </resources>
