@@ -37,8 +37,10 @@ import kaaes.spotify.webapi.android.models.Image;
 import kaaes.spotify.webapi.android.models.Track;
 import retrofit.RetrofitError;
 import si.vei.pedram.spotifystreamer.R;
+import si.vei.pedram.spotifystreamer.activities.MainActivity;
 import si.vei.pedram.spotifystreamer.activities.MusicPlayerActivity;
 import si.vei.pedram.spotifystreamer.activities.SettingsActivity;
+import si.vei.pedram.spotifystreamer.activities.TopTracksActivity;
 import si.vei.pedram.spotifystreamer.lists.adapters.TopTracksListAdapter;
 import si.vei.pedram.spotifystreamer.models.TrackGist;
 import si.vei.pedram.spotifystreamer.service.MusicService;
@@ -118,9 +120,10 @@ public class TopTracksFragment extends Fragment {
                     musicPlayerFragment.setArguments(arguments);
                     musicPlayerFragment.show(getActivity().getSupportFragmentManager(), MUSICPLAYERFRAGMENT_TAG);
 
+                    mMusicPlaying = true;
                     getActivity().invalidateOptionsMenu();
 
-                    if (mShareActionProvider != null && mMusicPlaying) {
+                    if (mShareActionProvider != null) {
                         TrackGist currentTrack = trackList.get(position);
                         mTrackShareText = getString(R.string.track_share_text, currentTrack.getTrackName(), currentTrack.getArtistName(), currentTrack.getPreviewUrl());
                         mShareActionProvider.setShareIntent(createShareTrackIntent(mTrackShareText));
@@ -164,63 +167,28 @@ public class TopTracksFragment extends Fragment {
         outState.putParcelableArrayList(getString(R.string.state_tracks), tracks);
     }
 
-//    @Override
-//    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
-//
-//        // Inflate the menu; this adds items to the action bar if it is present.
-//        getActivity().getMenuInflater().inflate(R.menu.menu_top_tracks, menu);
-//
-//        if(!mHasTwoPanes){
-//            MenuItem nowPlayingItem = menu.findItem(R.id.action_now_playing);
-//
-//            if (mMusicPlaying) {
-//                nowPlayingItem.setVisible(true);
-//            } else {
-//                nowPlayingItem.setVisible(false);
-//            }
-//        }
-//
-//        if (mHasTwoPanes && mMusicPlaying) {
-//            // Inflate the menu; this adds items to the action bar if it is present.
-//            getActivity().getMenuInflater().inflate(R.menu.menu_top_tracks, menu);
-//
-//            // Locate MenuItem with ShareActionProvider
-//            MenuItem menuItem = menu.findItem(R.id.action_share);
-//
-//            // Make item visible
-//            menuItem.setVisible(true);
-//
-//            // Fetch and store ShareActionProvider
-//            mShareActionProvider = (ShareActionProvider) MenuItemCompat.getActionProvider(menuItem);
-//        }
-//        super.onCreateOptionsMenu(menu, inflater);
-//    }
-//
-//    @Override
-//    public boolean onOptionsItemSelected(MenuItem item) {
-//        // Handle action bar item clicks here. The action bar will
-//        // automatically handle clicks on the Home/Up button, so long
-//        // as you specify a parent activity in AndroidManifest.xml.
-//        int id = item.getItemId();
-//
-//        //noinspection SimplifiableIfStatement
-//        if (id == R.id.action_settings) {
-//            // Start SettingsActivity from menu
-//            Intent intent = new Intent(getActivity(), SettingsActivity.class);
-//            startActivity(intent);
-//
-//            return true;
-//        }
-//
-//        if (id == R.id.action_now_playing) {
-//            Intent intent = new Intent(getActivity(), MusicPlayerActivity.class);
-//            intent.setAction(MusicService.ACTION_RESUME_PLAYER);
-//            startActivity(intent);
-//            return true;
-//        }
-//
-//        return super.onOptionsItemSelected(item);
-//    }
+    @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        if (mHasTwoPanes && mMusicPlaying) {
+            // Inflate the menu; this adds items to the action bar if it is present.
+            getActivity().getMenuInflater().inflate(R.menu.menu_top_tracks, menu);
+
+            // Locate MenuItem with ShareActionProvider
+            MenuItem menuItem = menu.findItem(R.id.action_share);
+
+            // Make item visible
+            menuItem.setVisible(true);
+
+            // Fetch and store ShareActionProvider
+            mShareActionProvider = (ShareActionProvider) MenuItemCompat.getActionProvider(menuItem);
+        }
+        super.onCreateOptionsMenu(menu, inflater);
+    }
+
+    @Override
+    public void onPrepareOptionsMenu(Menu menu) {
+        super.onPrepareOptionsMenu(menu);
+    }
 
     private Intent createShareTrackIntent(String trackShareText) {
         Intent shareIntent = new Intent(Intent.ACTION_SEND);

@@ -29,7 +29,7 @@ public class MainActivity extends AppCompatActivity implements ArtistSearchFragm
     private static final String TOPTRACKSFRAGMENT_TAG = "TTFTAG";
     private final String MUSICPLAYERFRAGMENT_TAG = "MPFTAG";
     private boolean mTwoPane = false;
-    private boolean mMusicPlaying;
+    public boolean mMusicPlaying;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
