@@ -14,7 +14,6 @@ import android.support.v4.content.LocalBroadcastManager;
 import android.support.v4.content.res.ResourcesCompat;
 import android.support.v4.view.MenuItemCompat;
 import android.support.v7.widget.ShareActionProvider;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -42,7 +41,6 @@ public class MusicPlayerFragment extends DialogFragment implements SeekBar.OnSee
 
     private ArrayList<TrackGist> mTrackList;
     private int mTrackPosition;
-    private Intent mPlayIntent;
     private MusicService mMusicService;
 
     private ImageButton mPlayButton;
@@ -170,16 +168,16 @@ public class MusicPlayerFragment extends DialogFragment implements SeekBar.OnSee
 
         utils = new Utilities();
 
-        mPlayIntent = new Intent(getActivity(), MusicService.class);
+        Intent serviceIntent = new Intent(getActivity(), MusicService.class);
 
         if (!mPlayerResumed) {
-            mPlayIntent.setAction(MusicService.ACTION_PLAY);
-            mPlayIntent.putParcelableArrayListExtra(getString(R.string.intent_track_list_key), mTrackList);
-            mPlayIntent.putExtra(getString(R.string.intent_selected_track_position), mTrackPosition);
-            getActivity().startService(mPlayIntent);
+            serviceIntent.setAction(MusicService.ACTION_PLAY);
+            serviceIntent.putParcelableArrayListExtra(getString(R.string.intent_track_list_key), mTrackList);
+            serviceIntent.putExtra(getString(R.string.intent_selected_track_position), mTrackPosition);
+            getActivity().startService(serviceIntent);
         }
 
-        getActivity().bindService(mPlayIntent, musicConnection, Context.BIND_AUTO_CREATE);
+        getActivity().bindService(serviceIntent, musicConnection, Context.BIND_AUTO_CREATE);
 
 
         // Listeners

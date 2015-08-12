@@ -1,12 +1,15 @@
 package si.vei.pedram.spotifystreamer.fragments;
 
 import android.content.BroadcastReceiver;
+import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.content.ServiceConnection;
 import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.os.IBinder;
 import android.preference.PreferenceManager;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.LocalBroadcastManager;
@@ -63,6 +66,7 @@ public class TopTracksFragment extends Fragment {
     private String mTrackShareText;
     private ShareActionProvider mShareActionProvider;
     private boolean mMusicPlaying;
+    private MusicService mMusicService;
 
     /**
      * Constructor
@@ -121,13 +125,8 @@ public class TopTracksFragment extends Fragment {
                     musicPlayerFragment.show(getActivity().getSupportFragmentManager(), MUSICPLAYERFRAGMENT_TAG);
 
                     mMusicPlaying = true;
-                    getActivity().invalidateOptionsMenu();
 
-                    if (mShareActionProvider != null) {
-                        TrackGist currentTrack = trackList.get(position);
-                        mTrackShareText = getString(R.string.track_share_text, currentTrack.getTrackName(), currentTrack.getArtistName(), currentTrack.getPreviewUrl());
-                        mShareActionProvider.setShareIntent(createShareTrackIntent(mTrackShareText));
-                    }
+                    getActivity().invalidateOptionsMenu();
 
                 } else {
                     Intent intent = new Intent(getActivity(), MusicPlayerActivity.class);
@@ -157,8 +156,33 @@ public class TopTracksFragment extends Fragment {
             getTopTracks.execute(artistId);
         }
 
+        IntentFilter intentFilter = new IntentFilter();
+        intentFilter.addAction(MusicService.BROADCAST_TRACK_CHANGED);
+        intentFilter.addAction(MusicService.BROADCAST_MEDIA_PLAYER_PREPARED);
+
+        LocalBroadcastManager.getInstance(getActivity()).registerReceiver(mBroadcastReceiver, intentFilter);
+
+        Intent serviceIntent = new Intent(getActivity(), MusicService.class);
+        getActivity().bindService(serviceIntent, musicConnection, Context.BIND_AUTO_CREATE);
+
         return rootView;
     }
+
+    // Connect to the service
+    private ServiceConnection musicConnection = new ServiceConnection() {
+
+        @Override
+        public void onServiceConnected(ComponentName name, IBinder service) {
+            MusicService.MusicBinder binder = (MusicService.MusicBinder) service;
+            //get service
+            mMusicService = binder.getService();
+        }
+
+        @Override
+        public void onServiceDisconnected(ComponentName name) {
+        }
+    };
+
 
     @Override
     public void onSaveInstanceState(Bundle outState) {
@@ -169,6 +193,7 @@ public class TopTracksFragment extends Fragment {
 
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        super.onCreateOptionsMenu(menu, inflater);
         if (mHasTwoPanes && mMusicPlaying) {
             // Inflate the menu; this adds items to the action bar if it is present.
             getActivity().getMenuInflater().inflate(R.menu.menu_top_tracks, menu);
@@ -182,13 +207,8 @@ public class TopTracksFragment extends Fragment {
             // Fetch and store ShareActionProvider
             mShareActionProvider = (ShareActionProvider) MenuItemCompat.getActionProvider(menuItem);
         }
-        super.onCreateOptionsMenu(menu, inflater);
     }
 
-    @Override
-    public void onPrepareOptionsMenu(Menu menu) {
-        super.onPrepareOptionsMenu(menu);
-    }
 
     private Intent createShareTrackIntent(String trackShareText) {
         Intent shareIntent = new Intent(Intent.ACTION_SEND);
@@ -205,6 +225,31 @@ public class TopTracksFragment extends Fragment {
             getTopTracks.cancel(true);
         }
         super.onPause();
+    }
+
+    @Override
+    public void onDestroy() {
+        LocalBroadcastManager.getInstance(getActivity()).unregisterReceiver(mBroadcastReceiver);
+        super.onDestroy();
+    }
+
+    private BroadcastReceiver mBroadcastReceiver = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            handleBroadcastIntent(intent.getAction());
+        }
+    };
+
+    private void handleBroadcastIntent(String action) {
+        if (action.equalsIgnoreCase(MusicService.BROADCAST_TRACK_CHANGED) || action.equalsIgnoreCase(MusicService.BROADCAST_MEDIA_PLAYER_PREPARED)) {
+            if (mShareActionProvider != null) {
+                TrackGist currentTrack = mMusicService.getCurrentTrack();
+                mTrackShareText = getString(R.string.track_share_text, currentTrack.getTrackName(), currentTrack.getArtistName(), currentTrack.getPreviewUrl());
+                mShareActionProvider.setShareIntent(createShareTrackIntent(mTrackShareText));
+            }
+
+            getActivity().invalidateOptionsMenu();
+        }
     }
 
 
