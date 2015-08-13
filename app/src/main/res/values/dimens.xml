@@ -14,5 +14,8 @@
     <dimen name="top_tracks_header_list_margin">10dp</dimen>
 
     <dimen name="toolbar_elevation">7dp</dimen>
+    <dimen name="music_player_artist_name_margin">5dp</dimen>
+    <dimen name="music_player_track_name_top_margin">5dp</dimen>
+    <dimen name="music_player_seekbar_bottom_margin">5dp</dimen>
 
 </resources>

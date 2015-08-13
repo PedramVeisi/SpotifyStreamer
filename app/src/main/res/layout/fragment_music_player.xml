@@ -24,7 +24,6 @@
                 android:layout_height="wrap_content"
                 android:layout_alignParentTop="true"
                 android:layout_centerHorizontal="true"
-                android:text="Medium Text"
                 android:textAppearance="?android:attr/textAppearanceLarge"
                 android:textColor="@android:color/black" />
 
@@ -34,8 +33,7 @@
                 android:layout_height="wrap_content"
                 android:layout_below="@+id/music_player_artist_name_textview"
                 android:layout_centerHorizontal="true"
-                android:layout_margin="5dp"
-                android:text="Small Text"
+                android:layout_margin="@dimen/music_player_artist_name_margin"
                 android:textAppearance="?android:attr/textAppearanceMedium"
                 android:textStyle="bold" />
 
@@ -54,8 +52,7 @@
                 android:layout_height="wrap_content"
                 android:layout_below="@id/music_player_album_art_imageview"
                 android:layout_centerHorizontal="true"
-                android:layout_marginTop="5dp"
-                android:text="Medium Text"
+                android:layout_marginTop="@dimen/music_player_track_name_top_margin"
                 android:textAppearance="?android:attr/textAppearanceLarge"
                 android:textColor="@android:color/black"
                 android:textStyle="bold" />
@@ -122,7 +119,7 @@
         android:layout_above="@id/music_player_controller_container"
         android:layout_centerHorizontal="true"
         android:background="@color/colorPrimary"
-        android:paddingBottom="5dp" />
+        android:paddingBottom="@dimen/music_player_seekbar_bottom_margin" />
 
     <TextView
         android:id="@+id/music_player_current_time_textview"
@@ -131,7 +128,7 @@
         android:layout_above="@id/music_player_controller_container"
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true"
-        android:text="Small Text"
+        android:text="@string/music_player_seekbar_zero_label"
         android:textAppearance="?android:attr/textAppearanceSmall" />
 
 
@@ -142,7 +139,7 @@
         android:layout_alignBottom="@+id/music_player_seekBar"
         android:layout_alignParentEnd="true"
         android:layout_alignParentRight="true"
-        android:text="0:00"
+        android:text="@string/music_player_seekbar_zero_label"
         android:textAppearance="?android:attr/textAppearanceSmall" />
 
 </RelativeLayout>
