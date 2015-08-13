@@ -248,9 +248,14 @@ public class MusicPlayerFragment extends DialogFragment implements SeekBar.OnSee
         if (mServiceBound && getActivity().isFinishing()) {
             // remove message Handler from updating progress bar
             mHandler.removeCallbacks(mUpdateTimeTask);
-            getActivity().unbindService(musicConnection);
-            mServiceBound = false;
         }
+    }
+
+    @Override
+    public void onDestroy() {
+        getActivity().unbindService(musicConnection);
+        mServiceBound = false;
+        super.onDestroy();
     }
 
     /**
