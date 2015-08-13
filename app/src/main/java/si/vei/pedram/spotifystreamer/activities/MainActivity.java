@@ -44,7 +44,7 @@ public class MainActivity extends AppCompatActivity implements ArtistSearchFragm
             mTwoPane = true;
         }
 
-        // Register for local broadcast tp update toolbar
+        // Register for local broadcast to update toolbar
         IntentFilter intentFilter = new IntentFilter();
         intentFilter.addAction(MusicService.BROADCAST_MEDIA_PLAYER_PREPARED);
         intentFilter.addAction(MusicService.BROADCAST_SERVICE_STOPPED);
