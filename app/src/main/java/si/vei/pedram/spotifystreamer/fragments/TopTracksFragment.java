@@ -249,6 +249,7 @@ public class TopTracksFragment extends Fragment {
     @Override
     public void onDestroy() {
         LocalBroadcastManager.getInstance(getActivity()).unregisterReceiver(mBroadcastReceiver);
+        getActivity().unbindService(musicConnection);
         super.onDestroy();
     }
 
