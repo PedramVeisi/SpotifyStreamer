@@ -28,8 +28,9 @@ import si.vei.pedram.spotifystreamer.activities.MusicPlayerActivity;
 import si.vei.pedram.spotifystreamer.models.TrackGist;
 
 /**
+ * Music Player Service
+ *
  * @author Pedram Veisi
- *         Music Player Service
  */
 public class MusicService extends Service implements
         MediaPlayer.OnPreparedListener, MediaPlayer.OnErrorListener,
@@ -51,12 +52,12 @@ public class MusicService extends Service implements
     public static final String BROADCAST_MEDIA_PLAYER_PREPARED = "music_service.broadcast_media_player_prepared";
     public static final String BROADCAST_NOTIFICATION_CLOSED = "music_service.broadcast_notification_closed";
 
-    private int seekForwardTime = getResources().getInteger(R.integer.music_fast_forward_time); // 3000 milliseconds
-    private int seekBackwardTime = getResources().getInteger(R.integer.music_rewind_time);
-    ; // 3000 milliseconds
-
     // Notification id
     private static final int NOTIFICATION_ID = 1;
+
+    private int mSeekForwardTime;
+    private int mSeekBackwardTime;
+    ; // 3000 milliseconds
 
     //media player
     private MediaPlayer mPlayer;
@@ -76,6 +77,9 @@ public class MusicService extends Service implements
     @Override
     public void onCreate() {
         super.onCreate();
+
+        mSeekForwardTime = getResources().getInteger(R.integer.music_fast_forward_time); // 3000 milliseconds
+        mSeekBackwardTime = getResources().getInteger(R.integer.music_rewind_time);
 
         // Initialize the player
         initMusicPlayer();
@@ -281,8 +285,8 @@ public class MusicService extends Service implements
     public void seekForward() {
         int currentPosition = getPlayingPosition();
         int totalDuration = getTrackDuration();
-        if (currentPosition + seekForwardTime <= totalDuration) {
-            seekTo(getPlayingPosition() + seekForwardTime);
+        if (currentPosition + mSeekForwardTime <= totalDuration) {
+            seekTo(getPlayingPosition() + mSeekForwardTime);
         } else {
             seekTo(totalDuration);
         }
@@ -293,8 +297,8 @@ public class MusicService extends Service implements
      */
     public void seekBackward() {
         int currentPosition = getPlayingPosition();
-        if (currentPosition - seekBackwardTime >= 0) {
-            seekTo(currentPosition - seekBackwardTime);
+        if (currentPosition - mSeekBackwardTime >= 0) {
+            seekTo(currentPosition - mSeekBackwardTime);
         } else {
             seekTo(0);
         }
