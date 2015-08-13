@@ -171,6 +171,7 @@ public class TopTracksFragment extends Fragment {
         IntentFilter intentFilter = new IntentFilter();
         intentFilter.addAction(MusicService.BROADCAST_TRACK_CHANGED);
         intentFilter.addAction(MusicService.BROADCAST_MEDIA_PLAYER_PREPARED);
+        intentFilter.addAction(MusicService.BROADCAST_SERVICE_STOPPED);
 
         LocalBroadcastManager.getInstance(getActivity()).registerReceiver(mBroadcastReceiver, intentFilter);
 
@@ -273,8 +274,11 @@ public class TopTracksFragment extends Fragment {
                 mTrackShareText = getString(R.string.track_share_text, currentTrack.getTrackName(), currentTrack.getArtistName(), currentTrack.getPreviewUrl());
                 mShareActionProvider.setShareIntent(createShareTrackIntent(mTrackShareText));
             }
-
             getActivity().invalidateOptionsMenu();
+        }
+        // If service is stopped (user clicks on notification close button) finish the activity
+        if (action.equalsIgnoreCase(MusicService.BROADCAST_SERVICE_STOPPED)) {
+            getActivity().finish();
         }
     }
 

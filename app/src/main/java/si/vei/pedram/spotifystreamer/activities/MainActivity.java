@@ -136,11 +136,9 @@ public class MainActivity extends AppCompatActivity implements ArtistSearchFragm
         // When service is stopped
         if (action.equalsIgnoreCase(MusicService.BROADCAST_SERVICE_STOPPED)) {
             mMusicPlaying = false;
-            invalidateOptionsMenu();
-            // In two pane mode close the app on service stop. Service stop is broadcast when close button is pressed in notification
-            if (mTwoPane) {
-                finish();
-            }
+            // Close the activity if service is stopped (user clicks on notification close button)
+            finish();
+
         }
     }
 
