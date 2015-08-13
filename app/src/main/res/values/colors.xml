@@ -6,12 +6,11 @@
     <color name="list_item_touch_background">#a5d6a7</color>
     <color name="selector_ripple_color">#cccccc</color>
 
+    <!-- Notifications -->
     <color name="music_player_notification_background">#404040</color>
     <color name="big_notification_album_name_text_color">#C0C0C0</color>
     <color name="big_notification_track_name_text_color">@android:color/white</color>
-
     <color name="notification_album_name_text_color">#C0C0C0</color>
     <color name="notification_track_name_text_color">@android:color/white</color>
-
 
 </resources>

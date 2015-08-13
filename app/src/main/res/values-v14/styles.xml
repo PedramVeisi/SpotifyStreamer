@@ -8,6 +8,6 @@
     <!-- Settings activity action bar styles -->
     <style name="ActionBar.V14.SpotifyStreamer.NoTitle" parent="@android:style/Widget.Holo.Light.ActionBar.Solid.Inverse">
         <item name="android:background">@color/colorPrimary</item>
-        <item name="android:height">56dp</item>
+        <item name="android:height">@dimen/settings_activity_actionbar_height</item>
     </style>
 </resources>
