@@ -39,10 +39,15 @@ import si.vei.pedram.spotifystreamer.service.MusicService;
  */
 public class MusicPlayerFragment extends DialogFragment implements SeekBar.OnSeekBarChangeListener {
 
+    // Data used to play music
     private ArrayList<TrackGist> mTrackList;
     private int mTrackPosition;
+    private TrackGist mCurrentTrack;
+
+    // Music service
     private MusicService mMusicService;
 
+    // UI elements
     private ImageButton mPlayButton;
     private ImageButton mForwardButton;
     private ImageButton mRewindButton;
@@ -50,20 +55,19 @@ public class MusicPlayerFragment extends DialogFragment implements SeekBar.OnSee
     private ImageButton mPreviousButton;
 
     private SeekBar mTrackSeekbar;
+    private ImageView mAlbumArtImageView;
     private TextView mTrackCurrentDuration;
     private TextView mTrackTotalDuration;
+    private TextView mAartistNameTextView;
+    private TextView mAlbumNameTextView;
+    private TextView mTrackNameTextView;
 
     // Handler to update UI timer, progress bar etc,.
     private Handler mHandler = new Handler();
 
     private Utilities utils;
 
-    private TextView mAartistNameTextView;
-    private TextView mAlbumNameTextView;
-    private ImageView mAlbumArtImageView;
-    private TextView mTrackNameTextView;
-    private TrackGist mCurrentTrack;
-
+    private boolean mHasTwoPanes;
     private boolean mServiceBound = false;
     private boolean mPlayerResumed = false;
 
@@ -76,7 +80,6 @@ public class MusicPlayerFragment extends DialogFragment implements SeekBar.OnSee
             handleBroadcastIntent(intent.getAction());
         }
     };
-    private boolean mHasTwoPanes;
 
     // this method is only called once for this fragment
     @Override
@@ -103,6 +106,8 @@ public class MusicPlayerFragment extends DialogFragment implements SeekBar.OnSee
             mHasTwoPanes = arguments.getBoolean(getString(R.string.intent_has_two_pane));
         }
 
+        // If app is in two pane mode, music player will be shown as a dialog
+        // otherwise, it will be a normal fragment attached to music player activity
         setShowsDialog(mHasTwoPanes);
 
         // Get UI elements
@@ -168,6 +173,8 @@ public class MusicPlayerFragment extends DialogFragment implements SeekBar.OnSee
 
         utils = new Utilities();
 
+        // Handle starting service. If player is resumes, it means that service is already started.
+        // So we will only bind to it. Otherwise we will start the service
         Intent serviceIntent = new Intent(getActivity(), MusicService.class);
 
         if (!mPlayerResumed) {
@@ -179,8 +186,7 @@ public class MusicPlayerFragment extends DialogFragment implements SeekBar.OnSee
 
         getActivity().bindService(serviceIntent, musicConnection, Context.BIND_AUTO_CREATE);
 
-
-        // Listeners
+        // Listener
         mTrackSeekbar.setOnSeekBarChangeListener(this);
 
         return rootView;
@@ -192,11 +198,9 @@ public class MusicPlayerFragment extends DialogFragment implements SeekBar.OnSee
         @Override
         public void onServiceConnected(ComponentName name, IBinder service) {
             MusicService.MusicBinder binder = (MusicService.MusicBinder) service;
-            //get service
+            // Get service, update UI and set the flag
             mMusicService = binder.getService();
-
             updateUi();
-
             mServiceBound = true;
         }
 
@@ -220,6 +224,7 @@ public class MusicPlayerFragment extends DialogFragment implements SeekBar.OnSee
             updateUi();
         }
 
+        // Register for broadcast message from the service in order to update the player
         IntentFilter intentFilter = new IntentFilter();
         intentFilter.addAction(MusicService.BROADCAST_MEDIA_PLAYER_PREPARED);
         intentFilter.addAction(MusicService.BROADCAST_SERVICE_STOPPED);
@@ -248,28 +253,46 @@ public class MusicPlayerFragment extends DialogFragment implements SeekBar.OnSee
         }
     }
 
-    //play previous
+    /**
+     * Plays previous track by calling corresponding method in the service
+     */
     private void playPreviousTrack() {
         mMusicService.playPreviousTrack();
     }
 
+    /**
+     * Rewinds track by calling corresponding method in the service
+     */
     private void seekBackward() {
         mMusicService.seekBackward();
     }
 
+    /**
+     * Fast forwards track by calling corresponding method in the service
+     */
     private void seekForward() {
         mMusicService.seekForward();
     }
 
-    //play next
+    /**
+     * Plays next track by calling corresponding method in the service
+     */
     private void playNextTrack() {
         mMusicService.playNextTrack();
     }
 
+    /**
+     * Updates the track seekbar
+     */
     public void updateProgressBar() {
         mHandler.postDelayed(mUpdateTimeTask, 500);
     }
 
+    /**
+     * Handles incoming broadcast messages to control music playing.
+     *
+     * @param action
+     */
     private void handleBroadcastIntent(String action) {
         if (action.equalsIgnoreCase(MusicService.BROADCAST_MEDIA_PLAYER_PREPARED)) {
             updateProgressBar();
@@ -287,11 +310,16 @@ public class MusicPlayerFragment extends DialogFragment implements SeekBar.OnSee
         }
     }
 
+    /**
+     * Updates player UI with any changes in music playing status
+     */
     public void updateUi() {
         mCurrentTrack = mMusicService.getCurrentTrack();
 
+        // Invalidate options menu in order to update the toolbar
         getActivity().invalidateOptionsMenu();
 
+        // If app is not in two pane mode setup the share button. Other wise, top tracks fragment will take care of it.
         if (mShareActionProvider != null && !mHasTwoPanes) {
             mTrackShareText = getString(R.string.track_share_text, mCurrentTrack.getTrackName(), mCurrentTrack.getArtistName(), mCurrentTrack.getmExternalUrl());
             mShareActionProvider.setShareIntent(createShareTrackIntent(mTrackShareText));
@@ -301,9 +329,10 @@ public class MusicPlayerFragment extends DialogFragment implements SeekBar.OnSee
         mAlbumNameTextView.setText(mCurrentTrack.getAlbumName());
         mTrackNameTextView.setText(mCurrentTrack.getTrackName());
 
-        // Load the album art
+        // Load the album art. In case of error, set the default image.
         Picasso.with(getActivity()).load(mCurrentTrack.getLargeAlbumThumbnail()).error(ResourcesCompat.getDrawable(getResources(), R.drawable.no_image_available, null)).into(mAlbumArtImageView);
 
+        // Disable music controls related to media player (play/pause, rewind, fast forward and seekbar) if the music player is not ready in order to prevent unexpected behaviour. When the music player is ready they will be enabled.
         if (mMusicService.isMediaPlayerPrepared()) {
             enableControls();
             updateProgressBar();
@@ -314,6 +343,9 @@ public class MusicPlayerFragment extends DialogFragment implements SeekBar.OnSee
         }
     }
 
+    /**
+     * Disables play/pause, rewind, fast forward buttons and seekbar in the UI. This method is used in order to prevent unexpected behaviour when media player is not ready.
+     */
     private void disableControls() {
         mPlayButton.setEnabled(false);
         mRewindButton.setEnabled(false);
@@ -325,6 +357,11 @@ public class MusicPlayerFragment extends DialogFragment implements SeekBar.OnSee
         mForwardButton.setImageDrawable(ResourcesCompat.getDrawable(getResources(), R.drawable.ic_media_ff_disabled, null));
     }
 
+    /**
+     * Enable media control buttons and seekbar.
+     *
+     * @see {@link #disableControls()}
+     */
     private void enableControls() {
         mPlayButton.setEnabled(true);
         mRewindButton.setEnabled(true);
@@ -342,7 +379,7 @@ public class MusicPlayerFragment extends DialogFragment implements SeekBar.OnSee
     }
 
     /**
-     * Background Runnable thread
+     * Background Runnable thread to update the seekbar
      */
     private Runnable mUpdateTimeTask = new Runnable() {
         public void run() {
@@ -368,6 +405,11 @@ public class MusicPlayerFragment extends DialogFragment implements SeekBar.OnSee
         }
     };
 
+    /**
+     * Creates share intent to set the shareActionbarProvider in toolbar. Track share text is added to the intent.
+     * @param trackShareText
+     * @return the created intent
+     */
     private Intent createShareTrackIntent(String trackShareText) {
         Intent shareIntent = new Intent(Intent.ACTION_SEND);
         shareIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_WHEN_TASK_RESET);
