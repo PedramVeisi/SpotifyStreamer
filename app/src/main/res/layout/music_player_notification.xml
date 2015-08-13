@@ -56,6 +56,14 @@
             android:orientation="horizontal">
 
             <ImageButton
+                android:id="@+id/notification_previous_button"
+                android:layout_width="@dimen/notification_previous_button_width"
+                android:layout_height="@dimen/notification_previous_button_height"
+                android:layout_margin="@dimen/notification_previous_button_margin"
+                android:background="?android:attr/selectableItemBackground"
+                android:src="@android:drawable/ic_media_previous" />
+
+            <ImageButton
                 android:id="@+id/notification_pause_button"
                 android:layout_width="@dimen/notification_play_pause_button_width"
                 android:layout_height="@dimen/notification_play_pause_button_height"

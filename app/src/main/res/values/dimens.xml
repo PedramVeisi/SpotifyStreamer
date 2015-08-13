@@ -42,6 +42,9 @@
     <dimen name="notification_album_art_height">60dp</dimen>
     <dimen name="notification_track_name_text_size">18sp</dimen>
     <dimen name="notification_album_name_text_size">14sp</dimen>
+    <dimen name="notification_previous_button_width">32dp</dimen>
+    <dimen name="notification_previous_button_height">32dp</dimen>
+    <dimen name="notification_previous_button_margin">5dp</dimen>
     <dimen name="notification_play_pause_button_width">32dp</dimen>
     <dimen name="notification_play_pause_button_height">32dp</dimen>
     <dimen name="notification_play_pause_button_margin">5dp</dimen>
