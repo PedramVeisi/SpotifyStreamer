@@ -35,6 +35,7 @@ public class MusicService extends Service implements
         MediaPlayer.OnPreparedListener, MediaPlayer.OnErrorListener,
         MediaPlayer.OnCompletionListener, MediaPlayer.OnSeekCompleteListener {
 
+    // Service actions
     public static final String ACTION_PLAY = "music_service.action_play";
     public static final String ACTION_PAUSE = "music_service.action_pause";
     public static final String ACTION_NEXT = "music_service.action_next";
@@ -42,6 +43,7 @@ public class MusicService extends Service implements
     public static final String ACTION_CLOSE_NOTIFICATION = "music_service.action_close_notification";
     public static final String ACTION_RESUME_PLAYER = "music_service.resume_player";
 
+    // Local broadast messages
     public static final String BROADCAST_TRACK_PAUSED = "music_service.broadcast_pause";
     public static final String BROADCAST_TRACK_PLAYED = "music_service.broadcast_play";
     public static final String BROADCAST_TRACK_CHANGED = "music_service.broadcast_track_change";
@@ -49,23 +51,24 @@ public class MusicService extends Service implements
     public static final String BROADCAST_MEDIA_PLAYER_PREPARED = "music_service.broadcast_media_player_prepared";
     public static final String BROADCAST_NOTIFICATION_CLOSED = "music_service.broadcast_notification_closed";
 
-    private int seekForwardTime = 3000; // 3000 milliseconds
-    private int seekBackwardTime = 3000; // 3000 milliseconds
+    private int seekForwardTime = getResources().getInteger(R.integer.music_fast_forward_time); // 3000 milliseconds
+    private int seekBackwardTime = getResources().getInteger(R.integer.music_rewind_time);
+    ; // 3000 milliseconds
 
     // Notification id
     private static final int NOTIFICATION_ID = 1;
 
     //media player
     private MediaPlayer mPlayer;
-    //song list
+    // Track list
     private ArrayList<TrackGist> mTrackList;
-    //current position
+    // Current track position
     private int mTrackPosition;
 
     private boolean mMediaPlayerPrepared = false;
+    private boolean mPlaybackPaused = false;
 
     private final IBinder mMusicBinder = new MusicBinder();
-    private boolean mPlaybackPaused = false;
 
     public MusicService() {
     }
@@ -84,17 +87,20 @@ public class MusicService extends Service implements
         return START_STICKY;
     }
 
+    /**
+     * Handle intent actions
+     *
+     * @param intent
+     */
     private void handleIntent(Intent intent) {
-
         if (intent == null) {
             return;
         }
-
+        // Get track list and track position from intent if exist
         if (intent.getExtras() != null) {
             mTrackList = intent.getParcelableArrayListExtra(getString(R.string.intent_track_list_key));
             mTrackPosition = intent.getIntExtra(getString(R.string.intent_selected_track_position), 0);
         }
-
         if (intent.getAction() == null) {
             return;
         }
@@ -133,6 +139,7 @@ public class MusicService extends Service implements
             mPlayer = new MediaPlayer();
         }
 
+        // In order to play music while device is locked
         mPlayer.setWakeMode(getApplicationContext(),
                 PowerManager.PARTIAL_WAKE_LOCK);
         mPlayer.setAudioStreamType(AudioManager.STREAM_MUSIC);
@@ -152,10 +159,6 @@ public class MusicService extends Service implements
      * Make the player ready to start playing the track
      */
     public void playTrack() {
-
-        //new UpdateMetadata(mCurrentTrack, mRemoteControlClient).execute(mCurrentTrack.getLargeAlbumThumbnail());
-        //UpdateMetadata();
-
         mPlayer.reset();
 
         mPlaybackPaused = false;
@@ -174,44 +177,54 @@ public class MusicService extends Service implements
         mPlayer.prepareAsync();
     }
 
-    public void setTrackList(ArrayList<TrackGist> trackList) {
-        mTrackList = trackList;
-    }
-
     /**
-     * Allows us to change the track index
+     * Return current track
      *
-     * @param trackPosition
+     * @return current track which is being played
      */
-    public void setTrackPosition(int trackPosition) {
-        mTrackPosition = trackPosition;
-    }
-
-    public int getTrackPosition() {
-        return mTrackPosition;
-    }
-
-
     public TrackGist getCurrentTrack() {
         return mTrackList.get(mTrackPosition);
     }
 
+    /**
+     * Return track's playing position
+     *
+     * @return track's playing position
+     */
     public int getPlayingPosition() {
         return mPlayer.getCurrentPosition();
     }
 
+    /**
+     * Return track duration
+     *
+     * @return track duration
+     */
     public int getTrackDuration() {
         return mPlayer.getDuration();
     }
 
+    /**
+     * Return a boolean indicating playing status
+     *
+     * @return playing status
+     */
     public boolean isPlaying() {
         return mPlayer.isPlaying();
     }
 
+    /**
+     * Return a boolean indicating pause status
+     *
+     * @return pause status
+     */
     public boolean isPaused() {
         return mPlaybackPaused;
     }
 
+    /**
+     * Pause player, set flags, update notification and broadcast a message indicating track being paused
+     */
     public void pausePlayer() {
         mPlayer.pause();
         mPlaybackPaused = true;
@@ -219,10 +232,18 @@ public class MusicService extends Service implements
         broadcast(BROADCAST_TRACK_PAUSED);
     }
 
+    /**
+     * Seeks to desired position
+     *
+     * @param position
+     */
     public void seekTo(int position) {
         mPlayer.seekTo(position);
     }
 
+    /**
+     * Start player
+     */
     public void startPlayer() {
         mPlayer.start();
         mPlaybackPaused = false;
@@ -254,6 +275,9 @@ public class MusicService extends Service implements
         playTrack();
     }
 
+    /**
+     * Fast forward track
+     */
     public void seekForward() {
         int currentPosition = getPlayingPosition();
         int totalDuration = getTrackDuration();
@@ -264,6 +288,9 @@ public class MusicService extends Service implements
         }
     }
 
+    /**
+     * Rewind track
+     */
     public void seekBackward() {
         int currentPosition = getPlayingPosition();
         if (currentPosition - seekBackwardTime >= 0) {
@@ -273,6 +300,11 @@ public class MusicService extends Service implements
         }
     }
 
+    /**
+     * Return a boolean indication media player preparation status
+     *
+     * @return media player preparation status
+     */
     public boolean isMediaPlayerPrepared() {
         return mMediaPlayerPrepared;
     }
@@ -292,9 +324,11 @@ public class MusicService extends Service implements
         String trackName = currentTrack.getTrackName();
         String albumName = currentTrack.getAlbumName();
 
+        // Set layouts for simple and expanded notifications
         RemoteViews simpleContentView = new RemoteViews(getApplicationContext().getPackageName(), R.layout.music_player_notification);
         RemoteViews expandedView = new RemoteViews(getApplicationContext().getPackageName(), R.layout.music_player_big_notification);
 
+        // Handle clicks on notification (resume player)
         Intent notificationIntent = new Intent(this, MusicPlayerActivity.class);
         notificationIntent.setAction(MusicService.ACTION_RESUME_PLAYER);
 
@@ -304,19 +338,20 @@ public class MusicService extends Service implements
         PendingIntent pendingIntent = PendingIntent.getActivity(this, 0,
                 notificationIntent, 0);
 
-
+        // Set notification properties and build it
         Notification notification = new NotificationCompat.Builder(getApplicationContext())
                 .setSmallIcon(R.drawable.ic_music)
                 .setContentIntent(pendingIntent)
                 .setPriority(Notification.PRIORITY_MAX)
                 .setContentTitle(trackName).build();
 
+        // set listeners for views
         setListeners(simpleContentView);
         setListeners(expandedView);
 
+        // Set small and big notifications
         notification.contentView = simpleContentView;
         notification.bigContentView = expandedView;
-
 
         // If notification is being created for the first time
         if (!isPlaying() && !isPaused()) {
@@ -325,9 +360,11 @@ public class MusicService extends Service implements
             notification.bigContentView.setImageViewResource(R.id.notification_album_art_imageview, R.drawable.default_album_art);
         }
 
+        // Load album art into image view in small and big notifications
         Picasso.with(this).load(currentTrack.getSmallAlbumThumbnail()).into(simpleContentView, R.id.notification_album_art_imageview, NOTIFICATION_ID, notification);
         Picasso.with(this).load(currentTrack.getSmallAlbumThumbnail()).into(expandedView, R.id.notification_album_art_imageview, NOTIFICATION_ID, notification);
 
+        // Handle play and pause buttons on the notification
         if (isPaused()) {
             notification.contentView.setViewVisibility(R.id.notification_pause_button, View.GONE);
             notification.contentView.setViewVisibility(R.id.notification_play_button, View.VISIBLE);
@@ -342,6 +379,7 @@ public class MusicService extends Service implements
             notification.bigContentView.setViewVisibility(R.id.notification_play_button, View.GONE);
         }
 
+        // Set track info on the notification
         notification.contentView.setTextViewText(R.id.notification_track_name_textview, trackName);
         notification.contentView.setTextViewText(R.id.notification_album_name_textview, albumName);
         notification.bigContentView.setTextViewText(R.id.notification_track_name_textview, trackName);
@@ -351,6 +389,12 @@ public class MusicService extends Service implements
         startForeground(NOTIFICATION_ID, notification);
     }
 
+
+    /**
+     * Set listener for notification views
+     *
+     * @param view
+     */
     public void setListeners(RemoteViews view) {
         Intent previousIntent = setAction(this, ACTION_PREVIOUS);
         Intent notificationCloseIntent = setAction(this, ACTION_CLOSE_NOTIFICATION);
@@ -374,18 +418,33 @@ public class MusicService extends Service implements
         view.setOnClickPendingIntent(R.id.notification_play_button, playPendingIntent);
     }
 
+    /**
+     * Create an intent and set the required action
+     *
+     * @param context
+     * @param action
+     * @return prepared intent
+     */
     public Intent setAction(Context context, String action) {
         Intent intent = new Intent(context, MusicService.class);
         intent.setAction(action);
         return intent;
     }
 
+    /**
+     * Broadcast a message
+     *
+     * @param message
+     */
     private void broadcast(String message) {
         Intent intent = new Intent(message);
         // You can also include some extra data.
         LocalBroadcastManager.getInstance(this).sendBroadcast(intent);
     }
 
+    /**
+     * Stop music service and broad a message stating so
+     */
     private void stopMusicService() {
         stopSelf();
         stopForeground(true);
@@ -407,17 +466,6 @@ public class MusicService extends Service implements
 
     @Override
     public boolean onError(MediaPlayer mp, int what, int extra) {
-
-//        To handle special case of error later
-//        switch (what) {
-//            case MediaPlayer.MEDIA_ERROR_NOT_VALID_FOR_PROGRESSIVE_PLAYBACK:
-//                break;
-//            case MediaPlayer.MEDIA_ERROR_SERVER_DIED:
-//                break;
-//            case MediaPlayer.MEDIA_ERROR_UNKNOWN:
-//                break;
-//        }
-
         mPlayer.reset();
         return false;
     }
@@ -437,7 +485,7 @@ public class MusicService extends Service implements
         mMediaPlayerPrepared = false;
         mPlayer.stop();
         mPlayer.release();
-        stopForeground(true);
+        stopMusicService();
         super.onDestroy();
     }
 
@@ -446,67 +494,9 @@ public class MusicService extends Service implements
 
     }
 
-//    private class UpdateMetadata extends AsyncTask<String, Void, Bitmap> {
-//        private final RemoteControlClient remoteControlClient;
-//        TrackGist currentTrack;
-//
-//        public UpdateMetadata(TrackGist currentTrack, RemoteControlClient remoteControlClient) {
-//            this.currentTrack = currentTrack;
-//            this.remoteControlClient = remoteControlClient;
-//        }
-//
-//        protected Bitmap doInBackground(String... urls) {
-//            String albumArtUrl = urls[0];
-//            Bitmap albumArt = null;
-//            try {
-//                InputStream in = new java.net.URL(albumArtUrl).openStream();
-//                albumArt = BitmapFactory.decodeStream(in);
-//            } catch (Exception e) {
-//                Log.e("Error", e.getMessage());
-//                e.printStackTrace();
-//            }
-//            return albumArt;
-//        }
-//
-//        protected void onPostExecute(Bitmap result) {
-//            Log.e("TAG", "1");
-//            if (remoteControlClient == null) {
-//                Log.e("TAG", "2");
-//                return;
-//            }
-//            RemoteControlClient.MetadataEditor metadataEditor = remoteControlClient.editMetadata(true);
-//            metadataEditor.putString(MediaMetadataRetriever.METADATA_KEY_ALBUM, currentTrack.getAlbumName());
-//            metadataEditor.putString(MediaMetadataRetriever.METADATA_KEY_ARTIST, currentTrack.getArtistName());
-//            metadataEditor.putString(MediaMetadataRetriever.METADATA_KEY_TITLE, currentTrack.getTrackName());
-//            Bitmap defualtAlbumArt = null;
-//            if (result == null) {
-//                defualtAlbumArt = BitmapFactory.decodeResource(getResources(), R.drawable.default_album_art);
-//                Log.e("TAG", "3");
-//            }
-//            metadataEditor.putBitmap(RemoteControlClient.MetadataEditor.BITMAP_KEY_ARTWORK, defualtAlbumArt);
-//            metadataEditor.apply();
-//        }
-//    }
-
-
-//    private void UpdateMetadata() {
-//        if (mRemoteControlClient == null)
-//            return;
-//
-//        RemoteControlClient.MetadataEditor metadataEditor = mRemoteControlClient.editMetadata(true);
-//        metadataEditor.putString(MediaMetadataRetriever.METADATA_KEY_ALBUM, mCurrentTrack.getAlbumName());
-//        metadataEditor.putString(MediaMetadataRetriever.METADATA_KEY_ARTIST, mCurrentTrack.getArtistName());
-//        metadataEditor.putString(MediaMetadataRetriever.METADATA_KEY_TITLE, mCurrentTrack.getTrackName());
-//
-//        //TODO Get album art from the Internet
-//        Bitmap albumArt = BitmapFactory.decodeResource(getResources(), R.drawable.default_album_art);
-//
-//        metadataEditor.putBitmap(RemoteControlClient.MetadataEditor.BITMAP_KEY_ARTWORK, albumArt);
-//
-//        metadataEditor.apply();
-//    }
-
-
+    /**
+     * Binder class
+     */
     public class MusicBinder extends Binder {
         public MusicService getService() {
             return MusicService.this;
