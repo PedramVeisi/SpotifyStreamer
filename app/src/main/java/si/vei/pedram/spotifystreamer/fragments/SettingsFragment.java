@@ -27,7 +27,7 @@ public class SettingsFragment extends PreferenceFragment implements Preference.O
     }
 
     /**
-     * Attaches a listener so the summary is always updated with the preference value.
+     * Attach a listener so the summary is always updated with the preference value.
      * Also fires the listener once, to initialize the summary (so it shows up before the value
      * is changed.)
      *

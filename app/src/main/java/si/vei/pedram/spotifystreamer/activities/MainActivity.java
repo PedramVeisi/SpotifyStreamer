@@ -123,7 +123,7 @@ public class MainActivity extends AppCompatActivity implements ArtistSearchFragm
     };
 
     /**
-     * Handles broadcast messages to update toolbar.
+     * Handle broadcast messages to update toolbar.
      *
      * @param action
      */

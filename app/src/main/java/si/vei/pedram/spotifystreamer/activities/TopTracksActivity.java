@@ -122,7 +122,7 @@ public class TopTracksActivity extends AppCompatActivity {
     };
 
     /**
-     * Handles broadcast messages to update toolbar.
+     * Handle broadcast messages to update toolbar.
      *
      * @param action
      */

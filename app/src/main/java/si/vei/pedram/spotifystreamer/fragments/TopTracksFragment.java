@@ -224,7 +224,7 @@ public class TopTracksFragment extends Fragment {
     }
 
     /**
-     * Creates share intent to set the shareActionbarProvider in toolbar. Track share text is added to the intent.
+     * Create share intent to set the shareActionbarProvider in toolbar. Track share text is added to the intent.
      *
      * @param trackShareText Share string to set for the shareActionProvider
      * @return the created intent
@@ -261,7 +261,7 @@ public class TopTracksFragment extends Fragment {
     };
 
     /**
-     * Handles incoming broadcast messages
+     * Handle incoming broadcast messages
      *
      * @param action broadcast action
      */

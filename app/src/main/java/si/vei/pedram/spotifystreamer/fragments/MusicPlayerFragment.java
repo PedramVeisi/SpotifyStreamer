@@ -254,42 +254,42 @@ public class MusicPlayerFragment extends DialogFragment implements SeekBar.OnSee
     }
 
     /**
-     * Plays previous track by calling corresponding method in the service
+     * Play previous track by calling corresponding method in the service
      */
     private void playPreviousTrack() {
         mMusicService.playPreviousTrack();
     }
 
     /**
-     * Rewinds track by calling corresponding method in the service
+     * Rewind track by calling corresponding method in the service
      */
     private void seekBackward() {
         mMusicService.seekBackward();
     }
 
     /**
-     * Fast forwards track by calling corresponding method in the service
+     * Fast forward track by calling corresponding method in the service
      */
     private void seekForward() {
         mMusicService.seekForward();
     }
 
     /**
-     * Plays next track by calling corresponding method in the service
+     * Play next track by calling corresponding method in the service
      */
     private void playNextTrack() {
         mMusicService.playNextTrack();
     }
 
     /**
-     * Updates the track seekbar
+     * Update the track seekbar
      */
     public void updateProgressBar() {
         mHandler.postDelayed(mUpdateTimeTask, 500);
     }
 
     /**
-     * Handles incoming broadcast messages to control music playing.
+     * Handle incoming broadcast messages to control music playing.
      *
      * @param action broadcast action
      */
@@ -311,7 +311,7 @@ public class MusicPlayerFragment extends DialogFragment implements SeekBar.OnSee
     }
 
     /**
-     * Updates player UI with any changes in music playing status
+     * Update player UI with any changes in music playing status
      */
     public void updateUi() {
         mCurrentTrack = mMusicService.getCurrentTrack();
@@ -344,7 +344,7 @@ public class MusicPlayerFragment extends DialogFragment implements SeekBar.OnSee
     }
 
     /**
-     * Disables play/pause, rewind, fast forward buttons and seekbar in the UI. This method is used in order to prevent unexpected behaviour when media player is not ready.
+     * Disable play/pause, rewind, fast forward buttons and seekbar in the UI. This method is used in order to prevent unexpected behaviour when media player is not ready.
      */
     private void disableControls() {
         mPlayButton.setEnabled(false);
@@ -358,7 +358,7 @@ public class MusicPlayerFragment extends DialogFragment implements SeekBar.OnSee
     }
 
     /**
-     * Enables media control buttons and seekbar.
+     * Enable media control buttons and seekbar.
      *
      * @see {@link #disableControls()}
      */
@@ -406,7 +406,7 @@ public class MusicPlayerFragment extends DialogFragment implements SeekBar.OnSee
     };
 
     /**
-     * Creates share intent to set the shareActionbarProvider in toolbar. Track share text is added to the intent.
+     * Create share intent to set the shareActionbarProvider in toolbar. Track share text is added to the intent.
      * @param trackShareText Share string to set for the shareActionProvider
      * @return the created intent
      */
