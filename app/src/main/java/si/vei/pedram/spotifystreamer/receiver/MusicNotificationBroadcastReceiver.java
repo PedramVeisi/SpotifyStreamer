@@ -3,8 +3,6 @@ package si.vei.pedram.spotifystreamer.receiver;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
-import android.util.Log;
-import android.view.KeyEvent;
 
 import si.vei.pedram.spotifystreamer.service.MusicService;
 
@@ -15,9 +13,8 @@ public class MusicNotificationBroadcastReceiver extends BroadcastReceiver {
     @Override
     public void onReceive(Context context, Intent intent) {
 
-        if (intent.getAction().equals(
-                android.media.AudioManager.ACTION_AUDIO_BECOMING_NOISY)) {
-
+        // Pause music in case headphone is unplugged
+        if (intent.getAction().equals(android.media.AudioManager.ACTION_AUDIO_BECOMING_NOISY)) {
             Intent pauseIntent = new Intent(MusicService.ACTION_PAUSE);
             pauseIntent.setClass(context,
                     MusicService.class);
