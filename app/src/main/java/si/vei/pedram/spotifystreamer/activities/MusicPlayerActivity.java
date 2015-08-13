@@ -42,6 +42,7 @@ public class MusicPlayerActivity extends AppCompatActivity {
             mTrackPosition = getIntent().getExtras().getInt(getString(R.string.intent_selected_track_position));
         }
 
+        // Handle resuming from now playing button or notification
         if (getIntent().getAction() != null) {
             if (getIntent().getAction().equalsIgnoreCase(MusicService.ACTION_RESUME_PLAYER)) {
                 mPlayerResumed = true;
