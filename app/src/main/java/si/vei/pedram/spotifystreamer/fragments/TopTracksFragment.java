@@ -14,7 +14,6 @@ import android.preference.PreferenceManager;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.LocalBroadcastManager;
 import android.support.v4.view.MenuItemCompat;
-import android.support.v7.app.ActionBarActivity;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.ShareActionProvider;
 import android.view.LayoutInflater;
@@ -56,13 +55,17 @@ public class TopTracksFragment extends Fragment {
     private final String MUSICPLAYERFRAGMENT_TAG = "MPFTAG";
 
     private TopTracksListAdapter mTracksAdapter;
-    private ArrayList<TrackGist> tracks = new ArrayList<TrackGist>();
-    private GetTopTracks getTopTracks;
-    private boolean mHasTwoPanes;
-    private String mTrackShareText;
-    private ShareActionProvider mShareActionProvider;
-    private boolean mMusicPlaying;
+
     private MusicService mMusicService;
+
+    private ArrayList<TrackGist> tracks = new ArrayList();
+    private GetTopTracks getTopTracks;
+
+    private ShareActionProvider mShareActionProvider;
+    private String mTrackShareText;
+
+    private boolean mHasTwoPanes;
+    private boolean mMusicPlaying;
 
     /**
      * Constructor
@@ -80,7 +83,7 @@ public class TopTracksFragment extends Fragment {
         String artistName = null;
         String artistId = null;
 
-        // Get artistId
+        // Get artistId, artist name, artist image url and music playing flag
         Bundle arguments = getArguments();
         if (arguments != null) {
             artistId = arguments.getString(getString(R.string.intent_artist_id_key));
@@ -89,14 +92,16 @@ public class TopTracksFragment extends Fragment {
             mMusicPlaying = arguments.getBoolean(getString(R.string.intent_music_playing_flag));
         }
 
+        // Set artist name as subtitle in toolbar
         ((AppCompatActivity) getActivity()).getSupportActionBar().setSubtitle(artistName);
 
+        // Set artists image on top of top tracks fragment
         final ImageView headerImageView = (ImageView) rootView.findViewById(R.id.top_tracks_header_imageview);
         if (artistImageUrl != null) {
             // Set header image view
             Picasso.with(getActivity()).load(artistImageUrl).into(headerImageView);
         } else {
-            // Hide the image view
+            // Hide the image view if there is no image
             headerImageView.setVisibility(View.GONE);
         }
 
@@ -106,8 +111,10 @@ public class TopTracksFragment extends Fragment {
         ListView topTracksListView = (ListView) rootView.findViewById(R.id.artist_top_tracks_listview);
         topTracksListView.setAdapter(mTracksAdapter);
 
+        // The resource value for R.bool.has_two_panes is different on tablets and phones.
         mHasTwoPanes = getResources().getBoolean(R.bool.has_two_panes);
 
+        // Indicate that fragment can access and update the toolbar
         setHasOptionsMenu(true);
 
         topTracksListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
@@ -129,6 +136,7 @@ public class TopTracksFragment extends Fragment {
 
                     mMusicPlaying = true;
 
+                    // Call on CreateOptionsMenu and update toolbar
                     getActivity().invalidateOptionsMenu();
 
                 } else {
@@ -142,7 +150,7 @@ public class TopTracksFragment extends Fragment {
         });
 
         // To show the empty view when there is no top track
-        View emptyView = (View) rootView.findViewById(R.id.empty_top_tracks_list_message_view);
+        View emptyView = rootView.findViewById(R.id.empty_top_tracks_list_message_view);
         topTracksListView.setEmptyView(emptyView);
 
         // To make sure user won't see "No track found" message before tracks are loaded!
@@ -159,12 +167,14 @@ public class TopTracksFragment extends Fragment {
             getTopTracks.execute(artistId);
         }
 
+        // Register for local broadcast to update toolbar and shareText
         IntentFilter intentFilter = new IntentFilter();
         intentFilter.addAction(MusicService.BROADCAST_TRACK_CHANGED);
         intentFilter.addAction(MusicService.BROADCAST_MEDIA_PLAYER_PREPARED);
 
         LocalBroadcastManager.getInstance(getActivity()).registerReceiver(mBroadcastReceiver, intentFilter);
 
+        // Bind to service in order to get the current playing track for the service
         Intent serviceIntent = new Intent(getActivity(), MusicService.class);
         getActivity().bindService(serviceIntent, musicConnection, Context.BIND_AUTO_CREATE);
 
@@ -197,6 +207,7 @@ public class TopTracksFragment extends Fragment {
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         super.onCreateOptionsMenu(menu, inflater);
+        // Show share action button if app is in two pane mode an music is being played. Music player fragment will take care of this on phones
         if (mHasTwoPanes && mMusicPlaying) {
             // Inflate the menu; this adds items to the action bar if it is present.
             getActivity().getMenuInflater().inflate(R.menu.menu_top_tracks, menu);
@@ -212,7 +223,12 @@ public class TopTracksFragment extends Fragment {
         }
     }
 
-
+    /**
+     * Creates share intent to set the shareActionbarProvider in toolbar. Track share text is added to the intent.
+     *
+     * @param trackShareText Share string to set for the shareActionProvider
+     * @return the created intent
+     */
     private Intent createShareTrackIntent(String trackShareText) {
         Intent shareIntent = new Intent(Intent.ACTION_SEND);
         shareIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_WHEN_TASK_RESET);
@@ -243,7 +259,13 @@ public class TopTracksFragment extends Fragment {
         }
     };
 
+    /**
+     * Handles incoming broadcast messages
+     *
+     * @param action broadcast action
+     */
     private void handleBroadcastIntent(String action) {
+        // Update share text in case media player is ready (a song is being player) or track is changed.
         if (action.equalsIgnoreCase(MusicService.BROADCAST_TRACK_CHANGED) || action.equalsIgnoreCase(MusicService.BROADCAST_MEDIA_PLAYER_PREPARED)) {
             if (mShareActionProvider != null) {
                 TrackGist currentTrack = mMusicService.getCurrentTrack();
@@ -255,7 +277,9 @@ public class TopTracksFragment extends Fragment {
         }
     }
 
-
+    /**
+     * Background thread to get list of top tracks for each artist
+     */
     public class GetTopTracks extends AsyncTask<String, Void, ArrayList<TrackGist>> {
         @Override
         protected ArrayList<TrackGist> doInBackground(String... params) {
@@ -296,14 +320,14 @@ public class TopTracksFragment extends Fragment {
                     }
                 });
                 // Return an empty list
-                return new ArrayList<TrackGist>();
+                return new ArrayList<>();
             }
 
             String largeAlbumThumbnailUrl;
             String smallAlbumThumbnailUrl;
             String artistsString = "";
 
-            ArrayList<TrackGist> trackGists = new ArrayList<TrackGist>();
+            ArrayList<TrackGist> trackGists = new ArrayList<>();
 
             if (resultTracks != null) {
                 for (Track track : resultTracks) {

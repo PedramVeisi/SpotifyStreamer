@@ -291,7 +291,7 @@ public class MusicPlayerFragment extends DialogFragment implements SeekBar.OnSee
     /**
      * Handles incoming broadcast messages to control music playing.
      *
-     * @param action
+     * @param action broadcast action
      */
     private void handleBroadcastIntent(String action) {
         if (action.equalsIgnoreCase(MusicService.BROADCAST_MEDIA_PLAYER_PREPARED)) {
@@ -358,7 +358,7 @@ public class MusicPlayerFragment extends DialogFragment implements SeekBar.OnSee
     }
 
     /**
-     * Enable media control buttons and seekbar.
+     * Enables media control buttons and seekbar.
      *
      * @see {@link #disableControls()}
      */
@@ -395,7 +395,7 @@ public class MusicPlayerFragment extends DialogFragment implements SeekBar.OnSee
                 mTrackCurrentDuration.setText("" + utils.milliSecondsToTimer(currentDuration));
 
                 // Updating progress bar
-                int progress = (int) (utils.getProgressPercentage(currentDuration, totalDuration));
+                int progress = utils.getProgressPercentage(currentDuration, totalDuration);
                 //Log.d("Progress", ""+progress);
                 mTrackSeekbar.setProgress(progress);
             }
@@ -407,7 +407,7 @@ public class MusicPlayerFragment extends DialogFragment implements SeekBar.OnSee
 
     /**
      * Creates share intent to set the shareActionbarProvider in toolbar. Track share text is added to the intent.
-     * @param trackShareText
+     * @param trackShareText Share string to set for the shareActionProvider
      * @return the created intent
      */
     private Intent createShareTrackIntent(String trackShareText) {
