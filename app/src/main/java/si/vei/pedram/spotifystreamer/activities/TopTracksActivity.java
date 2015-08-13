@@ -54,6 +54,7 @@ public class TopTracksActivity extends AppCompatActivity {
                     .commit();
         }
 
+        // Register for local broadcast to update toolbar
         IntentFilter intentFilter = new IntentFilter();
         intentFilter.addAction(MusicService.BROADCAST_MEDIA_PLAYER_PREPARED);
         intentFilter.addAction(MusicService.BROADCAST_SERVICE_STOPPED);
@@ -67,6 +68,7 @@ public class TopTracksActivity extends AppCompatActivity {
         // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.menu_top_tracks, menu);
 
+        // Show now playing button if music is being played
         MenuItem nowPlayingItem = menu.findItem(R.id.action_now_playing);
 
         if (mMusicPlaying) {
@@ -110,6 +112,7 @@ public class TopTracksActivity extends AppCompatActivity {
         LocalBroadcastManager.getInstance(this).unregisterReceiver(mBroadcastReceiver);
     }
 
+    // Broadcast receiver
     private BroadcastReceiver mBroadcastReceiver = new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, Intent intent) {
@@ -117,11 +120,18 @@ public class TopTracksActivity extends AppCompatActivity {
         }
     };
 
+    /**
+     * Handles broadcast messages to update toolbar.
+     *
+     * @param action
+     */
     private void handleBroadcastIntent(String action) {
+        // When music player is prepared
         if (action.equalsIgnoreCase(MusicService.BROADCAST_MEDIA_PLAYER_PREPARED)) {
             mMusicPlaying = true;
             invalidateOptionsMenu();
         }
+        // When service is stopped
         if (action.equalsIgnoreCase(MusicService.BROADCAST_SERVICE_STOPPED)) {
             mMusicPlaying = false;
             invalidateOptionsMenu();
