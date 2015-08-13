@@ -13,8 +13,8 @@
 
         <ImageView
             android:id="@+id/notification_album_art_imageview"
-            android:layout_width="60dp"
-            android:layout_height="60dp"
+            android:layout_width="@dimen/notification_album_art_width"
+            android:layout_height="@dimen/notification_album_art_height"
             android:src="@mipmap/ic_launcher" />
 
         <LinearLayout
@@ -32,8 +32,8 @@
                 android:gravity="center_vertical"
                 android:selectAllOnFocus="true"
                 android:singleLine="true"
-                android:textColor="@android:color/white"
-                android:textSize="18dp" />
+                android:textColor="@color/notification_track_name_text_color"
+                android:textSize="@dimen/notification_track_name_text_size" />
 
             <TextView
                 android:id="@+id/notification_album_name_textview"
@@ -44,8 +44,8 @@
                 android:marqueeRepeatLimit="marquee_forever"
                 android:selectAllOnFocus="true"
                 android:singleLine="true"
-                android:textColor="#C0C0C0"
-                android:textSize="14dp" />
+                android:textColor="@color/notification_album_name_text_color"
+                android:textSize="@dimen/notification_album_name_text_size" />
         </LinearLayout>
 
         <LinearLayout
@@ -57,37 +57,35 @@
 
             <ImageButton
                 android:id="@+id/notification_pause_button"
-                android:layout_width="32dp"
-                android:layout_height="32dp"
-                android:layout_margin="5dp"
+                android:layout_width="@dimen/notification_play_pause_button_width"
+                android:layout_height="@dimen/notification_play_pause_button_height"
+                android:layout_margin="@dimen/notification_play_pause_button_margin"
                 android:background="?android:attr/selectableItemBackground"
                 android:src="@android:drawable/ic_media_pause" />
 
             <ImageButton
                 android:id="@+id/notification_play_button"
-                android:layout_width="32dp"
-                android:layout_height="32dp"
-                android:layout_margin="5dp"
+                android:layout_width="@dimen/notification_play_pause_button_width"
+                android:layout_height="@dimen/notification_play_pause_button_height"
+                android:layout_margin="@dimen/notification_play_pause_button_margin"
                 android:background="?android:attr/selectableItemBackground"
                 android:src="@android:drawable/ic_media_play"
                 android:visibility="gone" />
 
             <ImageButton
                 android:id="@+id/notification_next_button"
-                android:layout_width="32dp"
-                android:layout_height="32dp"
-                android:layout_margin="5dp"
+                android:layout_width="@dimen/notification_next_button_width"
+                android:layout_height="@dimen/notification_next_button_height"
+                android:layout_margin="@dimen/notification_next_button_margin"
                 android:background="?android:attr/selectableItemBackground"
-                android:src="@android:drawable/ic_media_next"
-
-                />
+                android:src="@android:drawable/ic_media_next" />
         </LinearLayout>
 
         <ImageButton
             android:id="@+id/notification_close_button"
-            android:layout_width="28dp"
-            android:layout_height="28dp"
-            android:layout_marginLeft="5dp"
+            android:layout_width="@dimen/notification_close_button_width"
+            android:layout_height="@dimen/notification_close_button_height"
+            android:layout_marginLeft="@dimen/notification_close_button_left_margin"
             android:background="?android:attr/selectableItemBackground"
             android:src="@drawable/ic_action_close" />
     </LinearLayout>

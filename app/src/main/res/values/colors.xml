@@ -10,5 +10,8 @@
     <color name="big_notification_album_name_text_color">#C0C0C0</color>
     <color name="big_notification_track_name_text_color">@android:color/white</color>
 
+    <color name="notification_album_name_text_color">#C0C0C0</color>
+    <color name="notification_track_name_text_color">@android:color/white</color>
+
 
 </resources>
