@@ -1,6 +1,7 @@
 package si.vei.pedram.spotifystreamer.service;
 
 import android.app.Notification;
+import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.app.Service;
 import android.content.Context;
@@ -70,6 +71,7 @@ public class MusicService extends Service implements
     private boolean mPlaybackPaused = false;
 
     private final IBinder mMusicBinder = new MusicBinder();
+    private NotificationManager mNotificationManager;
 
     public MusicService() {
     }
@@ -319,7 +321,10 @@ public class MusicService extends Service implements
         SharedPreferences sharedPrefs = PreferenceManager.getDefaultSharedPreferences(this);
         Boolean notificationOn = sharedPrefs.getBoolean(getString(R.string.pref_notification_setting_key), true);
 
+        mNotificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
+
         if (!notificationOn) {
+            mNotificationManager.cancel(NOTIFICATION_ID);
             return;
         }
 
@@ -390,7 +395,8 @@ public class MusicService extends Service implements
         notification.bigContentView.setTextViewText(R.id.notification_album_name_textview, albumName);
 
         notification.flags |= Notification.FLAG_ONGOING_EVENT;
-        startForeground(NOTIFICATION_ID, notification);
+        mNotificationManager.notify(NOTIFICATION_ID, notification);
+        //startForeground(NOTIFICATION_ID, notification);
     }
 
 
@@ -450,6 +456,7 @@ public class MusicService extends Service implements
      * Stop music service and broad a message stating so
      */
     private void stopMusicService() {
+        mNotificationManager.cancel(NOTIFICATION_ID);
         stopSelf();
         stopForeground(true);
         broadcast(BROADCAST_SERVICE_STOPPED);
@@ -486,6 +493,7 @@ public class MusicService extends Service implements
 
     @Override
     public void onDestroy() {
+        mNotificationManager.cancel(NOTIFICATION_ID);
         mMediaPlayerPrepared = false;
         mPlayer.stop();
         mPlayer.release();
