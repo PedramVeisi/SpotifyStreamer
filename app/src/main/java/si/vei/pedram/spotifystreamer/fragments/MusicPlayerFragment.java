@@ -293,7 +293,7 @@ public class MusicPlayerFragment extends DialogFragment implements SeekBar.OnSee
         getActivity().invalidateOptionsMenu();
 
         if (mShareActionProvider != null && !mHasTwoPanes) {
-            mTrackShareText = getString(R.string.track_share_text, mCurrentTrack.getTrackName(), mCurrentTrack.getArtistName(), mCurrentTrack.getPreviewUrl());
+            mTrackShareText = getString(R.string.track_share_text, mCurrentTrack.getTrackName(), mCurrentTrack.getArtistName(), mCurrentTrack.getmExternalUrl());
             mShareActionProvider.setShareIntent(createShareTrackIntent(mTrackShareText));
         }
 
