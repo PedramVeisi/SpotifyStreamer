@@ -8,17 +8,13 @@ import android.os.Bundle;
 import android.support.v4.content.LocalBroadcastManager;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
-
-import java.util.ArrayList;
 
 import si.vei.pedram.spotifystreamer.R;
 import si.vei.pedram.spotifystreamer.fragments.ArtistSearchFragment;
 import si.vei.pedram.spotifystreamer.fragments.MusicPlayerFragment;
 import si.vei.pedram.spotifystreamer.fragments.TopTracksFragment;
-import si.vei.pedram.spotifystreamer.models.TrackGist;
 import si.vei.pedram.spotifystreamer.service.MusicService;
 
 /**
@@ -48,6 +44,7 @@ public class MainActivity extends AppCompatActivity implements ArtistSearchFragm
             mTwoPane = true;
         }
 
+        // Register for local broadcast tp update toolbar
         IntentFilter intentFilter = new IntentFilter();
         intentFilter.addAction(MusicService.BROADCAST_MEDIA_PLAYER_PREPARED);
         intentFilter.addAction(MusicService.BROADCAST_SERVICE_STOPPED);
@@ -67,6 +64,7 @@ public class MainActivity extends AppCompatActivity implements ArtistSearchFragm
         // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.menu_main, menu);
 
+        // Show now playing button if music is being played
         MenuItem nowPlayingItem = menu.findItem(R.id.action_now_playing);
 
         if (mMusicPlaying) {
@@ -95,6 +93,7 @@ public class MainActivity extends AppCompatActivity implements ArtistSearchFragm
         }
 
         if (id == R.id.action_now_playing) {
+            // If we are in two pane mode show the dialog fragment. Otherwise start music player activity
             if (mTwoPane) {
                 Bundle arguments = new Bundle();
                 arguments.putBoolean(getString(R.string.intent_player_resumed), true);
@@ -115,6 +114,7 @@ public class MainActivity extends AppCompatActivity implements ArtistSearchFragm
         return super.onOptionsItemSelected(item);
     }
 
+    // Broadcast receiver
     private BroadcastReceiver mBroadcastReceiver = new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, Intent intent) {
@@ -122,14 +122,22 @@ public class MainActivity extends AppCompatActivity implements ArtistSearchFragm
         }
     };
 
+    /**
+     * Handles broadcast messages to update toolbar.
+     *
+     * @param action
+     */
     private void handleBroadcastIntent(String action) {
+        // When music player is prepared
         if (action.equalsIgnoreCase(MusicService.BROADCAST_MEDIA_PLAYER_PREPARED)) {
             mMusicPlaying = true;
             invalidateOptionsMenu();
         }
+        // When service is stopped
         if (action.equalsIgnoreCase(MusicService.BROADCAST_SERVICE_STOPPED)) {
             mMusicPlaying = false;
             invalidateOptionsMenu();
+            // In two pane mode close the app on service stop. Service stop is broadcast when close button is pressed in notification
             if (mTwoPane) {
                 finish();
             }

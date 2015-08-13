@@ -25,16 +25,19 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+
         <activity
             android:name=".activities.TopTracksActivity"
             android:label="@string/title_activity_top_tracks"
             android:launchMode="singleTop"
             android:parentActivityName=".activities.MainActivity" />
+
         <activity
             android:name=".activities.SettingsActivity"
             android:label="@string/title_settings"
             android:parentActivityName=".activities.MainActivity"
             android:theme="@style/SettingsTheme" />
+
         <activity
             android:name=".activities.MusicPlayerActivity"
             android:configChanges="orientation|screenSize"
