@@ -136,11 +136,12 @@ public class ArtistSearchFragment extends Fragment {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 String artistId = mArtistsAdapter.getItem(position).getId();
+                String artistName = mArtistsAdapter.getItem(position).getName();
                 String artistImage = mArtistsAdapter.getItem(position).getImageUrl();
 
                 // Notify the CallBack
                 if(artistId != null){
-                    ((Callback)getActivity()).onItemSelected(artistId, artistImage);
+                    ((Callback) getActivity()).onItemSelected(artistId, artistName, artistImage);
                 }
             }
         });
@@ -252,7 +253,7 @@ public class ArtistSearchFragment extends Fragment {
         /**
          * ArtistSearchFragmentCallback for when an item has been selected.
          */
-        public void onItemSelected(String artistId, String artistImageUrl);
+        public void onItemSelected(String artistId, String artistName, String artistImageUrl);
     }
 
 }

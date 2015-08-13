@@ -243,4 +243,5 @@
     <string name="now_playing">Now Playing</string>
     <string name="track_share_text">Listening to <xliff:g id="track_name" example="Alguien Soy Yo">%s</xliff:g> by <xliff:g id="artist_name" example="Enrique Iglesias">%s</xliff:g> <xliff:g id="track_url">%s</xliff:g></string>
     <string name="share">Share</string>
+    <string name="intent_artist_name_key">KEY_ARTIST_NAME</string>
 </resources>

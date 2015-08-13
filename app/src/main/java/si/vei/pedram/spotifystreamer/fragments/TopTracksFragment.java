@@ -14,8 +14,9 @@ import android.preference.PreferenceManager;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.LocalBroadcastManager;
 import android.support.v4.view.MenuItemCompat;
+import android.support.v7.app.ActionBarActivity;
+import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.ShareActionProvider;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -40,10 +41,7 @@ import kaaes.spotify.webapi.android.models.Image;
 import kaaes.spotify.webapi.android.models.Track;
 import retrofit.RetrofitError;
 import si.vei.pedram.spotifystreamer.R;
-import si.vei.pedram.spotifystreamer.activities.MainActivity;
 import si.vei.pedram.spotifystreamer.activities.MusicPlayerActivity;
-import si.vei.pedram.spotifystreamer.activities.SettingsActivity;
-import si.vei.pedram.spotifystreamer.activities.TopTracksActivity;
 import si.vei.pedram.spotifystreamer.lists.adapters.TopTracksListAdapter;
 import si.vei.pedram.spotifystreamer.models.TrackGist;
 import si.vei.pedram.spotifystreamer.service.MusicService;
@@ -59,8 +57,6 @@ public class TopTracksFragment extends Fragment {
 
     private TopTracksListAdapter mTracksAdapter;
     private ArrayList<TrackGist> tracks = new ArrayList<TrackGist>();
-    private String artistId;
-    private String artistImageUrl;
     private GetTopTracks getTopTracks;
     private boolean mHasTwoPanes;
     private String mTrackShareText;
@@ -80,13 +76,20 @@ public class TopTracksFragment extends Fragment {
         // Inflating fragment's view to customize it
         View rootView = inflater.inflate(R.layout.fragment_top_tracks, container, false);
 
+        String artistImageUrl = null;
+        String artistName = null;
+        String artistId = null;
+
         // Get artistId
         Bundle arguments = getArguments();
         if (arguments != null) {
             artistId = arguments.getString(getString(R.string.intent_artist_id_key));
             artistImageUrl = arguments.getString(getString(R.string.intent_artist_image_url_key));
+            artistName = arguments.getString(getString(R.string.intent_artist_name_key));
             mMusicPlaying = arguments.getBoolean(getString(R.string.intent_music_playing_flag));
         }
+
+        ((AppCompatActivity) getActivity()).getSupportActionBar().setSubtitle(artistName);
 
         final ImageView headerImageView = (ImageView) rootView.findViewById(R.id.top_tracks_header_imageview);
         if (artistImageUrl != null) {
