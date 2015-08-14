@@ -81,19 +81,15 @@ public class MusicPlayerFragment extends DialogFragment implements SeekBar.OnSee
         }
     };
 
-    // this method is only called once for this fragment
-    @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        // retain this fragment
-        setRetainInstance(true);
-        setHasOptionsMenu(true);
-    }
-
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.fragment_music_player, container, false);
+
+        // retain this fragment
+        setRetainInstance(true);
+
+        setHasOptionsMenu(true);
 
         mHasTwoPanes = false;
 
@@ -177,7 +173,7 @@ public class MusicPlayerFragment extends DialogFragment implements SeekBar.OnSee
         // So we will only bind to it. Otherwise we will start the service
         Intent serviceIntent = new Intent(getActivity(), MusicService.class);
 
-        if (!mPlayerResumed) {
+        if (!mPlayerResumed && savedInstanceState == null) {
             serviceIntent.setAction(MusicService.ACTION_PLAY);
             serviceIntent.putParcelableArrayListExtra(getString(R.string.intent_track_list_key), mTrackList);
             serviceIntent.putExtra(getString(R.string.intent_selected_track_position), mTrackPosition);
@@ -249,6 +245,13 @@ public class MusicPlayerFragment extends DialogFragment implements SeekBar.OnSee
             // remove message Handler from updating progress bar
             mHandler.removeCallbacks(mUpdateTimeTask);
         }
+    }
+
+    @Override
+    public void onDestroyView() {
+        if (getDialog() != null && getRetainInstance())
+            getDialog().setDismissMessage(null);
+        super.onDestroyView();
     }
 
     @Override
