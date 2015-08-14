@@ -456,7 +456,9 @@ public class MusicService extends Service implements
      * Stop music service and broad a message stating so
      */
     private void stopMusicService() {
-        mNotificationManager.cancel(NOTIFICATION_ID);
+        if (mNotificationManager != null) {
+            mNotificationManager.cancel(NOTIFICATION_ID);
+        }
         stopSelf();
         stopForeground(true);
         broadcast(BROADCAST_SERVICE_STOPPED);
@@ -493,7 +495,10 @@ public class MusicService extends Service implements
 
     @Override
     public void onDestroy() {
-        mNotificationManager.cancel(NOTIFICATION_ID);
+        if (mNotificationManager != null) {
+            // Cancel the current notification
+            mNotificationManager.cancel(NOTIFICATION_ID);
+        }
         mMediaPlayerPrepared = false;
         mPlayer.stop();
         mPlayer.release();
