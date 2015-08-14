@@ -175,7 +175,7 @@ public class TopTracksFragment extends Fragment {
 
         LocalBroadcastManager.getInstance(getActivity()).registerReceiver(mBroadcastReceiver, intentFilter);
 
-        // Bind to service in order to get the current playing track for the service
+        // Bind to service in order to get the current playing track from the service
         Intent serviceIntent = new Intent(getActivity(), MusicService.class);
         getActivity().bindService(serviceIntent, musicConnection, Context.BIND_AUTO_CREATE);
 

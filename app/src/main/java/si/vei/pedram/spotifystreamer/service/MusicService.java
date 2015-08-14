@@ -132,6 +132,7 @@ public class MusicService extends Service implements
         if (action.equalsIgnoreCase(ACTION_CLOSE_NOTIFICATION)) {
             broadcast(BROADCAST_NOTIFICATION_CLOSED);
             stopSelf();
+            broadcast(BROADCAST_SERVICE_STOPPED);
         }
     }
 
@@ -492,7 +493,6 @@ public class MusicService extends Service implements
             mPlayer.release();
         }
         mMediaPlayerPrepared = false;
-        broadcast(BROADCAST_SERVICE_STOPPED);
         super.onDestroy();
     }
 
