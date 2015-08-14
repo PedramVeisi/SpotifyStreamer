@@ -76,7 +76,9 @@ public class ArtistSearchFragment extends Fragment {
         if (savedInstanceState != null) {
             artists = savedInstanceState.getParcelableArrayList(getString(R.string.state_artists));
             mArtistsAdapter.clear();
-            mArtistsAdapter.addAll(artists);
+            if (artists != null) {
+                mArtistsAdapter.addAll(artists);
+            }
             rotationFlag = true;
         }
 
