@@ -131,7 +131,7 @@ public class MusicService extends Service implements
         }
         if (action.equalsIgnoreCase(ACTION_CLOSE_NOTIFICATION)) {
             broadcast(BROADCAST_NOTIFICATION_CLOSED);
-            stopMusicService();
+            stopSelf();
         }
     }
 
@@ -452,18 +452,6 @@ public class MusicService extends Service implements
         LocalBroadcastManager.getInstance(this).sendBroadcast(intent);
     }
 
-    /**
-     * Stop music service and broad a message stating so
-     */
-    private void stopMusicService() {
-        if (mNotificationManager != null) {
-            mNotificationManager.cancel(NOTIFICATION_ID);
-        }
-        stopSelf();
-        stopForeground(true);
-        broadcast(BROADCAST_SERVICE_STOPPED);
-    }
-
     @Override
     public IBinder onBind(Intent intent) {
         return mMusicBinder;
@@ -499,10 +487,12 @@ public class MusicService extends Service implements
             // Cancel the current notification
             mNotificationManager.cancel(NOTIFICATION_ID);
         }
+        if (mMediaPlayerPrepared) {
+            mPlayer.stop();
+            mPlayer.release();
+        }
         mMediaPlayerPrepared = false;
-        mPlayer.stop();
-        mPlayer.release();
-        stopMusicService();
+        broadcast(BROADCAST_SERVICE_STOPPED);
         super.onDestroy();
     }
 
