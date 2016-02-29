@@ -27,7 +27,7 @@ Stage 1
  - The queried results are retained on rotation.
 
  
- Stage 2
+Stage 2
 --------------
 
 **User Interface - Layout**
