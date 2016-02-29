@@ -64,4 +64,9 @@ When an artist name is entered, app displays list of artist results in a ListVie
 
 <img src="../screenshots/Screenshots/Main.png?raw=true" alt="Main Activity" width="280" />
 <img src="/../screenshots/Screenshots/ArtistSearch.png?raw=true" alt="Artist Search" width="280" />
+<img src="/../screenshots/Screenshots/TopTracks.png?raw=true" alt="Top Tracks" width="280" />
+
 <img src="/../screenshots/Screenshots/Player.png?raw=true" alt="Player" width="280" />
+<img src="../screenshots/Screenshots/Notification.png?raw=true" alt="Notification" width="280" />
+<img src="/../screenshots/Screenshots/NotificationLockScreen.png?raw=true" alt="Notification Lock Screen" width="280" />
+
