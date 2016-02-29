@@ -70,7 +70,7 @@ When an artist name is entered, app displays list of artist results in a ListVie
 <img src="/../screenshots/Screenshots/NotificationLockScreen.png?raw=true" alt="Notification Lock Screen" width="280" />
 <img src="/../screenshots/Screenshots/Settings.png?raw=true" alt="Settings" width="280" />
 
-<img src="/../screenshots/Screenshots/TabletTopTracks.png?raw=true" alt="Tablet Top Tracks" width="840" />
-<img src="/../screenshots/Screenshots/TabletPlayer.png?raw=true" alt="Tablet Player" width="840" />
+<img src="/../screenshots/Screenshots/TabletTopTracks.png?raw=true" alt="Tablet Top Tracks" width="860" />
+<img src="/../screenshots/Screenshots/TabletPlayer.png?raw=true" alt="Tablet Player" width="860" />
 
 
