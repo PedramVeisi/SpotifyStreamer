@@ -67,6 +67,8 @@ When an artist name is entered, app displays list of artist results in a ListVie
 <img src="../screenshots/Screenshots/Main.png?raw=true" alt="Main Activity" style="width: 200px;"/>
 
 
+<img src="/../screenshots/Screenshots/ArtistSearch.png?raw=true" width="200" height="400" />
+
 ![Alt text](/../screenshots/Screenshots/ArtistSearch.png?raw=true "Artist Search" | width=100)
 
  
