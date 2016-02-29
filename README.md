@@ -63,6 +63,6 @@ When an artist name is entered, app displays list of artist results in a ListVie
  - If a user taps on another track while one is currently playing, playback is stopped on the currently playing track and the newly selected track (in other words, the tracks should not mix)
 
 
-![Alt text](/../screenshots/Screenshots/Main.png?raw=true "Main Activity") ![Alt text](/../screenshots/Screenshots/ArtistSearch.png?raw=true "Artist Search")
+![Alt text](/../screenshots/Screenshots/Main.png?raw=true "Main Activity" =500x) ![Alt text](/../screenshots/Screenshots/ArtistSearch.png?raw=true "Artist Search" =500x)
 
  
