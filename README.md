@@ -62,11 +62,15 @@ When an artist name is entered, app displays list of artist results in a ListVie
  - Pause button pauses playback of currently selected track
  - If a user taps on another track while one is currently playing, playback is stopped on the currently playing track and the newly selected track (in other words, the tracks should not mix)
 
-<img src="../screenshots/Screenshots/Main.png?raw=true" alt="Main Activity" width="280" />
 <img src="/../screenshots/Screenshots/ArtistSearch.png?raw=true" alt="Artist Search" width="280" />
 <img src="/../screenshots/Screenshots/TopTracks.png?raw=true" alt="Top Tracks" width="280" />
-
 <img src="/../screenshots/Screenshots/Player.png?raw=true" alt="Player" width="280" />
+
 <img src="../screenshots/Screenshots/Notification.png?raw=true" alt="Notification" width="280" />
 <img src="/../screenshots/Screenshots/NotificationLockScreen.png?raw=true" alt="Notification Lock Screen" width="280" />
+<img src="/../screenshots/Screenshots/Settings.png?raw=true" alt="Settings" width="280" />
+
+<img src="/../screenshots/Screenshots/TabletTopTracks.png?raw=true" alt="Tablet Top Tracks" width="840" />
+<img src="/../screenshots/Screenshots/TabletPlayer.png?raw=true" alt="Tablet Player" width="840" />
+
 
