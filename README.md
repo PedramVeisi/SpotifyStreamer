@@ -1,6 +1,6 @@
-#Spotify Streamer
-
-Spotify Streamer - Project 1, Udacity Android developer Nanodegree
+Spotify Streamer
+=============
+Project 1, Udacity [**"Android Developer Nanodegree"**](https://www.udacity.com/course/android-developer-nanodegree--nd801) program.
 
 Stage 1
 --------------
